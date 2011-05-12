@@ -1,0 +1,50 @@
+mthd
+	version 1
+	unit 192
+end mthd
+
+mtrk
+	tact 4 / 4 24 8
+	beats 120
+	key "Cmaj"
+end mtrk
+
+mtrk(1)
+	prefixport 0
+	prefixchannel 1
+	program GrandPno
+	volume 127
+	balance 64
+	reverb 64
+	1/4;
+	+e3 $7F;
+	+g3 $7F;
+	+b3 $7F;
+	1/4;-e3 $00;
+	-g3 $00;
+	-b3 $00;
+	+a3 $7F;
+	+c3 $7F;
+	+e3 $7F;
+	1/4;-a3 $00;
+	-c3 $00;
+	-e3 $00;
+	+d3 $7F;
+	+f3 $7F;
+	+a3 $7F;
+	1/4;-d3 $00;
+	-f3 $00;
+	-a3 $00;
+	+g3 $7F;
+	+b3 $7F;
+	+d3 $7F;
+	1/4;-g3 $00;
+	-b3 $00;
+	-d3 $00;
+	+c3 $7F;
+	+e3 $7F;
+	+g3 $7F;
+	1/4;-c3 $00;
+	-e3 $00;
+	-g3 $00;
+end mtrk
