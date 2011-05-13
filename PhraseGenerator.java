@@ -32,10 +32,13 @@ public class PhraseGenerator
 	{
 		Init();
 	}
-	
+	public String startTrack(int track, int port, int channel, String instr, int volume, int balance, int reverb)
+	{
+		return "mtrk(" + track + ")\n\tprefixport " + port + "\n\tprefixchannel " + channel + "\n\tprogram " + instr + "\n\tvolume " + volume + "\n\tbalance " + balance + "\n\treverb " + reverb + "\n\t1/4;\n";
+	}
 	public String generatePhrase()
 	{
-		String phrase = "mtrk(1)\n\tprefixport 0\n\tprefixchannel 1\n\tprogram GrandPno\n\tvolume 127\n\tbalance 64\n\treverb 64\n\t1/4;\n";
+		String phrase = startTrack(1, 0, 1, "GrandPno", 127, 64, 64);
 		Chord curr = getRandomChord();
 		phrase += curr.toString();
 		while(curr != C)
