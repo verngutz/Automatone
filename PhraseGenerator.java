@@ -2,6 +2,13 @@ import java.util.*;
 
 public class PhraseGenerator
 {
+	public enum Cadence
+	{ 
+		HALF,
+		AUTHENTIC,
+		PLAGAL,
+		DECEPTIVE
+	};
 	public static final Chord 	C = new Chord('c'),
 								D = new Chord('d'),
 								E = new Chord('e'),
@@ -35,16 +42,17 @@ public class PhraseGenerator
 	
 	public String generatePhrase()
 	{
-		String phrase = "mtrk(1)\n\tprefixport 0\n\tprefixchannel 1\n\tprogram GrandPno\n\tvolume 127\n\tbalance 64\n\treverb 64\n\t1/4;\n";
-		Chord curr = getRandomChord();
+		String phrase = "mtrk(1)\n\tprefixport 0\n\tprefixchannel 1\n\tprogram GrandPno\n\tvolume 127\n\tbalance 64\n\treverb 64\n\t1/2;\n";
+		Chord curr = C;
 		phrase += curr.toString();
-		while(curr != C)
+		do
 		{
 			int length = progression.get(curr).length;
 			int index = (int)(Math.random() * length);
 			curr = progression.get(curr)[index];
 			phrase += curr.toString();
 		}
+		while(curr != C);
 		phrase += "end mtrk\n";
 		return phrase;
 	}
@@ -59,24 +67,5 @@ public class PhraseGenerator
 		else if(rand < 5.0 / 7) return G;
 		else if(rand < 6.0 / 7) return A;
 		else return B;
-	}
-}
-
-class Chord
-{					
-	private static char[] keyboard = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
-	private char base;
-	private char third;
-	private char fifth;
-	public Chord(char base)
-	{
-		this.base = keyboard[base - 'a'];
-		third = keyboard[(base - 'a' + 2) % 7];
-		fifth = keyboard[(base - 'a' + 4) % 7];
-	}
-	public String toString()
-	{
-		return "\t+" + base + "3 $7F;\n\t+" + third + "3 $7F;\n\t+" + fifth + "3 $7F;\n" 
-		+ "\t1/4;-" + base + "3 $00;\n\t-" + third + "3 $00;\n\t-" + fifth + "3 $00;\n";
 	}
 }
