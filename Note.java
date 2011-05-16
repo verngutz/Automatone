@@ -1,4 +1,4 @@
-public class Note
+public class Note implements Comparable<Note>
 {
 	private char note;
 	private char accidental;
@@ -24,6 +24,16 @@ public class Note
 		this.startBeat = start_beat;
 	}
 	
+	public int getStartMeasure()
+	{
+		return startMeasure;
+	}
+	
+	public double startBeat()
+	{
+		return startBeat;
+	}
+	
 	//beat_resolution will be passed by NoteThread and should ideally be less than the initial duration of any Note
 	public void update(double beat_resolution)
 	{
@@ -33,6 +43,11 @@ public class Note
 	public String toString()
 	{
 		return "" + note + accidental + octave;
+	}
+	
+	public int compareTo(Note n)
+	{
+		return (int) Math.round((startMeasure + startBeat) * 100 - (n.startMeasure + n.startBeat) * 100);
 	}
 }
 

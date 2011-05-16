@@ -1,39 +1,36 @@
+import java.util.*;
+
 public class NoteThread
 {
 	private static final double BEAT_RESOLUTION = 1 / 16.0;
 	
-	private ArrayList<Note> notes;
-	private ArrayList<Note> activeNotes;
-	private ArrayList<Note> expiredNotes;
-	private int currentMeasure;
-	private double currentBeat;
-	private double timePassed;
-	private String thread;
+	private PriorityQueue<Note> notes;
 	
 	//Limited to 4/4 time as of now
 	public NoteThread()
 	{
-		notes = new ArrayList<Note>();
-		currentMeasure = 0;
-		currentBeat = 0;
-		thread = "";
+		notes = new PriorityQueue<Note>();
 	}
 	
-	//increment time and deallocate expired notes
-	public void update()
+	public void addNote(Note n)
 	{
-		timePassed += BEAT_RESOLUTION;
-		currentMeasure = (int)Math.round(timePassed / 1);
-		currentBeat = timePassed - currentMeasure;
-	}
-	
-	//add a new note at the current time
-	public void addNote(char note, char accidental, int octave, double duration)
-	{
+		notes.offer(n);
 	}
 	
 	public String toString()
 	{
+		String thread = "";
+		int currentMeasure = 0;
+		double currentBeat = 0;
+		double timePassed = 0;
+		ArrayList<Note> activeNotes = new ArrayList<Note>();
+		while(notes.size() > 0)
+		{
+			//if(notes.peek().getStartMeasure() );
+			timePassed += BEAT_RESOLUTION;
+			currentMeasure = (int)Math.round(timePassed / 1);
+			currentBeat = timePassed - currentMeasure;
+		}
 		return thread;
 	}
 }
