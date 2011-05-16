@@ -41,13 +41,14 @@ public class PhraseGenerator
 	}
 	public String startTrack(int track, int port, int channel, String instr, int volume, int balance, int reverb)
 	{
-		return "mtrk(" + track + ")\n\tprefixport " + port + "\n\tprefixchannel " + channel + "\n\tprogram " + instr + "\n\tvolume " + volume + "\n\tbalance " + balance + "\n\treverb " + reverb + "\n\t1/4;\n";
+		return "mtrk(" + track + ")\n\tprefixport " + port + "\n\tprefixchannel " + channel + "\n\tprogram " + instr + "\n\tvolume " + volume + "\n\tbalance " + balance + "\n\treverb " + reverb + "\n";
 	}
 	
 	public String generatePhrase()
 	{
 		String phrase = startTrack(1, 0, 1, "GrandPno", 127, 64, 64);
 		Chord curr = getRandomChord();
+		phrase += "\t1/4;\n"; //generate random timing
 		phrase += curr.toString();
 		do
 		{
