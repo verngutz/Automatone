@@ -29,15 +29,16 @@ public class Note implements Comparable<Note>
 		return startMeasure;
 	}
 	
-	public double startBeat()
+	public double getStartBeat()
 	{
 		return startBeat;
 	}
 	
 	//beat_resolution will be passed by NoteThread and should ideally be less than the initial duration of any Note
-	public void update(double beat_resolution)
+	public double update(double beat_resolution)
 	{
 		remainingDuration -= beat_resolution;
+		return remainingDuration;
 	}
 	
 	public String toString()
