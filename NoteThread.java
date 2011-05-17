@@ -55,4 +55,10 @@ public class NoteThread
 		thread += "end mtrk\n";
 		return thread;
 	}
+	
+	public String randomVolume(double lbound, double ubound)
+	{
+		return " $" + (int)(Math.random() * (ubound - lbound) + lbound) + ";\n";
+		//return " $7F;\n";
+	}
 }

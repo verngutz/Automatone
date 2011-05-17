@@ -2,18 +2,49 @@ import java.util.*;
 
 public class PhraseGenerator
 {
-	private ArrayList<Phrase> phraseChromosomes;
+	public static final Chord 	C = new Chord(new Notename('c', ' '), ),
+								Dm = new Chord('d'),
+								Em = new Chord('e'),
+								F = new Chord('f'),
+								G = new Chord('g'),
+								Am = new Chord('a'),
+								Bdim = new Chord('b');
+								
+	private Hashtable<Chord, Chord[]> progressionTheory;
 	
-	public PhraseGenerator() 
+	public PhraseGenerator()
 	{
-		phraseChromosomes = new ArrayList<Phrase>();
+		progressionTheory = new Hashtable<Chord, Chord[]>();
+		Chord[] eProg = {A};
+		progressionTheory.put(E, eProg);
+		Chord[] aProg = {D, F};
+		progressionTheory.put(A, aProg);
+		Chord[] dfProg = {G, B};
+		progressionTheory.put(D, dfProg);
+		progressionTheory.put(F, dfProg);
+		Chord[] gProg = {C};
+		progressionTheory.put(G, gProg);
+		Chord[] bProg = {C, E};
+		progressionTheory.put(B, bProg);
+		Chord[] cProg = {C, D, E, F, G, A, B};
+		progressionTheory.put(C, cProg);
 	}
 	
 	public ArrayList<Note> generatePhrase()
 	{
-		Phrase p = new Phrase();
-		phraseChromosomes.add(p);
-		return p.toNoteList();
+		return (new Phrase(progressionTheory)).getNoteList();
+	}
+		
+	private Chord getRandomChord()
+	{
+		double rand = Math.random();
+		if(rand < 1.0 / 7) return C;
+		else if(rand < 2.0 / 7) return D;
+		else if(rand < 3.0 / 7) return E;
+		else if(rand < 4.0 / 7) return F;
+		else if(rand < 5.0 / 7) return G;
+		else if(rand < 6.0 / 7) return A;
+		else return B;
 	}
 	
 	public String generatePhrase2()
@@ -64,9 +95,4 @@ public class PhraseGenerator
 			}
 		}
 	}
-	private Chord getRandomChord()
-	{
-		return null;
-	}
-	
 }
