@@ -1,15 +1,37 @@
 public class Chord
-{					
-	private static char[] keyboard = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
-	private char base;
-	private char third;
-	private char fifth;
-	public Chord(char base)
+{
+	public enum Mode
 	{
-		this.base = keyboard[base - 'a'];
-		third = keyboard[(base - 'a' + 2) % 7];
-		fifth = keyboard[(base - 'a' + 4) % 7];
+		MAJOR,                   //C
+		MINOR,                   //Cm
+		AUGMENTED,               //Caug
+		DIMINISHED,              //Cdim
+		DOMINANT_SEVENTH,        //C7
+		MAJOR_SEVENTH,           //CM7
+		MINOR_SEVENTH,           //Cm7
+		DIMINISHED_SEVENTH,      //Cdim7
+		MINOR_MAJOR_SEVENTH,     //CmM7
+		AUGMENTED_MAJOR_SEVENTH, //C+M7
+		AUGMENTED_SEVENTH,       //C+7
+		MANUAL
 	}
+	
+	private ArrayList<Notename> chordConstituents;
+	
+	public Chord(Notename base, Mode mode)
+	{
+		chordConstituents = new ArrayList<Notename>();
+	}
+	
+	public Chord(Notename base, int[] intervals)
+	{
+		chordConsituents = new ArrayList<Notename>();
+		for(int i = 0; i < intervals.length; i++)
+		{
+			
+		}
+	}
+	
 	public String randomVolume(double lbound, double ubound)
 	{
 		return " $" + (Math.random() * (ubound - lbound) + lbound) + ";\n";

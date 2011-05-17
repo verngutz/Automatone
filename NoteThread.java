@@ -18,9 +18,14 @@ public class NoteThread
 		notes.offer(n);
 	}
 	
+	private String startTrack(int track, int port, int channel, String instr, int volume, int balance, int reverb)
+	{
+		return "mtrk(" + track + ")\n\tprefixport " + port + "\n\tprefixchannel " + channel + "\n\tprogram " + instr + "\n\tvolume " + volume + "\n\tbalance " + balance + "\n\treverb " + reverb + "\n";
+	}
+	
 	public String toString()
 	{
-		String thread = "";
+		String thread = startTrack(1, 0, 1, "GrandPno", 127, 64, 64);
 		double timePassed = 0;
 		ArrayList<Note> activeNotes = new ArrayList<Note>();
 		ArrayList<Note> expiredNotes = new ArrayList<Note>();
@@ -47,6 +52,7 @@ public class NoteThread
 				activeNotes.remove(n);
 			}
 		}
+		thread += "end mtrk\n";
 		return thread;
 	}
 }
