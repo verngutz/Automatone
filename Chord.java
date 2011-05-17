@@ -34,14 +34,14 @@ public class Chord
 	
 	public String randomVolume(double lbound, double ubound)
 	{
-		return " $" + (Math.random() * (ubound - lbound) + lbound) + ";\n";
+		return " $" + (int)(Math.random() * (ubound - lbound) + lbound) + ";\n";
+		//return " $7F;\n";
 	}
-	public String toString()
+	public String toString(String time, String octave)
 	{
-		String vol = randomVolume(100.0,127.0);
-		String octave = "3";
-		String time = "1/2";
-		return strum(time, octave, vol) + strum(time, octave);
+		String vol = randomVolume(127,127);
+		
+		return strum(time, octave, vol);
 	}
 	public String strum(String time, String octave, String vol)
 	{
