@@ -2,9 +2,9 @@ import java.util.*;
 
 public class VerseGenerator
 {
-	public ArrayList<Note> generateVerse()
+	public CellState[][] generateVerse(Theory theory)
 	{
 		PhraseGenerator pg = new PhraseGenerator();
-		return pg.generatePhrase();
+		return pg.generatePhrase(theory);
 	}
 }
