@@ -9,8 +9,7 @@ public class PhraseGenerator
 	
 	public CellState[][] generatePhrase(Theory theory)
 	{
-		CellState[][] phrase;
-		theory.populate(phrase);
+		CellState[][] phrase = theory.initialize();
 		theory.evolve(phrase);
 		return phrase;
 	}

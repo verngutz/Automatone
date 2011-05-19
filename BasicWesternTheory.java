@@ -2,6 +2,12 @@ import java.util.*;
 
 public class BasicWesternTheory extends Theory
 {
+	public BasicWesternTheory()
+	{
+		super();
+	}
+	
+	//MELODY
 	public static final NoteName NOTE_C              = new NoteName('c', ' ');
 	public static final NoteName NOTE_C_SHARP        = new NoteName('c', '#');
 	public static final NoteName NOTE_C_FLAT         = new NoteName('b', ' ');
@@ -44,12 +50,79 @@ public class BasicWesternTheory extends Theory
 	public static final NoteName NOTE_B_DOUBLE_SHARP = new NoteName('c', '#');
 	public static final NoteName NOTE_B_DOUBLE_FLAT  = new NoteName('a', ' ');
 	
-	public BasicWesternTheory()
+	private static final NoteName[] CHROMATIC_SCALE = 
 	{
-	}
+		NOTE_C,
+		NOTE_C_SHARP,
+		NOTE_D,
+		NOTE_D_SHARP,
+		NOTE_E,
+		NOTE_F,
+		NOTE_F_SHARP,
+		NOTE_G,
+		NOTE_G_SHARP,
+		NOTE_A,
+		NOTE_A_SHARP,
+		NOTE_B
+	};
+	
+	private static final int PIANO_SIZE = 88;
+	
+	//HARMONY
+	
+	//RHYTHM
+	private static final double SUBBEATS_PER_MEASURE = 16.0;
+	
+	//FORM
+	private static final int NUM_MEASURES_LBOUND = 2;
+	private static final int NUM_MEASURES_UBOUND = 14;
+	
 	
 	public double getBeatResolution()
 	{
-		return 1 / 16.0;
+		return 1 / SUBBEATS_PER_MEASURE;
+	}
+	
+	public CellState[][] initialize()
+	{
+		int numMeasures = (int)Math.round(NUM_MEASURES_LBOUND + random.nextDouble() * (NUM_MEASURES_UBOUND - NUM_MEASURES_LBOUND));
+		System.out.println(numMeasures);
+		int phraseLength = (int)SUBBEATS_PER_MEASURE * numMeasures;
+		CellState[][] songCells = new CellState[PIANO_SIZE][phraseLength];
+		for(int i = 0; i < PIANO_SIZE; i++)
+		{
+			for(int j = 0; j < phraseLength; j++)
+			{
+				switch(random.nextInt(3))
+				{
+					case 0:
+						songCells[i][j] = CellState.START;
+						break;
+					case 1:
+						songCells[i][j] = CellState.HOLD;
+						break;
+					case 2:
+						songCells[i][j] = CellState.SILENT;
+						break;
+				}
+			}
+		}
+		
+		return songCells;
+	}
+	
+	public void evolve(CellState[][] songCells)
+	{
+		
+	}
+	
+	public NoteName getNoteName(int pitchNumber)
+	{
+		return CHROMATIC_SCALE[(pitchNumber % 12 + 7) % 12];
+	}
+	
+	public int getOctave(int pitchNumber)
+	{
+		return (pitchNumber - 3) / 12 + 1;
 	}
 }

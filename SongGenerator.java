@@ -120,9 +120,9 @@ public class SongGenerator
 			double timePassed = 0;
 			ArrayList<Note> activeNotes = new ArrayList<Note>();
 			ArrayList<Note> expiredNotes = new ArrayList<Note>();
-			while(notes.size() > 0 || activeNotes.size() > 0 || expiredNotes.size() > 0)
+			while(notes.size() > 0 || activeNotes.size() > 0)
 			{
-				while(Math.abs(notes.peek().getStartMeasure() + notes.peek().getStartBeat() - timePassed) <= EPSILON)
+				while(notes.size() > 0 && Math.abs(notes.peek().getStartMeasure() + notes.peek().getStartBeat() - timePassed) <= EPSILON)
 				{
 					Note toActivate = notes.poll();
 					activeNotes.add(toActivate);
@@ -142,6 +142,7 @@ public class SongGenerator
 				{
 					activeNotes.remove(n);
 				}
+				expiredNotes.clear();
 			}
 			thread += "end mtrk\n";
 			return thread;
