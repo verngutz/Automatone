@@ -153,6 +153,9 @@ public class BasicWesternTheory extends Theory
 	public static final int PERFECT_OCTAVE_INTERVAL = 12;
 	public static final int AUGMENTED_OCTAVE_INTERVAL = 13;
 	
+	public static final int WHOLE_STEP = 2;
+	public static final int HALF_STEP = 1;
+	
 	//MELODY
 	private void initializeMelody()
 	{
@@ -163,10 +166,7 @@ public class BasicWesternTheory extends Theory
 	{
 	}
 	
-	
 	private enum ChordMode { MAJOR, MINOR, AUGMENTED, DIMINISHED }
-	
-	private static final ArrayList<NoteName> CHORD_C_MAJOR = createChord(NOTE_C, ChordMode.MAJOR);
 	private static ArrayList<NoteName> createChord(NoteName base, ChordMode mode)
 	{
 		ArrayList<NoteName> chord = new ArrayList<NoteName>();
@@ -174,23 +174,62 @@ public class BasicWesternTheory extends Theory
 		switch(mode)
 		{
 			case MAJOR:
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + MAJOR_THIRD_INTERVAL]);
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + PERFECT_FIFTH_INTERVAL]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + MAJOR_THIRD_INTERVAL) % CHROMATIC_SCALE.length]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + PERFECT_FIFTH_INTERVAL) % CHROMATIC_SCALE.length]);
 				break;
 			case MINOR:
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + MINOR_THIRD_INTERVAL]);
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + PERFECT_FIFTH_INTERVAL]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + MINOR_THIRD_INTERVAL) % CHROMATIC_SCALE.length]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + PERFECT_FIFTH_INTERVAL) % CHROMATIC_SCALE.length]);
 				break;
 			case AUGMENTED:
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + MAJOR_THIRD_INTERVAL]);
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + AUGMENTED_FIFTH_INTERVAL]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + MAJOR_THIRD_INTERVAL) % CHROMATIC_SCALE.length]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + AUGMENTED_FIFTH_INTERVAL) % CHROMATIC_SCALE.length]);
 				break;
 			case DIMINISHED:
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + MINOR_THIRD_INTERVAL]);
-				chord.add(CHROMATIC_SCALE[CHROMATIC_EQUIVALENTS.get(base) + DIMINISHED_FIFTH_INTERVAL]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + MINOR_THIRD_INTERVAL) % CHROMATIC_SCALE.length]);
+				chord.add(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(base) + DIMINISHED_FIFTH_INTERVAL) % CHROMATIC_SCALE.length]);
 				break;
 		}
 		return chord;
+	}
+	
+	private enum ScaleMode { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR }
+	
+	/**
+	private static ArrayList<ArrayList<NoteName>> createChordProgression(NoteName key, ScaleMode mode)
+	{
+		
+	}*/
+	
+	private static ArrayList<NoteName> createDiatonicScale(NoteName key, ScaleMode mode)
+	{
+		ArrayList<NoteName> scale = new ArrayList<NoteName>();
+		scale.add(key);
+		NoteName curr = key;
+		switch(mode)
+		{
+			case MAJOR:
+				for(int i = 0; i < 2; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				for(int i = 0; i < 3; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				break;
+			case NATURAL_MINOR:
+				break;
+			case HARMONIC_MINOR:
+				break;
+			case MELODIC_MINOR:
+				break;
+		}
+		return scale;
 	}
 	
 	private double tonality;
@@ -255,7 +294,7 @@ public class BasicWesternTheory extends Theory
 			{
 				for(int j = 0; j < songCells[0].length; j++)
 				{
-					if(!CHORD_C_MAJOR.contains(getNoteName(i)))
+					if(!(createChord(NOTE_C, ChordMode.MAJOR)).contains(getNoteName(i)))
 					{
 						if(random.nextDouble() > 0.7)
 						{
