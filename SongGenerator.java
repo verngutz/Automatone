@@ -128,7 +128,7 @@ public class SongGenerator
 					activeNotes.add(toActivate);
 					thread += "\t\t+" + toActivate.toString() + " $7F;\n";
 				}
-				thread += "\t1/16;\n";
+				thread += "\t1/8;\n";//beats per minute
 				timePassed += beatResolution;
 				for(Note n : activeNotes)
 				{

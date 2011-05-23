@@ -299,25 +299,22 @@ public class BasicWesternTheory extends Theory
 		Hashtable<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = createDiatonicTriads(key, mode);
 		ArrayList<ArrayList<NoteName>> rawProgression = new ArrayList<ArrayList<NoteName>>();
 		DiatonicNumeral goalTriad;
-		DiatonicNumeral curr;
 		switch(mode)
 		{
 			case MAJOR:
 				goalTriad = DiatonicNumeral.I;
-				curr = DiatonicNumeral.getRandomMajor();
 				break;
 			case NATURAL_MINOR:
 			case HARMONIC_MINOR:
 			case MELODIC_MINOR:
 			case GENERIC_MINOR:
 				goalTriad = DiatonicNumeral.i;
-				curr = DiatonicNumeral.getRandomMinor();
 				break;
 			default:
 				goalTriad = DiatonicNumeral.I;
-				curr = DiatonicNumeral.getRandomMajor();
 				break;
 		}
+		DiatonicNumeral curr = goalTriad;
 		do
 		{
 			rawProgression.add(diatonicTriads.get(curr));
@@ -325,20 +322,39 @@ public class BasicWesternTheory extends Theory
 		}
 		while(curr != goalTriad);
 		rawProgression.add(diatonicTriads.get(curr));
-		
+		System.out.println("Progression size: " + rawProgression.size());
+		int[] progressionChangeIndices = new int[rawProgression.size()];
+		int lastIndex = 0;
+		for(int i = 0; i < progressionChangeIndices.length; i++)
+		{
+			progressionChangeIndices[i] = lastIndex + (int)(random.nextDouble() * (phraseLength - lastIndex));
+		}
+		Arrays.sort(progressionChangeIndices);
+		System.out.println("length: " + phraseLength);
+		System.out.println("Indices: ");
+		for(int i = 0; i < progressionChangeIndices.length; i++)
+		{
+			System.out.print(progressionChangeIndices[i] + " ");
+		}
 		ArrayList<ArrayList<NoteName>> organizedProgression = new ArrayList<ArrayList<NoteName>>();
 		int[] absoluteNoteDensity = new int[phraseLength];
 		int[] relativeNoteDensity = new int[phraseLength];
 		int maxAbsoluteNoteDensity = 0;
+		
+		int index = 0;
 		for(int i = 0; i < phraseLength; i++)
 		{
 			if(rawProgression.size() == 0)
 				organizedProgression.add(organizedProgression.get(i - 1));
 			else
+			{
 				organizedProgression.add(rawProgression.get(0));
-			double rand = random.nextDouble();
-			if(rand < 1.0 / phraseLength && rawProgression.size() != 0)
-				rawProgression.remove(0);
+				if(i == progressionChangeIndices[index])
+				{
+					index++;
+					rawProgression.remove(0);
+				}
+			}
 		}
 		return organizedProgression;
 	}
@@ -354,12 +370,10 @@ public class BasicWesternTheory extends Theory
 					case iii:
 						return DiatonicNumeral.vi;
 					case vi:
-						if(rand < 0.33)
+						if(rand < 0.5)
 							return DiatonicNumeral.ii;
-						else if(rand < 0.66)
-							return DiatonicNumeral.IV;
 						else
-							return DiatonicNumeral.N;
+							return DiatonicNumeral.IV;
 					case ii:
 					case IV:
 					case N:
@@ -498,11 +512,44 @@ public class BasicWesternTheory extends Theory
 	}
 	
 	//RHYTHM
-	private void initializeRhythm()
+	private void initializeRhythm(double notesMean, double beatsLoyalty)
 	{
+		this.notesMean = notesMean;
+		this.beatsLoyalty = beatsLoyalty;
+		double[] beats = new double[MIN_NOTE];
+		beatsProb = new double[MIN_NOTE];
+		
+		for(int i=0; i<MIN_NOTE; i++)
+			beats[i] = i;
+		for(int i=0; i<MIN_NOTE; i++)
+		{
+			beatsProb[i] = ( i == 0 ?  0 : getProbability( beats, beats[i] ) );
+		}
 	}
 	
-	private static final double SUBBEATS_PER_MEASURE = 16.0;
+	private double[] beatsProb;
+	
+	private double getProbability( double[] beats, double beat )
+	{
+		return getProbability( beats, beat, 1.0, 1, beats.length - 1 );
+	}
+	
+	private double getProbability( double[] beats, double beat, double prob, int low, int high )
+	{
+		prob /= 2;
+		int mid = ( low + high ) / 2;
+		if( beats[mid] > beat )
+			return getProbability( beats, beat, prob, low, mid - 1 );
+		else if( beats[mid] < beat )
+			return getProbability( beats, beat, prob, mid + 1, high );
+		else
+			return 1 - prob;
+	}
+	
+	private static final double SUBBEATS_PER_MEASURE = 8.0;
+	private static final int MIN_NOTE = 8;
+	private double notesMean;
+	private double beatsLoyalty;
 	
 	//FORM
 	private void initializeForm()
@@ -549,8 +596,10 @@ public class BasicWesternTheory extends Theory
 	{
 		initializeMelody();
 		initializeHarmony(songCells[0].length);
-		initializeRhythm();
+		initializeRhythm(0.375, 0.90); //@param ( notesmean, beatsloyalty )
 		initializeForm();
+		CellState[][] previousState = songCells;
+		
 		for(int x = 0; x < NUM_GENERATIONS; x++)
 		{
 			for(int i = 0; i < songCells.length; i++)
@@ -567,6 +616,36 @@ public class BasicWesternTheory extends Theory
 				}
 			}
 		}
+		
+		//RHYTHM
+		for(int i = 0; i < songCells.length; i++)
+		{
+			for(int j = 0; j < songCells[0].length; j++)
+			{
+				if(random.nextDouble() < beatsProb[j%(int)MIN_NOTE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
+					songCells[i][j] = CellState.SILENT;
+			}
+		}
+		for(int i = 0; i < songCells.length; i++)//pitch
+		{
+			for(int j = 0; j < songCells[0].length-1; j++)//time
+			{
+				if(songCells[i][j] == CellState.START)
+				{
+					int distCounter = 0;
+					while(j<songCells[0].length-1 && songCells[i][j+1] != CellState.START && songCells[i][j] != CellState.HOLD)
+					{
+						distCounter++;
+						j++;
+						if(random.nextDouble() < 1.0 / distCounter)
+							songCells[i][j] = CellState.HOLD;
+						else 
+							break;
+					}
+				}
+			}
+		}
+		//END RHYTHM
 	}
 	
 	public NoteName getNoteName(int pitchNumber)
