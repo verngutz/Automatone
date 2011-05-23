@@ -2,12 +2,49 @@ import java.util.*;
 
 public class SongGenerator
 {
+	Random random;
+	Theory theory;
+	
+	public SongGenerator(Random random)
+	{
+		this.random = random;
+	}
+	
 	public String generateSong(Theory theory)
 	{
-		NoteThread thread = new NoteThread(theory.getBeatResolution());
+		this.theory = theory;
+		thread = new NoteThread(theory.getBeatResolution());
 		VerseGenerator vg = new VerseGenerator();
+		ArrayList<CellState[][]> generatedVerses = new ArrayList<CellState[][]>();
 		CellState[][] songCells = vg.generateVerse(theory);
-		
+		generatedVerses.add( songCells );
+		verseToThread( songCells );
+		boolean done = false;
+		double doneProb = 0;
+		while(!done)
+		{
+			System.out.println(done);
+			
+			double randGS = random.nextDouble();
+			if(randGS < ( 1.0 - doneProb ) / 2)
+			{
+				CellState[][] songCellsR = vg.generateVerse(theory);
+				generatedVerses.add( songCellsR );
+				verseToThread( songCellsR );
+			}
+			else if(randGS < 1.0 - doneProb)
+				generatedVerses.add( generatedVerses.get(random.nextInt(generatedVerses.size())) );
+			else
+				done = true;
+			doneProb += 0.10;
+		}
+		return thread.toString();
+	}
+	
+	private NoteThread thread;
+	
+	private void verseToThread(CellState[][] songCells)
+	{
 		for(int i = 0; i < songCells.length; i++)
 		{
 			for(int j = 0; j < songCells[0].length; j++)
@@ -25,8 +62,6 @@ public class SongGenerator
 				}
 			}
 		}
-		
-		return thread.toString();
 	}
 	
 	class Note implements Comparable<Note>
@@ -116,6 +151,7 @@ public class SongGenerator
 		
 		public String toString()
 		{
+			System.out.println( "Generation Complete. Now parsing to text." );
 			String thread = startTrack(1, 0, 1, "GrandPno", 127, 64, 64);
 			double timePassed = 0;
 			ArrayList<Note> activeNotes = new ArrayList<Note>();

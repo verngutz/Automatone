@@ -2,9 +2,9 @@ import java.util.*;
 
 public class BasicWesternTheory extends Theory
 {
-	public BasicWesternTheory()
+	public BasicWesternTheory(Random random)
 	{
-		super();
+		super(random);
 	}
 	
 	private static final int NUM_GENERATIONS = 100;
@@ -325,7 +325,14 @@ public class BasicWesternTheory extends Theory
 		
 		int[] progressionChangeIndices = new int[rawProgression.size()];
 		ArrayList<Integer> rands = new ArrayList<Integer>();
-		for(int i = 0; i < phraseLength; i+= SUBBEATS_PER_MEASURE)
+		int randsSize = phraseLength;
+		int increment = SUBBEATS_PER_MEASURE;
+		while(randsSize / increment < progressionChangeIndices.length)
+		{
+			randsSize *= 4;
+			increment /= 2;
+		}
+		for(int i = 0; i < randsSize; i+= increment)
 		{
 			int deviation = (int)((1 - beatHarmonicCovariance) * SUBBEATS_PER_MEASURE / 2 * random.nextDouble());
 			rands.add((random.nextDouble() < 0.5 ? i + deviation : i - deviation));

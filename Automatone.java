@@ -8,8 +8,10 @@ public class Automatone
 		FileWriter fw = new FileWriter("sample.txt");
 		fw.write("mthd\n\tversion 1\n\tunit 192\nend mthd\n\n");
 		fw.write("mtrk\n\ttact 4 / 4 24 8\n\tbeats 160\n\tkey \"Cmaj\"\nend mtrk\n\n");
-		Theory theory = new BasicWesternTheory();
-		SongGenerator sg = new SongGenerator();
+		final long SEED = 40000;
+		Random random = new Random(SEED);
+		Theory theory = new BasicWesternTheory(random);
+		SongGenerator sg = new SongGenerator(random);
 		fw.write(sg.generateSong(theory));
 		fw.close();
 	}
