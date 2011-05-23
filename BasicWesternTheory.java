@@ -7,7 +7,10 @@ public class BasicWesternTheory extends Theory
 		super(random);
 	}
 	
-	private static final int NUM_GENERATIONS = 100;
+	//AUTOMATON CONSTANTS
+	private static final int NUM_GENERATIONS = 10;
+	private static final int CROWDEDNESS_TOLERANCE = 6;
+	private static final int LONELINESS_TOLERANCE = 1;
 	
 	//KEYBOARD CONSTANTS
 	public static final NoteName NOTE_C              = new NoteName('c', ' ');
@@ -552,7 +555,7 @@ public class BasicWesternTheory extends Theory
 			return 1 - prob;
 	}
 	
-	private static final int SUBBEATS_PER_MEASURE = 8;
+	private static final int SUBBEATS_PER_MEASURE = 16;
 	private double notesMean;
 	private double beatsLoyalty;
 	
@@ -601,60 +604,98 @@ public class BasicWesternTheory extends Theory
 	{
 		initializeMelody();
 		initializeHarmony(songCells[0].length);
-		initializeRhythm(0.375, 1); //@param ( notesmean, beatsloyalty )
+		initializeRhythm(0.375, 0.6); //@param ( notesmean, beatsloyalty )
 		initializeForm();
-		CellState[][] previousState = songCells;
+		CellState[][] previousState = new CellState[songCells.length][songCells[0].length];
 		
-		//MELODY AND RANGE
-		for(int i = 0; i < songCells.length; i++)
-		{
-			
-		}
 		
-		//HARMONY
-		for(int i = 0; i < songCells.length; i++)
+		for(int x = 0; x < NUM_GENERATIONS; x++)
 		{
-			for(int j = 0; j < songCells[0].length; j++)
+			for(int i = 0; i < songCells.length; i++)
+				for(int j = 0; j < songCells[0].length; j++)
+					previousState[i][j] = songCells[i][j];
+					
+			//GAME OF LIFE
+			for(int i = 0; i < songCells.length; i++)
 			{
-				if(!(chordProgression.get(j)).contains(getNoteName(i)))
+				for(int j = 0; j < songCells[0].length; j++)
 				{
-					if(random.nextDouble() * (i / PIANO_SIZE) < tonality)
+					int crowdedness = 0;
+					for(int k = Math.max(0, i - 2); k < Math.min(songCells.length, i + 2); k++)
+					{
+						switch(previousState[k][j])
+						{	
+							case START:
+								crowdedness++;
+							case HOLD:
+								crowdedness++;
+								break;
+						}
+					}
+					if(crowdedness > CROWDEDNESS_TOLERANCE)
 					{
 						songCells[i][j] = CellState.SILENT;
 					}
+					else if(crowdedness > LONELINESS_TOLERANCE)
+					{
+						songCells[i][j] = CellState.START;
+					}
 				}
 			}
-		}
-		
-		//RHYTHM
-		for(int i = 0; i < songCells.length; i++)
-		{
-			for(int j = 0; j < songCells[0].length; j++)
+			//MELODY AND RANGE
+			for(int i = 0; i < songCells.length; i++)
 			{
-				if(random.nextDouble() < beatsProb[j%SUBBEATS_PER_MEASURE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
-					songCells[i][j] = CellState.SILENT;
-			}
-		}
-		for(int i = 0; i < songCells.length; i++)//pitch
-		{
-			for(int j = 0; j < songCells[0].length-1; j++)//time
-			{
-				if(songCells[i][j] == CellState.START)
+				for(int j = 0; j < songCells[0].length; j++)
 				{
-					int distCounter = 0;
-					while(j<songCells[0].length-1 && songCells[i][j+1] != CellState.START && songCells[i][j] != CellState.HOLD)
+					if(j > songCells[0].length - SUBBEATS_PER_MEASURE)
+						songCells[i][j] = CellState.HOLD;
+				}
+			}
+			
+			//HARMONY
+			for(int i = 0; i < songCells.length; i++)
+			{
+				for(int j = 0; j < songCells[0].length; j++)
+				{
+					if(!(chordProgression.get(j)).contains(getNoteName(i)))
 					{
-						distCounter++;
-						j++;
-						if(random.nextDouble() < 1.0 / distCounter)
-							songCells[i][j] = CellState.HOLD;
-						else 
-							break;
+						if(random.nextDouble() * (i / PIANO_SIZE) < tonality)
+						{
+							songCells[i][j] = CellState.SILENT;
+						}
 					}
 				}
 			}
 		}
-		//END RHYTHM
+			//RHYTHM
+			for(int i = 0; i < songCells.length; i++)
+			{
+				for(int j = 0; j < songCells[0].length; j++)
+				{
+					if(random.nextDouble() < beatsProb[j%SUBBEATS_PER_MEASURE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
+						songCells[i][j] = CellState.SILENT;
+				}
+			}
+			for(int i = 0; i < songCells.length; i++)//pitch
+			{
+				for(int j = 0; j < songCells[0].length-1; j++)//time
+				{
+					if(songCells[i][j] == CellState.START)
+					{
+						int distCounter = 0;
+						while(j<songCells[0].length-1 && songCells[i][j+1] != CellState.START && songCells[i][j] != CellState.HOLD)
+						{
+							distCounter++;
+							j++;
+							if(random.nextDouble() < 1.0 / distCounter)
+								songCells[i][j] = CellState.HOLD;
+							else 
+								break;
+						}
+					}
+				}
+			}
+			//END RHYTHM
 	}
 	
 	public NoteName getNoteName(int pitchNumber)
