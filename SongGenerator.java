@@ -28,12 +28,16 @@ public class SongGenerator
 			double randGS = random.nextDouble();
 			if(randGS < ( 1.0 - doneProb ) / 2)
 			{
-				CellState[][] songCellsR = vg.generateVerse(theory);
-				generatedVerses.add( songCellsR );
-				verseToThread( songCellsR );
+				songCells = vg.generateVerse(theory);
+				generatedVerses.add( songCells );
+				verseToThread( songCells );
 			}
 			else if(randGS < 1.0 - doneProb)
-				generatedVerses.add( generatedVerses.get(random.nextInt(generatedVerses.size())) );
+			{
+				songCells = generatedVerses.get(random.nextInt(generatedVerses.size()));
+				generatedVerses.add( songCells );
+				verseToThread( songCells );
+			}
 			else
 				done = true;
 			doneProb += 0.10;
