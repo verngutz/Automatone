@@ -162,7 +162,7 @@ public class BasicWesternTheory extends Theory
 	//MELODY
 	private void initializeMelody()
 	{
-		tonality = 0.7;
+		tonality = 0.8;
 	}
 	
 	private double tonality; //how much the melody notes conform to the diatonic scale of a given key versus the chromatic scale
