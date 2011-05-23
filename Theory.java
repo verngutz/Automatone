@@ -2,7 +2,7 @@ import java.util.*;
 
 public abstract class Theory
 {
-	protected Random random;
+	protected static Random random;
 	private static final long SEED = 1;
 	
 	public abstract double getBeatResolution();

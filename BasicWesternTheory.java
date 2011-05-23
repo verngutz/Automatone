@@ -159,14 +159,115 @@ public class BasicWesternTheory extends Theory
 	//MELODY
 	private void initializeMelody()
 	{
+		tonality = 0.8;
+	}
+	
+	private double tonality; //how much the melody notes conform to the diatonic scale of a given key versus the chromatic scale
+	
+	private enum ScaleMode { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR, GENERIC_MINOR }
+	
+	private static ArrayList<NoteName> createDiatonicScale(NoteName key, ScaleMode mode)
+	{
+		ArrayList<NoteName> scale = new ArrayList<NoteName>();
+		scale.add(key);
+		NoteName curr = key;
+		switch(mode)
+		{
+			case MAJOR:
+				for(int i = 0; i < 2; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				for(int i = 0; i < 3; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				break;
+			case NATURAL_MINOR:
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				for(int i = 0; i < 2; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				break;
+			case HARMONIC_MINOR:
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				for(int i = 0; i < 2; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				break;
+			case MELODIC_MINOR:
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				for(int i = 0; i < 4; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				break;
+			case GENERIC_MINOR:
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				for(int i = 0; i < 2; i++)
+				{
+					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+					scale.add(curr);
+				}
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
+				scale.add(curr);
+				break;
+		}
+		return scale;
 	}
 	
 	//HARMONY
-	private void initializeHarmony()
+	private void initializeHarmony(int phraseLength)
 	{
+		jazzyness = 0;
+		beatHarmonicCovariance = 0.9;
+		chordProgression = createChordProgression
+		(
+			CHROMATIC_SCALE[(int)(random.nextDouble() * CHROMATIC_SCALE.length)], 
+			(random.nextDouble() < 0.5 ? ScaleMode.MAJOR : ScaleMode.GENERIC_MINOR),
+			phraseLength
+		);
 	}
 	
+	private double jazzyness; //how much blue notes and sixth, seventh, ninth, etc. chords will be used.
+	private double beatHarmonicCovariance; //how much chord changes are likely to fall on strong beats.
+	private ArrayList<ArrayList<NoteName>> chordProgression;
+	
 	private enum ChordMode { MAJOR, MINOR, AUGMENTED, DIMINISHED }
+	
 	private static ArrayList<NoteName> createChord(NoteName base, ChordMode mode)
 	{
 		ArrayList<NoteName> chord = new ArrayList<NoteName>();
@@ -193,46 +294,208 @@ public class BasicWesternTheory extends Theory
 		return chord;
 	}
 	
-	private enum ScaleMode { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR }
-	
-	/**
-	private static ArrayList<ArrayList<NoteName>> createChordProgression(NoteName key, ScaleMode mode)
+	private static ArrayList<ArrayList<NoteName>> createChordProgression(NoteName key, ScaleMode mode, int phraseLength)
 	{
-		
-	}*/
-	
-	private static ArrayList<NoteName> createDiatonicScale(NoteName key, ScaleMode mode)
-	{
-		ArrayList<NoteName> scale = new ArrayList<NoteName>();
-		scale.add(key);
-		NoteName curr = key;
+		Hashtable<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = createDiatonicTriads(key, mode);
+		ArrayList<ArrayList<NoteName>> rawProgression = new ArrayList<ArrayList<NoteName>>();
+		DiatonicNumeral goalTriad;
+		DiatonicNumeral curr;
 		switch(mode)
 		{
 			case MAJOR:
-				for(int i = 0; i < 2; i++)
+				goalTriad = DiatonicNumeral.I;
+				curr = DiatonicNumeral.getRandomMajor();
+				break;
+			case NATURAL_MINOR:
+			case HARMONIC_MINOR:
+			case MELODIC_MINOR:
+			case GENERIC_MINOR:
+				goalTriad = DiatonicNumeral.i;
+				curr = DiatonicNumeral.getRandomMinor();
+				break;
+			default:
+				goalTriad = DiatonicNumeral.I;
+				curr = DiatonicNumeral.getRandomMajor();
+				break;
+		}
+		do
+		{
+			rawProgression.add(diatonicTriads.get(curr));
+			curr = getNextDiatonicTriad(curr, mode);
+		}
+		while(curr != goalTriad);
+		rawProgression.add(diatonicTriads.get(curr));
+		
+		ArrayList<ArrayList<NoteName>> organizedProgression = new ArrayList<ArrayList<NoteName>>();
+		int[] absoluteNoteDensity = new int[phraseLength];
+		int[] relativeNoteDensity = new int[phraseLength];
+		int maxAbsoluteNoteDensity = 0;
+		for(int i = 0; i < phraseLength; i++)
+		{
+			if(rawProgression.size() == 0)
+				organizedProgression.add(organizedProgression.get(i - 1));
+			else
+				organizedProgression.add(rawProgression.get(0));
+			double rand = random.nextDouble();
+			if(rand < 1.0 / phraseLength && rawProgression.size() != 0)
+				rawProgression.remove(0);
+		}
+		return organizedProgression;
+	}
+	
+	private static DiatonicNumeral getNextDiatonicTriad(DiatonicNumeral currentTriad, ScaleMode mode)
+	{
+		double rand = random.nextDouble();
+		switch(mode)
+		{
+			case MAJOR:
+				switch(currentTriad)
 				{
-					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
-					scale.add(curr);
-				}
-				curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + HALF_STEP) % CHROMATIC_SCALE.length];
-				scale.add(curr);
-				for(int i = 0; i < 3; i++)
-				{
-					curr = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(curr) + WHOLE_STEP) % CHROMATIC_SCALE.length];
-					scale.add(curr);
+					case iii:
+						return DiatonicNumeral.vi;
+					case vi:
+						if(rand < 0.33)
+							return DiatonicNumeral.ii;
+						else if(rand < 0.66)
+							return DiatonicNumeral.IV;
+						else
+							return DiatonicNumeral.N;
+					case ii:
+					case IV:
+					case N:
+						if(rand < 0.5)
+							return DiatonicNumeral.V;
+						else
+							return DiatonicNumeral.viio;
+					case viio:
+						if(rand < 0.5)
+							return DiatonicNumeral.iii;
+					case V:
+						return DiatonicNumeral.I;
+					case I:
+						return DiatonicNumeral.getRandomMajor();
 				}
 				break;
 			case NATURAL_MINOR:
-				break;
 			case HARMONIC_MINOR:
-				break;
 			case MELODIC_MINOR:
+			case GENERIC_MINOR:
+				switch(currentTriad)
+				{
+					case VII:
+						return DiatonicNumeral.III;
+					case III:
+						return DiatonicNumeral.VI;
+					case VI:
+						if(rand < 0.33)
+							return DiatonicNumeral.iio;
+						else if(rand < 0.66)
+							return DiatonicNumeral.iv;
+						else
+							return DiatonicNumeral.N;
+					case iio:
+					case iv:
+						if(rand < 0.5)
+							return DiatonicNumeral.VII;
+					case N:
+						if(rand < 0.5)
+							return DiatonicNumeral.V;
+						else
+							return DiatonicNumeral.viio;
+					case viio:
+						return DiatonicNumeral.III;
+					case i:
+						return DiatonicNumeral.getRandomMinor();
+				}
 				break;
 		}
-		return scale;
+		return null;
 	}
 	
-	private double tonality;
+	private enum DiatonicNumeral 
+	{ 
+		I, i, ii, iio, III, iii, IV, iv, V, v, VI, vi, VII, viio, N;
+		public static DiatonicNumeral getRandomMajor()
+		{
+			double rand = random.nextDouble();
+			if(rand < 1.0 / 7)
+				return I;
+			else if(rand < 2.0 / 7)
+				return ii;
+			else if(rand < 3.0 / 7)
+				return iii;
+			else if(rand < 4.0 / 7)
+				return IV;
+			else if(rand < 5.0 / 7)
+				return V;
+			else if(rand < 6.0 / 7)
+				return vi;
+			else
+				return viio;
+		}
+		public static DiatonicNumeral getRandomMinor()
+		{
+			double rand = random.nextDouble();
+			if(rand < 1.0 / 8)
+				return i;
+			else if(rand < 2.0 / 8)
+				return iio;
+			else if(rand < 3.0 / 8)
+				return III;
+			else if(rand < 4.0 / 8)
+				return iv;
+			else if(rand < 5.0 / 8)
+				return V;
+			else if(rand < 6.0 / 8)
+				return VI;
+			else if(rand < 7.0 / 8)
+				return VII;
+			else
+				return viio;
+		}
+	}
+	
+	private static Hashtable<DiatonicNumeral, ArrayList<NoteName>> createDiatonicTriads(NoteName key, ScaleMode mode)
+	{
+		Hashtable<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = new Hashtable<DiatonicNumeral, ArrayList<NoteName>>();
+		
+		switch(mode)
+		{
+			case MAJOR:
+				ArrayList<NoteName> majorScale = createDiatonicScale(key, ScaleMode.MAJOR);
+				diatonicTriads.put(DiatonicNumeral.I, createChord(majorScale.get(0), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.ii, createChord(majorScale.get(1), ChordMode.MINOR));
+				diatonicTriads.put(DiatonicNumeral.iii, createChord(majorScale.get(2), ChordMode.MINOR));
+				diatonicTriads.put(DiatonicNumeral.IV, createChord(majorScale.get(3), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.V, createChord(majorScale.get(4), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.vi, createChord(majorScale.get(5), ChordMode.MINOR));
+				diatonicTriads.put(DiatonicNumeral.viio, createChord(majorScale.get(6), ChordMode.DIMINISHED));
+				break;
+			case NATURAL_MINOR:
+			case HARMONIC_MINOR:
+			case MELODIC_MINOR:
+			case GENERIC_MINOR:
+				ArrayList<NoteName> minorScale = createDiatonicScale(key, ScaleMode.GENERIC_MINOR);
+				diatonicTriads.put(DiatonicNumeral.i, createChord(minorScale.get(0), ChordMode.MINOR));
+				diatonicTriads.put(DiatonicNumeral.iio, createChord(minorScale.get(1), ChordMode.DIMINISHED));
+				diatonicTriads.put(DiatonicNumeral.III, createChord(minorScale.get(2), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.iv, createChord(minorScale.get(3), ChordMode.MINOR));
+				diatonicTriads.put(DiatonicNumeral.v, createChord(minorScale.get(4), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.V, createChord(minorScale.get(4), ChordMode.MINOR));
+				diatonicTriads.put(DiatonicNumeral.VI, createChord(minorScale.get(5), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.VII, createChord(minorScale.get(6), ChordMode.MAJOR));
+				diatonicTriads.put(DiatonicNumeral.viio, createChord(minorScale.get(7), ChordMode.DIMINISHED));
+				break;
+		}
+		
+		diatonicTriads.put
+		(
+			DiatonicNumeral.N, 
+			createChord(CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(key) + HALF_STEP) % CHROMATIC_SCALE.length], ChordMode.MAJOR)
+		);
+		
+		return diatonicTriads;
+	}
 	
 	//RHYTHM
 	private void initializeRhythm()
@@ -285,7 +548,7 @@ public class BasicWesternTheory extends Theory
 	public void evolve(CellState[][] songCells)
 	{
 		initializeMelody();
-		initializeHarmony();
+		initializeHarmony(songCells[0].length);
 		initializeRhythm();
 		initializeForm();
 		for(int x = 0; x < NUM_GENERATIONS; x++)
@@ -294,7 +557,7 @@ public class BasicWesternTheory extends Theory
 			{
 				for(int j = 0; j < songCells[0].length; j++)
 				{
-					if(!(createChord(NOTE_C, ChordMode.MAJOR)).contains(getNoteName(i)))
+					if(!(chordProgression.get(j)).contains(getNoteName(i)))
 					{
 						if(random.nextDouble() > 0.7)
 						{
