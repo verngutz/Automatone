@@ -3,7 +3,6 @@ import java.util.*;
 public abstract class Theory
 {
 	protected static Random random;
-	
 	public abstract double getBeatResolution();
 	public abstract CellState[][] initialize();
 	public abstract void evolve(CellState[][] songCells);

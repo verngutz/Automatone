@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 mthd
 	version 1
 	unit 192
@@ -5065,3 +5067,4 @@ mtrk(1)
 	1/8;
 		-g#5 $00;
 end mtrk
+>>>>>>> 1dc8724b4758b9e26450ddd5667a4c38cd59e275
