@@ -2,9 +2,9 @@ import java.util.*;
 
 public class BasicWesternTheory extends Theory
 {
-	public BasicWesternTheory()
+	public BasicWesternTheory(Random random)
 	{
-		super();
+		super(random);
 	}
 	
 	private static final int NUM_GENERATIONS = 100;

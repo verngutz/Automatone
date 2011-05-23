@@ -3,7 +3,6 @@ import java.util.*;
 public abstract class Theory
 {
 	protected Random random;
-	private static final long SEED = 200;
 	
 	public abstract double getBeatResolution();
 	public abstract CellState[][] initialize();
@@ -11,8 +10,8 @@ public abstract class Theory
 	public abstract NoteName getNoteName(int pitchNumber);
 	public abstract int getOctave(int pitchNumber);
 	
-	public Theory()
+	public Theory(Random random)
 	{
-		random = new Random(SEED);
+		this.random = random;
 	}
 }
