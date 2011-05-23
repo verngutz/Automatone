@@ -159,7 +159,7 @@ public class BasicWesternTheory extends Theory
 	//MELODY
 	private void initializeMelody()
 	{
-		tonality = 0.8;
+		tonality = 0.7;
 	}
 	
 	private double tonality; //how much the melody notes conform to the diatonic scale of a given key versus the chromatic scale
@@ -253,7 +253,7 @@ public class BasicWesternTheory extends Theory
 	private void initializeHarmony(int phraseLength)
 	{
 		jazzyness = 0;
-		beatHarmonicCovariance = 0.9;
+		beatHarmonicCovariance = 0.7;
 		chordProgression = createChordProgression
 		(
 			CHROMATIC_SCALE[(int)(random.nextDouble() * CHROMATIC_SCALE.length)], 
@@ -294,7 +294,7 @@ public class BasicWesternTheory extends Theory
 		return chord;
 	}
 	
-	private static ArrayList<ArrayList<NoteName>> createChordProgression(NoteName key, ScaleMode mode, int phraseLength)
+	private ArrayList<ArrayList<NoteName>> createChordProgression(NoteName key, ScaleMode mode, int phraseLength)
 	{
 		Hashtable<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = createDiatonicTriads(key, mode);
 		ArrayList<ArrayList<NoteName>> rawProgression = new ArrayList<ArrayList<NoteName>>();
@@ -322,25 +322,23 @@ public class BasicWesternTheory extends Theory
 		}
 		while(curr != goalTriad);
 		rawProgression.add(diatonicTriads.get(curr));
-		System.out.println("Progression size: " + rawProgression.size());
+		
 		int[] progressionChangeIndices = new int[rawProgression.size()];
-		int lastIndex = 0;
+		ArrayList<Integer> rands = new ArrayList<Integer>();
+		for(int i = 0; i < phraseLength; i+= SUBBEATS_PER_MEASURE)
+		{
+			int deviation = (int)((1 - beatHarmonicCovariance) * SUBBEATS_PER_MEASURE / 2 * random.nextDouble());
+			rands.add((random.nextDouble() < 0.5 ? i + deviation : i - deviation));
+		}
 		for(int i = 0; i < progressionChangeIndices.length; i++)
 		{
-			progressionChangeIndices[i] = lastIndex + (int)(random.nextDouble() * (phraseLength - lastIndex));
+			int randomIndex = random.nextInt(rands.size());
+			progressionChangeIndices[i] = rands.get(randomIndex);
+			rands.remove(randomIndex);
 		}
 		Arrays.sort(progressionChangeIndices);
-		System.out.println("length: " + phraseLength);
-		System.out.println("Indices: ");
-		for(int i = 0; i < progressionChangeIndices.length; i++)
-		{
-			System.out.print(progressionChangeIndices[i] + " ");
-		}
-		ArrayList<ArrayList<NoteName>> organizedProgression = new ArrayList<ArrayList<NoteName>>();
-		int[] absoluteNoteDensity = new int[phraseLength];
-		int[] relativeNoteDensity = new int[phraseLength];
-		int maxAbsoluteNoteDensity = 0;
 		
+		ArrayList<ArrayList<NoteName>> organizedProgression = new ArrayList<ArrayList<NoteName>>();
 		int index = 0;
 		for(int i = 0; i < phraseLength; i++)
 		{
@@ -417,7 +415,8 @@ public class BasicWesternTheory extends Theory
 						else
 							return DiatonicNumeral.viio;
 					case viio:
-						return DiatonicNumeral.III;
+					case V:
+						return DiatonicNumeral.i;
 					case i:
 						return DiatonicNumeral.getRandomMinor();
 				}
@@ -516,12 +515,12 @@ public class BasicWesternTheory extends Theory
 	{
 		this.notesMean = notesMean;
 		this.beatsLoyalty = beatsLoyalty;
-		double[] beats = new double[MIN_NOTE];
-		beatsProb = new double[MIN_NOTE];
+		double[] beats = new double[SUBBEATS_PER_MEASURE];
+		beatsProb = new double[SUBBEATS_PER_MEASURE];
 		
-		for(int i=0; i<MIN_NOTE; i++)
+		for(int i=0; i<SUBBEATS_PER_MEASURE; i++)
 			beats[i] = i;
-		for(int i=0; i<MIN_NOTE; i++)
+		for(int i=0; i<SUBBEATS_PER_MEASURE; i++)
 		{
 			beatsProb[i] = ( i == 0 ?  0 : getProbability( beats, beats[i] ) );
 		}
@@ -546,8 +545,7 @@ public class BasicWesternTheory extends Theory
 			return 1 - prob;
 	}
 	
-	private static final double SUBBEATS_PER_MEASURE = 8.0;
-	private static final int MIN_NOTE = 8;
+	private static final int SUBBEATS_PER_MEASURE = 8;
 	private double notesMean;
 	private double beatsLoyalty;
 	
@@ -562,13 +560,13 @@ public class BasicWesternTheory extends Theory
 	
 	public double getBeatResolution()
 	{
-		return 1 / SUBBEATS_PER_MEASURE;
+		return 1.0 / SUBBEATS_PER_MEASURE;
 	}
 	
 	public CellState[][] initialize()
 	{
 		int numMeasures = (int)Math.round(NUM_MEASURES_LBOUND + random.nextDouble() * (NUM_MEASURES_UBOUND - NUM_MEASURES_LBOUND));
-		int phraseLength = (int)SUBBEATS_PER_MEASURE * numMeasures;
+		int phraseLength = SUBBEATS_PER_MEASURE * numMeasures;
 		CellState[][] songCells = new CellState[PIANO_SIZE][phraseLength];
 		for(int i = 0; i < PIANO_SIZE; i++)
 		{
@@ -596,22 +594,26 @@ public class BasicWesternTheory extends Theory
 	{
 		initializeMelody();
 		initializeHarmony(songCells[0].length);
-		initializeRhythm(0.375, 0.90); //@param ( notesmean, beatsloyalty )
+		initializeRhythm(0.375, 1); //@param ( notesmean, beatsloyalty )
 		initializeForm();
 		CellState[][] previousState = songCells;
 		
-		for(int x = 0; x < NUM_GENERATIONS; x++)
+		//MELODY AND RANGE
+		for(int i = 0; i < songCells.length; i++)
 		{
-			for(int i = 0; i < songCells.length; i++)
+			
+		}
+		
+		//HARMONY
+		for(int i = 0; i < songCells.length; i++)
+		{
+			for(int j = 0; j < songCells[0].length; j++)
 			{
-				for(int j = 0; j < songCells[0].length; j++)
+				if(!(chordProgression.get(j)).contains(getNoteName(i)))
 				{
-					if(!(chordProgression.get(j)).contains(getNoteName(i)))
+					if(random.nextDouble() * (i / PIANO_SIZE) < tonality)
 					{
-						if(random.nextDouble() > 0.7)
-						{
-							songCells[i][j] = CellState.SILENT;
-						}
+						songCells[i][j] = CellState.SILENT;
 					}
 				}
 			}
@@ -622,7 +624,7 @@ public class BasicWesternTheory extends Theory
 		{
 			for(int j = 0; j < songCells[0].length; j++)
 			{
-				if(random.nextDouble() < beatsProb[j%(int)MIN_NOTE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
+				if(random.nextDouble() < beatsProb[j%SUBBEATS_PER_MEASURE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
 					songCells[i][j] = CellState.SILENT;
 			}
 		}

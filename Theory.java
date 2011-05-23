@@ -3,7 +3,7 @@ import java.util.*;
 public abstract class Theory
 {
 	protected static Random random;
-	private static final long SEED = 16;
+	private static final long SEED = 1000;
 	
 	public abstract double getBeatResolution();
 	public abstract CellState[][] initialize();
