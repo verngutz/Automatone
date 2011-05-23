@@ -196,11 +196,44 @@ public class BasicWesternTheory extends Theory
 	private double tonality;
 	
 	//RHYTHM
-	private void initializeRhythm()
+	private void initializeRhythm(double notesMean, double beatsLoyalty)
 	{
+		this.notesMean = notesMean;
+		this.beatsLoyalty = beatsLoyalty;
+		double[] beats = new double[MIN_NOTE];
+		beatsProb = new double[MIN_NOTE];
+		
+		for(int i=0; i<MIN_NOTE; i++)
+			beats[i] = i;
+		for(int i=0; i<MIN_NOTE; i++)
+		{
+			beatsProb[i] = ( i == 0 ?  0 : getProbability( beats, beats[i] ) );
+		}
+	}
+	
+	private double[] beatsProb;
+	
+	private double getProbability( double[] beats, double beat )
+	{
+		return getProbability( beats, beat, 1.0, 1, beats.length - 1 );
+	}
+	
+	private double getProbability( double[] beats, double beat, double prob, int low, int high )
+	{
+		prob /= 2;
+		int mid = ( low + high ) / 2;
+		if( beats[mid] > beat )
+			return getProbability( beats, beat, prob, low, mid - 1 );
+		else if( beats[mid] < beat )
+			return getProbability( beats, beat, prob, mid + 1, high );
+		else
+			return 1 - prob;
 	}
 	
 	private static final double SUBBEATS_PER_MEASURE = 16.0;
+	private static final int MIN_NOTE = 16;
+	private double notesMean;
+	private double beatsLoyalty;
 	
 	//FORM
 	private void initializeForm()
@@ -247,8 +280,40 @@ public class BasicWesternTheory extends Theory
 	{
 		initializeMelody();
 		initializeHarmony();
-		initializeRhythm();
+		initializeRhythm(0.25, 0.80); //@param ( notesmean, beatsloyalty )
 		initializeForm();
+		CellState[][] previousState = songCells;
+		
+		//RHYTHM
+		for(int i = 0; i < songCells.length; i++)
+		{
+			for(int j = 0; j < songCells[0].length; j++)
+			{
+				if(random.nextDouble() < beatsProb[j%(int)MIN_NOTE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
+					songCells[i][j] = CellState.SILENT;
+			}
+		}
+		for(int i = 0; i < songCells.length; i++)//pitch
+		{
+			for(int j = 0; j < songCells[0].length-1; j++)//time
+			{
+				if(songCells[i][j] == CellState.START)
+				{
+					int distCounter = 0;
+					while(j<songCells[0].length-1 && songCells[i][j+1] != CellState.START && songCells[i][j] != CellState.HOLD)
+					{
+						distCounter++;
+						j++;
+						if(random.nextDouble() < 1.0 / distCounter)
+							songCells[i][j] = CellState.HOLD;
+						else 
+							break;
+					}
+				}
+			}
+		}
+		//END RHYTHM
+		
 		for(int x = 0; x < NUM_GENERATIONS; x++)
 		{
 			for(int i = 0; i < songCells.length; i++)
@@ -265,6 +330,8 @@ public class BasicWesternTheory extends Theory
 				}
 			}
 		}
+		
+		
 	}
 	
 	public NoteName getNoteName(int pitchNumber)
