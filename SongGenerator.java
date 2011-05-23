@@ -4,6 +4,8 @@ public class SongGenerator
 {
 	Random random;
 	Theory theory;
+	NoteThread thread;
+	
 	
 	public SongGenerator(Random random)
 	{
@@ -18,54 +20,59 @@ public class SongGenerator
 		ArrayList<CellState[][]> generatedVerses = new ArrayList<CellState[][]>();
 		CellState[][] songCells = vg.generateVerse(theory);
 		generatedVerses.add( songCells );
-		verseToThread( songCells );
+		
+		
 		boolean done = false;
 		double doneProb = 0;
 		while(!done)
 		{
-			System.out.println(done);
-			
 			double randGS = random.nextDouble();
 			if(randGS < ( 1.0 - doneProb ) / 2)
 			{
 				songCells = vg.generateVerse(theory);
 				generatedVerses.add( songCells );
-				verseToThread( songCells );
 			}
 			else if(randGS < 1.0 - doneProb)
 			{
 				songCells = generatedVerses.get(random.nextInt(generatedVerses.size()));
 				generatedVerses.add( songCells );
-				verseToThread( songCells );
 			}
 			else
 				done = true;
 			doneProb += 0.10;
 		}
+		
+		int measureCounter = 0;
+		for(CellState[][] cs : generatedVerses)
+		{
+			measureCounter = verseToThread(cs, measureCounter);
+		}
 		return thread.toString();
 	}
 	
-	private NoteThread thread;
 	
-	private void verseToThread(CellState[][] songCells)
+	
+	private int verseToThread(CellState[][] songCells, int globalStartMeasure)
 	{
+		int globalEndMeasure = globalStartMeasure;
 		for(int i = 0; i < songCells.length; i++)
 		{
 			for(int j = 0; j < songCells[0].length; j++)
 			{
 				if(songCells[i][j] == CellState.START)
 				{
-					int startMeasure = (int)(j * theory.getBeatResolution());
+					globalEndMeasure = globalStartMeasure + (int)(j * theory.getBeatResolution());
 					double startBeat = (j % (int) Math.round(1 / theory.getBeatResolution()) * theory.getBeatResolution());
 					
 					int integerDuration = 1;
 					for(int x = j + 1; x < songCells[0].length && songCells[i][x] == CellState.HOLD; x++)
 						integerDuration++;
 						
-					thread.addNote(new Note(theory.getNoteName(i), theory.getOctave(i), integerDuration * theory.getBeatResolution(), startMeasure, startBeat));
+					thread.addNote(new Note(theory.getNoteName(i), theory.getOctave(i), integerDuration * theory.getBeatResolution(), globalEndMeasure, startBeat));
 				}
 			}
 		}
+		return globalEndMeasure + 1;
 	}
 	
 	class Note implements Comparable<Note>
@@ -155,7 +162,6 @@ public class SongGenerator
 		
 		public String toString()
 		{
-			System.out.println( "Generation Complete. Now parsing to text." );
 			String thread = startTrack(1, 0, 1, "GrandPno", 127, 64, 64);
 			double timePassed = 0;
 			ArrayList<Note> activeNotes = new ArrayList<Note>();
