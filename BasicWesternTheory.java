@@ -75,52 +75,23 @@ public class BasicWesternTheory extends Theory
 		NOTE_B
 	};
 	
-	private static final Hashtable<NoteName, Integer> CHROMATIC_EQUIVALENTS = createChromaticEquivalents();
-	private static Hashtable<NoteName, Integer> createChromaticEquivalents()
+	private static final HashMap<NoteName, Integer> CHROMATIC_EQUIVALENTS = createChromaticEquivalents();
+	private static HashMap<NoteName, Integer> createChromaticEquivalents()
 	{
-		Hashtable<NoteName, Integer> equivalents = new Hashtable<NoteName, Integer>();
+		HashMap<NoteName, Integer> equivalents = new HashMap<NoteName, Integer>();
 		
 		equivalents.put(NOTE_C, 0);
 		equivalents.put(NOTE_C_SHARP, 1);
-		equivalents.put(NOTE_C_FLAT, 11);
-		equivalents.put(NOTE_C_DOUBLE_SHARP, 2);
-		equivalents.put(NOTE_C_DOUBLE_FLAT, 10);
-		
 		equivalents.put(NOTE_D, 2);
 		equivalents.put(NOTE_D_SHARP, 3);
-		equivalents.put(NOTE_D_FLAT, 1);
-		equivalents.put(NOTE_D_DOUBLE_SHARP, 4);
-		equivalents.put(NOTE_D_DOUBLE_FLAT, 0);
-		
 		equivalents.put(NOTE_E, 4);
-		equivalents.put(NOTE_E_SHARP, 5);
-		equivalents.put(NOTE_E_FLAT, 3);
-		equivalents.put(NOTE_E_DOUBLE_SHARP, 6);
-		equivalents.put(NOTE_E_DOUBLE_FLAT, 2);
-		
 		equivalents.put(NOTE_F, 5);
 		equivalents.put(NOTE_F_SHARP, 6);
-		equivalents.put(NOTE_F_FLAT, 4);
-		equivalents.put(NOTE_F_DOUBLE_SHARP, 7);
-		equivalents.put(NOTE_F_DOUBLE_FLAT, 3);
-		
 		equivalents.put(NOTE_G, 7);
 		equivalents.put(NOTE_G_SHARP, 8);
-		equivalents.put(NOTE_G_FLAT, 6);
-		equivalents.put(NOTE_G_DOUBLE_SHARP, 9);
-		equivalents.put(NOTE_G_DOUBLE_FLAT, 5);
-		
 		equivalents.put(NOTE_A, 9);
 		equivalents.put(NOTE_A_SHARP, 10);
-		equivalents.put(NOTE_A_FLAT, 8);
-		equivalents.put(NOTE_A_DOUBLE_SHARP, 11);
-		equivalents.put(NOTE_A_DOUBLE_FLAT, 7);
-		
 		equivalents.put(NOTE_B, 11);
-		equivalents.put(NOTE_B_SHARP, 0);
-		equivalents.put(NOTE_B_FLAT, 10);
-		equivalents.put(NOTE_B_DOUBLE_SHARP, 1);
-		equivalents.put(NOTE_B_DOUBLE_FLAT, 9);
 		
 		return equivalents;
 	}
@@ -252,18 +223,101 @@ public class BasicWesternTheory extends Theory
 	}
 	
 	//HARMONY
+	private static final double MEAN_BEATHARMONIC_COVARIANCE = 0.9;
+	private static final double BEAT_HARMONIC_COVARIANCE_OFFSET_DIVISOR = 10;
+	private static final double RANDOM_MODULATION_PROBABILITY = 0.01;
+	private static final double PERFECT_FIFTH_MODULATION_PROBABILITY = 0.20;
+	private static final double PERFECT_FOURTH_MODULATION_PROBABILITY = 0.15;
+	private static final double RELATIVE_MODE_MODULATION_PROBABILITY = 0.1;
+	private static final double ABSOLUTE_MODE_MODULATION_PROBABILITY = 0.04;
+	
 	private void initializeHarmony(int phraseLength)
 	{
 		jazzyness = 0;
-		beatHarmonicCovariance = 0.7;
+		beatHarmonicCovariance = MEAN_BEATHARMONIC_COVARIANCE;
+		double offset = random.nextDouble() / BEAT_HARMONIC_COVARIANCE_OFFSET_DIVISOR;
+		
+		if(random.nextDouble() < 0.5)
+			beatHarmonicCovariance += offset;
+		else
+			beatHarmonicCovariance -= offset;
+			
+		NoteName originalKey;
+		ScaleMode originalMode;
+		if(key == null)
+		{
+			key = CHROMATIC_SCALE[(int)(random.nextDouble() * CHROMATIC_SCALE.length)];
+			mode = (random.nextDouble() < 0.5 ? ScaleMode.MAJOR : ScaleMode.GENERIC_MINOR);
+			originalKey = key;
+			originalMode = mode;
+		}
+		else
+		{
+			originalKey = new NoteName(key.getLetter(), key.getAccidental());
+			originalMode = mode;
+			double rand = random.nextDouble();
+			double cdf = RANDOM_MODULATION_PROBABILITY;
+			if(rand < cdf)
+			{
+				key = CHROMATIC_SCALE[(int)(random.nextDouble() * CHROMATIC_SCALE.length)];
+			}
+			else 
+			{
+				cdf += PERFECT_FIFTH_MODULATION_PROBABILITY;
+				if(rand < cdf)
+				{
+					key = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(originalKey) + PERFECT_FIFTH_INTERVAL) % CHROMATIC_SCALE.length];
+				}
+				else
+				{
+					cdf += PERFECT_FOURTH_MODULATION_PROBABILITY;
+					if(rand < cdf)
+					{
+						key = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(originalKey) + PERFECT_FOURTH_INTERVAL) % CHROMATIC_SCALE.length];
+					}
+					else
+					{
+						cdf += RELATIVE_MODE_MODULATION_PROBABILITY;
+						if(rand < cdf)
+						{
+							if(mode == ScaleMode.MAJOR)
+							{
+								key = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(originalKey) + MAJOR_SIXTH_INTERVAL) % CHROMATIC_SCALE.length];
+								mode = ScaleMode.GENERIC_MINOR;
+							}
+							else
+							{
+								key = CHROMATIC_SCALE[(CHROMATIC_EQUIVALENTS.get(originalKey) + MINOR_THIRD_INTERVAL) % CHROMATIC_SCALE.length];
+								mode = ScaleMode.MAJOR;
+							}
+						}
+						else 
+						{
+							cdf += ABSOLUTE_MODE_MODULATION_PROBABILITY;
+							if(rand < cdf)
+							{
+								if(mode == ScaleMode.MAJOR)
+									mode = ScaleMode.GENERIC_MINOR;
+								else
+									mode = ScaleMode.MAJOR;
+							}
+						}
+					}
+				}
+			}
+		}
 		chordProgression = createChordProgression
 		(
-			CHROMATIC_SCALE[(int)(random.nextDouble() * CHROMATIC_SCALE.length)], 
-			(random.nextDouble() < 0.5 ? ScaleMode.MAJOR : ScaleMode.GENERIC_MINOR),
+			key, 
+			mode,
 			phraseLength
 		);
+		key = originalKey;
+		mode = originalMode;
 	}
 	
+	private NoteName key;
+	private ScaleMode mode;
 	private double jazzyness; //how much blue notes and sixth, seventh, ninth, etc. chords will be used.
 	private double beatHarmonicCovariance; //how much chord changes are likely to fall on strong beats.
 	private ArrayList<ArrayList<NoteName>> chordProgression;
@@ -298,7 +352,7 @@ public class BasicWesternTheory extends Theory
 	
 	private ArrayList<ArrayList<NoteName>> createChordProgression(NoteName key, ScaleMode mode, int phraseLength)
 	{
-		Hashtable<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = createDiatonicTriads(key, mode);
+		HashMap<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = createDiatonicTriads(key, mode);
 		ArrayList<ArrayList<NoteName>> rawProgression = new ArrayList<ArrayList<NoteName>>();
 		DiatonicNumeral goalTriad;
 		switch(mode)
@@ -324,7 +378,8 @@ public class BasicWesternTheory extends Theory
 		}
 		while(curr != goalTriad);
 		rawProgression.add(diatonicTriads.get(curr));
-		
+		System.out.println("Phrase Length: " + phraseLength);
+		System.out.println("Progression: " + rawProgression);
 		int[] progressionChangeIndices = new int[rawProgression.size()];
 		ArrayList<Integer> rands = new ArrayList<Integer>();
 		int randsSize = phraseLength;
@@ -337,7 +392,7 @@ public class BasicWesternTheory extends Theory
 		for(int i = 0; i < randsSize; i+= increment)
 		{
 			int deviation = (int)((1 - beatHarmonicCovariance) * SUBBEATS_PER_MEASURE / 2 * random.nextDouble());
-			rands.add((random.nextDouble() < 0.5 ? i + deviation : i - deviation));
+			rands.add((random.nextDouble() < 0.5 ? i + deviation : Math.max(i - deviation, 0)));
 		}
 		for(int i = 0; i < progressionChangeIndices.length; i++)
 		{
@@ -346,6 +401,13 @@ public class BasicWesternTheory extends Theory
 			rands.remove(randomIndex);
 		}
 		Arrays.sort(progressionChangeIndices);
+		
+		System.out.print("Progression Changes: ");
+		for(int i = 0; i < progressionChangeIndices.length; i++)
+		{
+			System.out.print(progressionChangeIndices[i] + " ");
+		}
+		System.out.println();
 		
 		ArrayList<ArrayList<NoteName>> organizedProgression = new ArrayList<ArrayList<NoteName>>();
 		int index = 0;
@@ -477,9 +539,9 @@ public class BasicWesternTheory extends Theory
 		}
 	}
 	
-	private static Hashtable<DiatonicNumeral, ArrayList<NoteName>> createDiatonicTriads(NoteName key, ScaleMode mode)
+	private static HashMap<DiatonicNumeral, ArrayList<NoteName>> createDiatonicTriads(NoteName key, ScaleMode mode)
 	{
-		Hashtable<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = new Hashtable<DiatonicNumeral, ArrayList<NoteName>>();
+		HashMap<DiatonicNumeral, ArrayList<NoteName>> diatonicTriads = new HashMap<DiatonicNumeral, ArrayList<NoteName>>();
 		
 		switch(mode)
 		{
@@ -564,7 +626,7 @@ public class BasicWesternTheory extends Theory
 	}
 	
 	private static final int NUM_MEASURES_LBOUND = 2;
-	private static final int NUM_MEASURES_UBOUND = 14;
+	private static final int NUM_MEASURES_UBOUND = 8;
 	
 	
 	public double getBeatResolution()
@@ -574,7 +636,7 @@ public class BasicWesternTheory extends Theory
 	
 	public CellState[][] initialize()
 	{
-		int numMeasures = (int)Math.round(NUM_MEASURES_LBOUND + random.nextDouble() * (NUM_MEASURES_UBOUND - NUM_MEASURES_LBOUND));
+		int numMeasures = (int)Math.round(NUM_MEASURES_LBOUND + Math.abs(random.nextGaussian()) * (NUM_MEASURES_UBOUND - NUM_MEASURES_LBOUND));
 		int phraseLength = SUBBEATS_PER_MEASURE * numMeasures;
 		CellState[][] songCells = new CellState[PIANO_SIZE][phraseLength];
 		for(int i = 0; i < PIANO_SIZE; i++)
@@ -603,7 +665,7 @@ public class BasicWesternTheory extends Theory
 	{
 		initializeMelody();
 		initializeHarmony(songCells[0].length);
-		initializeRhythm(0.375, 0.9); //@param ( notesmean, beatsloyalty )
+		initializeRhythm(0.375, Math.min(1, random.nextDouble() + 0.5)); //@param ( notesmean, beatsloyalty )
 		initializeForm();
 		CellState[][] previousState = new CellState[songCells.length][songCells[0].length];
 		

@@ -2,10 +2,14 @@ import java.util.*;
 
 public class SongGenerator
 {
+	private static final double INIT_DONE_PROBABILITY = 0.4;
+	private static final double INIT_REPEAT_PROBABILITY = 0.5;
+	private static final double INIT_MAKENEW_PROBABILITY = 0.5;
+	private static final double PROBABILITY_ADJUSTOR = 0.1;
+	
 	Random random;
 	Theory theory;
 	NoteThread thread;
-	
 	
 	public SongGenerator(Random random)
 	{
@@ -23,23 +27,35 @@ public class SongGenerator
 		
 		
 		boolean done = false;
-		double doneProb = 0;
+		double doneProb = INIT_DONE_PROBABILITY;
+		double repeatProb = INIT_REPEAT_PROBABILITY;
+		double makeNewProb = INIT_MAKENEW_PROBABILITY;
 		while(!done)
 		{
-			double randGS = random.nextDouble();
-			if(randGS < ( 1.0 - doneProb ) / 2)
+			if(random.nextDouble() < makeNewProb)
 			{
 				songCells = vg.generateVerse(theory);
 				generatedVerses.add( songCells );
-			}
-			else if(randGS < 1.0 - doneProb)
-			{
-				songCells = generatedVerses.get(random.nextInt(generatedVerses.size()));
-				generatedVerses.add( songCells );
+				makeNewProb -= PROBABILITY_ADJUSTOR;
+				repeatProb += PROBABILITY_ADJUSTOR;
+				doneProb += PROBABILITY_ADJUSTOR;
 			}
 			else
-				done = true;
-			doneProb += 0.10;
+			{
+				if(random.nextDouble() < repeatProb)
+				{
+					songCells = generatedVerses.get(random.nextInt(generatedVerses.size()));
+					generatedVerses.add( songCells );
+					repeatProb -= PROBABILITY_ADJUSTOR;
+					makeNewProb += PROBABILITY_ADJUSTOR;
+					doneProb += PROBABILITY_ADJUSTOR;
+				}
+				else if(random.nextDouble() < doneProb)
+				{
+					done = true;
+				}
+				
+			}
 		}
 		
 		int measureCounter = 0;
