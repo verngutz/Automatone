@@ -9,8 +9,7 @@ public class BasicWesternTheory extends Theory
 	
 	//AUTOMATON CONSTANTS
 	private static final int NUM_GENERATIONS = 10;
-	private static final int CROWDEDNESS_TOLERANCE = 6;
-	private static final int LONELINESS_TOLERANCE = 1;
+	private static final int CROWDEDNESS_TOLERANCE = 3;
 	
 	//KEYBOARD CONSTANTS
 	public static final NoteName NOTE_C              = new NoteName('c', ' ');
@@ -162,7 +161,7 @@ public class BasicWesternTheory extends Theory
 	//MELODY
 	private void initializeMelody()
 	{
-		tonality = 0.8;
+		tonality = 0.9;
 	}
 	
 	private double tonality; //how much the melody notes conform to the diatonic scale of a given key versus the chromatic scale
@@ -604,7 +603,7 @@ public class BasicWesternTheory extends Theory
 	{
 		initializeMelody();
 		initializeHarmony(songCells[0].length);
-		initializeRhythm(0.375, 0.6); //@param ( notesmean, beatsloyalty )
+		initializeRhythm(0.375, 0.9); //@param ( notesmean, beatsloyalty )
 		initializeForm();
 		CellState[][] previousState = new CellState[songCells.length][songCells[0].length];
 		
@@ -636,7 +635,7 @@ public class BasicWesternTheory extends Theory
 					{
 						songCells[i][j] = CellState.SILENT;
 					}
-					else if(crowdedness > LONELINESS_TOLERANCE)
+					else
 					{
 						songCells[i][j] = CellState.START;
 					}
@@ -666,7 +665,7 @@ public class BasicWesternTheory extends Theory
 					}
 				}
 			}
-		}
+			
 			//RHYTHM
 			for(int i = 0; i < songCells.length; i++)
 			{
@@ -695,7 +694,8 @@ public class BasicWesternTheory extends Theory
 					}
 				}
 			}
-			//END RHYTHM
+			//END RHYTHM	
+		}
 	}
 	
 	public NoteName getNoteName(int pitchNumber)

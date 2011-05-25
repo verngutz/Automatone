@@ -72,7 +72,7 @@ public class SongGenerator
 				}
 			}
 		}
-		return globalEndMeasure + 1;
+		return globalEndMeasure;
 	}
 	
 	class Note implements Comparable<Note>
