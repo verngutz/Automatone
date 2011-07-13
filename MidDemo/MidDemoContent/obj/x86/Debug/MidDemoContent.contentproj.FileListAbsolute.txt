@@ -1,0 +1,2 @@
+C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemoContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemoContent\obj\x86\Debug\audio\WavetablePrograms.xml

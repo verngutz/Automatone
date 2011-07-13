@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>audio\xact.patchx</Source>
+      <Name>audio\xact</Name>
+      <Importer>XACTPatchImporter</Importer>
+      <Processor>XACTPatchProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\xact.xnb</Output>
+      <Time>2011-07-04T09:22:00.7158203+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\ChipTune\ChipTune_C1.wav</Source>
+      <Name>audio\ChipTune\ChipTune_C1</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\ChipTune\ChipTune_C1.xnb</Output>
+      <Time>2011-07-04T09:22:45.6503906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\ChipTune\ChipTune_C2.wav</Source>
+      <Name>audio\ChipTune\ChipTune_C2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\ChipTune\ChipTune_C2.xnb</Output>
+      <Time>2011-07-04T09:22:45.5878906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\ChipTune\ChipTune_C3.wav</Source>
+      <Name>audio\ChipTune\ChipTune_C3</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\ChipTune\ChipTune_C3.xnb</Output>
+      <Time>2011-07-04T09:22:45.2441406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\ChipTune\ChipTune_C4.wav</Source>
+      <Name>audio\ChipTune\ChipTune_C4</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\ChipTune\ChipTune_C4.xnb</Output>
+      <Time>2011-07-04T09:22:45.0566406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\ChipTune\ChipTune_C5.wav</Source>
+      <Name>audio\ChipTune\ChipTune_C5</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\ChipTune\ChipTune_C5.xnb</Output>
+      <Time>2011-07-04T09:22:45.0253906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\ChipTune\ChipTune_C6.wav</Source>
+      <Name>audio\ChipTune\ChipTune_C6</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\ChipTune\ChipTune_C6.xnb</Output>
+      <Time>2011-07-04T09:22:45.0097656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA2_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoA2_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA2_4x.xnb</Output>
+      <Time>2011-07-04T09:22:59.0410156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA32.wav</Source>
+      <Name>audio\GrandPiano\PianoA32</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA32.xnb</Output>
+      <Time>2011-07-04T09:22:58.8847656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA3_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoA3_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA3_4x.xnb</Output>
+      <Time>2011-07-04T09:22:59.0097656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA43.wav</Source>
+      <Name>audio\GrandPiano\PianoA43</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA43.xnb</Output>
+      <Time>2011-07-04T09:22:58.8535156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA4_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoA4_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA4_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.9785156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA5_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoA5_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA5_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.9472656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA62_.wav</Source>
+      <Name>audio\GrandPiano\PianoA62_</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA62_.xnb</Output>
+      <Time>2011-07-04T09:22:58.8222656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoA6_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoA6_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoA6_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.9160156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC23.wav</Source>
+      <Name>audio\GrandPiano\PianoC23</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC23.xnb</Output>
+      <Time>2011-07-04T09:22:58.5722656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC2_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoC2_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC2_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.7753906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC33.wav</Source>
+      <Name>audio\GrandPiano\PianoC33</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC33.xnb</Output>
+      <Time>2011-07-04T09:22:58.4941406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC3_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoC3_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC3_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.7128906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC43.wav</Source>
+      <Name>audio\GrandPiano\PianoC43</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC43.xnb</Output>
+      <Time>2011-07-04T09:22:58.4628906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC4_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoC4_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC4_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.6816406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC53.wav</Source>
+      <Name>audio\GrandPiano\PianoC53</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC53.xnb</Output>
+      <Time>2011-07-04T09:22:58.3847656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC5_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoC5_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC5_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.6347656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC63.wav</Source>
+      <Name>audio\GrandPiano\PianoC63</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC63.xnb</Output>
+      <Time>2011-07-04T09:22:58.3378906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoC6_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoC6_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoC6_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.6035156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#23.wav</Source>
+      <Name>audio\GrandPiano\PianoD#23</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#23.xnb</Output>
+      <Time>2011-07-04T09:22:57.7910156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#2_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoD#2_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#2_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.1660156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#3_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoD#3_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#3_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.1191406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#4_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoD#4_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#4_4x.xnb</Output>
+      <Time>2011-07-04T09:22:58.0722656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#5_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoD#5_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#5_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.9941406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#63.wav</Source>
+      <Name>audio\GrandPiano\PianoD#63</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#63.xnb</Output>
+      <Time>2011-07-04T09:22:57.6972656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD#6_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoD#6_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD#6_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.8691406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD33.wav</Source>
+      <Name>audio\GrandPiano\PianoD33</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD33.xnb</Output>
+      <Time>2011-07-04T09:22:57.4316406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoD3_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoD3_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoD3_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.4941406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoE53.wav</Source>
+      <Name>audio\GrandPiano\PianoE53</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoE53.xnb</Output>
+      <Time>2011-07-04T09:22:57.3847656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF#2_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoF#2_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF#2_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.3691406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF#3_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoF#3_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF#3_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.3066406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF#4_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoF#4_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF#4_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.2441406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF#5_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoF#5_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF#5_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.2128906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF#63.wav</Source>
+      <Name>audio\GrandPiano\PianoF#63</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF#63.xnb</Output>
+      <Time>2011-07-04T09:22:57.1660156+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF#6_4x.wav</Source>
+      <Name>audio\GrandPiano\PianoF#6_4x</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF#6_4x.xnb</Output>
+      <Time>2011-07-04T09:22:57.1972656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF23.wav</Source>
+      <Name>audio\GrandPiano\PianoF23</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF23.xnb</Output>
+      <Time>2011-07-04T09:22:57.1347656+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF33.wav</Source>
+      <Name>audio\GrandPiano\PianoF33</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF33.xnb</Output>
+      <Time>2011-07-04T09:22:57.0878906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF43.wav</Source>
+      <Name>audio\GrandPiano\PianoF43</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF43.xnb</Output>
+      <Time>2011-07-04T09:22:57.0253906+08:00</Time>
+    </Item>
+    <Item>
+      <Source>audio\GrandPiano\PianoF53.wav</Source>
+      <Name>audio\GrandPiano\PianoF53</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\audio\GrandPiano\PianoF53.xnb</Output>
+      <Time>2011-07-04T09:22:56.9941406+08:00</Time>
+    </Item>
+    <Item>
+      <Source>Font.spritefont</Source>
+      <Name>Font</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\Font.xnb</Output>
+      <Time>2011-07-14T01:08:30.4287109+08:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <TargetProfile>Reach</TargetProfile>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemoContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemoContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Vernon\Documents\Dev Documents\Automatone\MidDemo\MidDemo\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Users\Vernon\Documents\Dev Documents\Automatone\XACTPatch\bin\x86\Debug\XACTPatch.dll</Key>
+        <Value>2011-07-12T17:39:10.0742187+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2010-08-23T12:41:18+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2010-08-23T12:41:18+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2010-08-23T12:41:18+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2010-08-23T12:41:18+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2010-08-23T12:41:18+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2010-08-23T12:41:18+08:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Windows\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2011-03-09T17:44:02.133789+08:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
