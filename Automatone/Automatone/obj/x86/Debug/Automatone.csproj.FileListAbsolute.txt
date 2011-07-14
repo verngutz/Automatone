@@ -1,6 +1,0 @@
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Automatone\Automatone\bin\x86\Debug\Automatone.exe
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Automatone\Automatone\bin\x86\Debug\Automatone.pdb
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Automatone\Automatone\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Automatone\Automatone\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Automatone\Automatone\obj\x86\Debug\Automatone.exe
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Automatone\Automatone\obj\x86\Debug\Automatone.pdb

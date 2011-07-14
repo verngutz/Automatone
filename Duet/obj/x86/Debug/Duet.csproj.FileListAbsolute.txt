@@ -1,6 +1,0 @@
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Duet\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Duet\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Duet\bin\x86\Debug\Duet.dll
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Duet\bin\x86\Debug\Duet.pdb
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Duet\obj\x86\Debug\Duet.dll
-C:\Users\Vernon\Documents\Dev Documents\Automatone\Duet\obj\x86\Debug\Duet.pdb

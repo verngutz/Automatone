@@ -1,5 +1,0 @@
-C:\Users\Vernon\Documents\Dev Documents\Automatone\XACTPatch\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Vernon\Documents\Dev Documents\Automatone\XACTPatch\bin\x86\Debug\XACTPatch.dll
-C:\Users\Vernon\Documents\Dev Documents\Automatone\XACTPatch\bin\x86\Debug\XACTPatch.pdb
-C:\Users\Vernon\Documents\Dev Documents\Automatone\XACTPatch\obj\x86\Debug\XACTPatch.dll
-C:\Users\Vernon\Documents\Dev Documents\Automatone\XACTPatch\obj\x86\Debug\XACTPatch.pdb

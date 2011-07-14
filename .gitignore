@@ -2,3 +2,8 @@
 *.mid
 *.class
 sample.txt
+*.cachefile
+*.user
+*.suo
+bin/
+obj/
