@@ -1,2 +1,8 @@
 *.exe
 *.class
+*.suo
+*.user
+bin/
+obj/
+*.cachefile
+*.db
