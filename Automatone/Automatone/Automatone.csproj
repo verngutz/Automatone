@@ -107,9 +107,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicWesternTheory.cs" />
+    <Compile Include="CellState.cs" />
+    <Compile Include="NoteName.cs" />
+    <Compile Include="PhraseGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Automatone.cs" />
+    <Compile Include="SongGenerator.cs" />
+    <Compile Include="Theory.cs" />
+    <Compile Include="VerseGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -123,6 +130,10 @@
     <ProjectReference Include="..\..\..\MoodSwing\MoodSwingGUI\MoodSwingGUI.csproj">
       <Project>{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}</Project>
       <Name>MoodSwingGUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Duet\Duet.csproj">
+      <Project>{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}</Project>
+      <Name>Duet</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutomatoneContent\AutomatoneContent.contentproj">
       <Name>AutomatoneContent</Name>

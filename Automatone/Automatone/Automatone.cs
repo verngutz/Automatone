@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -12,6 +14,11 @@ using Microsoft.Xna.Framework.Media;
 using MoodSwingCoreComponents;
 using MoodSwingGUI;
 
+using Duet;
+using Duet.Audio_System;
+using Duet.Render_System;
+using Duet.Input_System;
+
 namespace Automatone
 {
     /// <summary>
@@ -19,24 +26,42 @@ namespace Automatone
     /// </summary>
     public class Automatone : Microsoft.Xna.Framework.Game
     {
+        // Content Objects
+        ContentManager content;
+
+        // Graphics Objects
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // Audio Objects
+        Synthesizer synthesizer;
+        Sequencer sequencer;
+
+        // Services
+        private IAudioSystemService audioService;
+        private InputComponent input;
+
+        // Random Shit
+        private float tempoChangeSpeed = 0.0f;
+        private float tempo;
+        private bool buttonDown = false;
+        private byte instrument = 0;
+
+        //GUI
         MSButton randomButton;
-
         MSTabbedPanel inputTabs;
-
         MSButton playButton;
         MSButton rewindButton;
         MSButton forwardButton;
         MSImageHolder slider;
         MSImageHolder sliderCursor;
-
         MSPanel topLeftPanel;
         MSPanel topRightPanel;
-
         MSPanel topPanel;
         MSPanel gridPanel;
+
+        //TXT2MIDI
+        Process txt2midi;
 
         public Automatone()
         {
@@ -45,10 +70,30 @@ namespace Automatone
             MSResolution.SetVirtualResolution(50 * 16, 150 + 44 * 16);
             MSResolution.SetResolution(50 * 16, 150 + 44 * 16, false);
 
+            content = new ContentManager(Services);
             Content.RootDirectory = "Content";
 
             IsMouseVisible = true;
             Window.Title = "Automatone";
+
+            //create midi
+            StreamWriter sw = new StreamWriter("Content\\sample.txt");
+		    sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
+		    sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
+		    const int SEED = 40;
+		    MSRandom random = new MSRandom(SEED);
+		    Theory theory = new BasicWesternTheory(random);
+		    SongGenerator sg = new SongGenerator(random);
+            String song = sg.generateSong(theory);
+            System.Console.WriteLine("Song Making Done");
+		    sw.Write(song);
+            System.Console.WriteLine("Song Writing Done");
+		    sw.Close();
+
+            Process.Start(Environment.CurrentDirectory + "\\Content\\TXT2MIDI.EXE", 
+                Environment.CurrentDirectory + "\\Content\\sample.txt" + " " 
+                + Environment.CurrentDirectory + "\\Content\\audio\\SAMPLE.MID");
+            
         }
 
         /// <summary>
@@ -59,7 +104,36 @@ namespace Automatone
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Start up core DUET services
+            Duet.Global.Initialize(this);
+
+            // Service Providers
+            audioService = (IAudioSystemService)Services.GetService(typeof(IAudioSystemService));
+
+            // Initialize Audio System with game specific settings
+            AudioStartupOptions options = new AudioStartupOptions();
+            options.audioSettingsPath = "Content\\audio\\WavetablePrograms.xgs";
+            audioService.Startup(options);
+
+            synthesizer = new Synthesizer(this);
+            synthesizer.WaveBankPath = "Content\\audio\\Wave Bank.xwb";
+            synthesizer.SoundBankPath = "Content\\audio\\Sound Bank.xsb";
+            synthesizer.m_Patch = content.Load<XACTPatch>(@"content\audio\xact");
+
+            sequencer = new Sequencer(this);
+
+            // Setup MIDI routing
+            sequencer.OutputDevice = synthesizer;
+
+            // Load MIDI File
+            sequencer.LoadMidi("Content\\audio\\SAMPLE.MID");
+            sequencer.PlayMidi();
+
+            tempo = 54.0f;
+            audioService.BeatsPerMinute = (ulong)tempo;
+
+            input = new InputComponent(this);
+            this.Components.Add(input);
 
             base.Initialize();
            
@@ -261,7 +335,7 @@ namespace Automatone
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            content.Dispose();
         }
 
         /// <summary>
@@ -276,6 +350,8 @@ namespace Automatone
                 this.Exit();
 
             // TODO: Add your update logic here
+            sequencer.Update(gameTime);
+            synthesizer.Update(gameTime);
 
             base.Update(gameTime);
         }
