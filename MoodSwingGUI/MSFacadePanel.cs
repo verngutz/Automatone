@@ -56,7 +56,7 @@ namespace MoodSwingGUI
         public virtual bool HandleMouseInput(bool careIfMouseHasMoved)
         {
             bool hasEvent = false;
-            MouseState currentMouseState = MSMouse.GetState();
+            MouseState currentMouseState = Mouse.GetState();
             if (hasMouseFocus)
             {
                 if (currentMouseState != oldMouseState || !careIfMouseHasMoved)

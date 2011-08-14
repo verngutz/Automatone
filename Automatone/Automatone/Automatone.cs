@@ -31,7 +31,7 @@ namespace Automatone
 
         // Graphics Objects
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch;
 
         // Audio Objects
         Synthesizer synthesizer;
@@ -48,24 +48,7 @@ namespace Automatone
         private byte instrument = 0;
 
         //GUI
-        MSButton randomButton;
-        MSTabbedPanel inputTabs;
-        MSButton playButton;
-        MSButton rewindButton;
-        MSButton forwardButton;
-        MSImageHolder slider;
-        MSImageHolder sliderCursor;
-        MSPanel topLeftPanel;
-        MSPanel topRightPanel;
-        MSPanel topPanel;
-        MSPanel gridPanel;
-        const int CELLSIZE = 10;
-
-        //TXT2MIDI
-        Process txt2midi;
-
-        //Song Cells
-        List<CellState[,]> songCells;
+        MainScreen gameScreen;
 
         public Automatone()
         {
@@ -78,28 +61,6 @@ namespace Automatone
             IsMouseVisible = true;
             Window.Title = "Automatone";
 
-            StreamWriter sw = new StreamWriter("sample.txt");
-		    sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
-		    sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
-		    const int SEED = 40;
-		    MSRandom random = new MSRandom(SEED);
-		    Theory theory = new BasicWesternTheory(random);
-		    SongGenerator sg = new SongGenerator(random);
-            String song = sg.generateSong(theory, out songCells);
-		    sw.Write(song);
-		    sw.Close();
-
-            Process txt2midi = new Process();
-            System.Console.WriteLine(Environment.CurrentDirectory);
-            txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
-            txt2midi.StartInfo.FileName = "TXT2MIDI.exe";
-            txt2midi.StartInfo.Arguments = "sample.txt SAMPLE.MID";
-            txt2midi.StartInfo.UseShellExecute = true;
-            txt2midi.Start();
-
-            graphics.PreferredBackBufferWidth = songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE;
-            graphics.PreferredBackBufferHeight = 150 + songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE;
-            System.Console.WriteLine(graphics.PreferredBackBufferWidth + "," + graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>
@@ -133,7 +94,7 @@ namespace Automatone
 
             // Load MIDI File
             sequencer.LoadMidi("sample.mid");
-            sequencer.PlayMidi();
+            //sequencer.PlayMidi();
 
             tempo = 54.0f;
             audioService.BeatsPerMinute = (ulong)tempo;
@@ -153,186 +114,8 @@ namespace Automatone
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            gameScreen = new MainScreen(null, spriteBatch, this, graphics);
             // TODO: use this.Content to load your game content here
-
-            randomButton = new MSButton(null, null, new Rectangle(0, 0, 117, 45),
-                Content.Load<Texture2D>("random"),
-                Content.Load<Texture2D>("random"),
-                Content.Load<Texture2D>("random"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this);
-
-            playButton = new MSButton(null, null, new Rectangle(0, 0, 45, 42),
-                Content.Load<Texture2D>("play"),
-                Content.Load<Texture2D>("play"),
-                Content.Load<Texture2D>("play"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this);
-
-            rewindButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
-                Content.Load<Texture2D>("rev"),
-                Content.Load<Texture2D>("rev"),
-                Content.Load<Texture2D>("rev"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this);
-
-            forwardButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
-                Content.Load<Texture2D>("fwd"),
-                Content.Load<Texture2D>("fwd"),
-                Content.Load<Texture2D>("fwd"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this);
-
-            slider = new MSImageHolder(new Rectangle(0, 0, 101, 13), Content.Load<Texture2D>("slider"), spriteBatch, this);
-            sliderCursor = new MSImageHolder(new Rectangle(0, 0, 15, 15), Content.Load<Texture2D>("slidercursor"), spriteBatch, this);
-
-            topLeftPanel = new MSPanel(null, new Rectangle(0, 0, 30 * CELLSIZE, 150), null, Shape.RECTANGULAR, spriteBatch, this);
-
-            MSPanel basicPanel = new MSPanel(Content.Load<Texture2D>("darkblue"), new Rectangle(0, 45, 30 * CELLSIZE, 105), 6, 6, 25, 15, null, Shape.RECTANGULAR, spriteBatch, this);
-            basicPanel.AddComponent(new MSFontScalingLabel("Mood:", new Rectangle(0, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this), Alignment.TOP_LEFT);
-            basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Happy", new Rectangle(50, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this),
-                null,
-                new Rectangle(0, 0, 50, 35),
-                Content.Load<Texture2D>("radiobutton"),
-                Content.Load<Texture2D>("radiobutton"),
-                Content.Load<Texture2D>("radiobutton"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this), Alignment.MIDDLE_LEFT);
-            basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Sad", new Rectangle(50, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this),
-                null,
-                new Rectangle(0, 0, 33, 30),
-                Content.Load<Texture2D>("radiobuttonempty"),
-                Content.Load<Texture2D>("radiobuttonempty"),
-                Content.Load<Texture2D>("radiobuttonempty"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this), Alignment.BOTTOM_LEFT);
-
-            basicPanel.AddComponent(new MSFontScalingLabel("Speed:", new Rectangle(0, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this), Alignment.TOP_CENTER);
-            basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Fast", new Rectangle(50, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this),
-                null,
-                new Rectangle(0, 0, 33, 30),
-                Content.Load<Texture2D>("radiobuttonempty"),
-                Content.Load<Texture2D>("radiobuttonempty"),
-                Content.Load<Texture2D>("radiobuttonempty"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this), Alignment.MIDDLE_CENTER);
-            basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Slow", new Rectangle(50, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this),
-                null,
-                new Rectangle(0, 0, 50, 35),
-                Content.Load<Texture2D>("radiobutton"),
-                Content.Load<Texture2D>("radiobutton"),
-                Content.Load<Texture2D>("radiobutton"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                this), Alignment.BOTTOM_CENTER);
-
-            MSPanel expertPanel = new MSPanel(null, new Rectangle(), null, Shape.RECTANGULAR, spriteBatch, this);
-
-            inputTabs = new MSTabbedPanel(topLeftPanel);
-            inputTabs.AddTab(new MSTab(
-                new MSButton(
-                    new MSFontScalingLabel("Basic", new Rectangle(10, 10, 50, 25), Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, this),
-                    null,
-                    new Rectangle(0, 0, 117, 45),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    null,
-                    Shape.RECTANGULAR,
-                    spriteBatch,
-                    this),
-                new MSButton(
-                    new MSFontScalingLabel("Basic", new Rectangle(10, 10, 50, 25), Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, this),
-                    null,
-                    new Rectangle(0, 0, 117, 45),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    null,
-                    Shape.RECTANGULAR,
-                    spriteBatch,
-                    this),
-                true,
-                basicPanel));
-
-            inputTabs.AddTab(new MSTab(
-                new MSButton(
-                    new MSFontScalingLabel("Expert", new Rectangle(10, 10, 50, 25), Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, this),
-                    null,
-                    new Rectangle(117, 0, 117, 45),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    null,
-                    Shape.RECTANGULAR,
-                    spriteBatch,
-                    this),
-                new MSButton(
-                    new MSFontScalingLabel("Expert", new Rectangle(10, 10, 50, 25), Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, this),
-                    null,
-                    new Rectangle(117, 0, 117, 45),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    Content.Load<Texture2D>("tab"),
-                    null,
-                    Shape.RECTANGULAR,
-                    spriteBatch,
-                    this),
-                false,
-                expertPanel));
-
-            topLeftPanel.AddComponent(basicPanel);
-
-            topRightPanel = new MSPanel(Content.Load<Texture2D>("darkblue"), new Rectangle(30 * CELLSIZE, 0, 20 * CELLSIZE, 150), 10, 5, 85, 85, null, Shape.RECTANGULAR, spriteBatch, this);
-            topRightPanel.AddComponent(randomButton, Alignment.TOP_CENTER);
-            topRightPanel.AddComponent(playButton, Alignment.MIDDLE_CENTER);
-            topRightPanel.AddComponent(rewindButton, Alignment.MIDDLE_LEFT);
-            topRightPanel.AddComponent(forwardButton, Alignment.MIDDLE_RIGHT);
-            topRightPanel.AddComponent(slider, Alignment.BOTTOM_CENTER);
-            topRightPanel.AddComponent(sliderCursor, Alignment.BOTTOM_CENTER);
-
-            topPanel = new MSPanel(null, new Rectangle(0, 0, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE, 150), null, Shape.RECTANGULAR, spriteBatch, this);
-            topPanel.AddComponent(topLeftPanel);
-            topPanel.AddComponent(topRightPanel);
-
-            gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE), null, Shape.RECTANGULAR, spriteBatch, this);
-
-            Random r = new Random();
-            for (int i = 0; i < songCells.ElementAt<CellState[,]>(0).GetLength(0); i++)
-            {
-                for (int j = 0; j < songCells.ElementAt<CellState[,]>(0).GetLength(1); j++)
-                {
-                    gridPanel.AddComponent(
-                        new MSImageHolder(
-                            new Rectangle(
-                                gridPanel.BoundingRectangle.X + j * CELLSIZE,
-                                gridPanel.BoundingRectangle.Y + i * CELLSIZE,
-                                CELLSIZE, CELLSIZE),
-                            (songCells.ElementAt<CellState[,]>(0)[i, j] != CellState.SILENT ? Content.Load<Texture2D>("lightbox") : Content.Load<Texture2D>("darkbox")),
-                            spriteBatch,
-                            this));
-                }
-            }
         }
 
         /// <summary>
@@ -359,6 +142,8 @@ namespace Automatone
             sequencer.Update(gameTime);
             synthesizer.Update(gameTime);
 
+            gameScreen.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -371,8 +156,9 @@ namespace Automatone
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            topPanel.Draw(gameTime);
-            gridPanel.Draw(gameTime);
+
+            gameScreen.Draw(gameTime);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
