@@ -647,7 +647,7 @@ namespace Automatone
 			    return 1 - prob;
 	    }
 	
-	    private const int SUBBEATS_PER_MEASURE = 16;
+	    private const int SUBBEATS_PER_MEASURE = 8;
 	    private double notesMean;
 	    private double beatsLoyalty;
 	
@@ -696,7 +696,7 @@ namespace Automatone
 	    {
 		    initializeMelody();
 		    initializeHarmony(songCells.GetLength(1));
-		    initializeRhythm(0.375, random.GetUniform()); //@param ( notesmean, beatsloyalty )
+		    initializeRhythm(0.375, Math.Min(1, random.GetUniform() + 0.5f)); //@param ( notesmean, beatsloyalty )
 		    initializeForm();
 		    CellState[,] previousState = new CellState[songCells.GetLength(0), songCells.GetLength(1)];
 		
@@ -708,33 +708,43 @@ namespace Automatone
 					    previousState[i, j] = songCells[i, j];
 					
 			    //GAME OF LIFE
-			    for(int i = 0; i < songCells.GetLength(0); i++)
-			    {
-				    for(int j = 0; j < songCells.GetLength(1); j++)
-				    {
-					    int crowdedness = 0;
-					    for(int k = Math.Max(0, i - 2); k < Math.Min(songCells.GetLength(0), i + 2); k++)
-					    {
-						    switch(previousState[k, j])
-						    {	
-							    case CellState.START:
-								    crowdedness+=2;
-                                    break;
-							    case CellState.HOLD:
-								    crowdedness++;
-								    break;
-						    }
-					    }
-					    if(crowdedness > CROWDEDNESS_TOLERANCE)
-					    {
-						    songCells[i, j] = CellState.SILENT;
-					    }
-					    else
-					    {
-						    songCells[i, j] = CellState.START;
-					    }
-				    }
-			    }
+                int midsectionStart = 30;
+                int midsectionEnd = 20;
+                int[] crowd = { 3, 0, 3 };
+                for (int section = 0; section < 3; section++)
+                {
+                    for (int i = midsectionStart*(section%2) + (songCells.GetLength(0)-midsectionEnd)*(section/2);
+                        (i < midsectionStart && section == 0) || (i < songCells.GetLength(0) - midsectionEnd && section == 1) || i < songCells.GetLength(0);
+                        i++)
+                    {
+                        for (int j = 0; j < songCells.GetLength(1); j++)
+                        {
+                            int crowdedness = crowd[section];
+                            for (int k = Math.Max(0, i - 2); k < Math.Min(songCells.GetLength(0), i + 2); k++)
+                            {
+                                switch (previousState[k, j])
+                                {
+                                    case CellState.START:
+                                        crowdedness += 2;
+                                        break;
+                                    case CellState.HOLD:
+                                        crowdedness++;
+                                        break;
+                                }
+                            }
+                            if (crowdedness > CROWDEDNESS_TOLERANCE)
+                            {
+                                songCells[i, j] = CellState.SILENT;
+                            }
+                            else
+                            {
+                                songCells[i, j] = CellState.START;
+                            }
+                        }
+                    }
+                }
+                
+
 			    //MELODY AND RANGE
 			    for(int i = 0; i < songCells.GetLength(0); i++)
 			    {

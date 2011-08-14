@@ -29,7 +29,7 @@ namespace Automatone
 
             StreamWriter sw = new StreamWriter("sample.txt");
             sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
-            sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
+            sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats " + Automatone.TEMPO + "\n\tkey \"Cmaj\"\nend mtrk\n");
             const int SEED = 40;
             MSRandom random = new MSRandom();
             Theory theory = new BasicWesternTheory(random);
@@ -61,7 +61,7 @@ namespace Automatone
                             new MSImageHolder(
                                 new Rectangle(
                                     (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE + xOffset,
-                                    (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + i * MainScreen.CELLSIZE,
+                                    (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + (songCells.ElementAt<CellState[,]>(x).GetLength(0)-i-1) * MainScreen.CELLSIZE,
                                     MainScreen.CELLSIZE, MainScreen.CELLSIZE),
                                 (songCells.ElementAt<CellState[,]>(x)[i, j] != CellState.SILENT ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("darkbox")),
                                 (game as Automatone).spriteBatch,

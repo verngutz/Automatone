@@ -50,6 +50,8 @@ namespace Automatone
         //GUI
         public MainScreen gameScreen;
 
+        public const int TEMPO = 60;
+
         public Automatone()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -92,8 +94,7 @@ namespace Automatone
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
 
-            tempo = 54.0f;
-            audioService.BeatsPerMinute = (ulong)tempo;
+            audioService.BeatsPerMinute = TEMPO;
 
             input = new InputComponent(this);
             this.Components.Add(input);
