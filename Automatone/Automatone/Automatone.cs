@@ -77,7 +77,7 @@ namespace Automatone
             Window.Title = "Automatone";
 
             //create midi
-            StreamWriter sw = new StreamWriter("Content\\sample.txt");
+            StreamWriter sw = new StreamWriter("sample.txt");
 		    sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
 		    sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
 		    const int SEED = 40;
@@ -85,14 +85,16 @@ namespace Automatone
 		    Theory theory = new BasicWesternTheory(random);
 		    SongGenerator sg = new SongGenerator(random);
             String song = sg.generateSong(theory);
-            System.Console.WriteLine("Song Making Done");
 		    sw.Write(song);
-            System.Console.WriteLine("Song Writing Done");
 		    sw.Close();
 
-            Process.Start(Environment.CurrentDirectory + "\\Content\\TXT2MIDI.EXE", 
-                Environment.CurrentDirectory + "\\Content\\sample.txt" + " " 
-                + Environment.CurrentDirectory + "\\Content\\audio\\SAMPLE.MID");
+            Process txt2midi = new Process();
+            System.Console.WriteLine(Environment.CurrentDirectory);
+            txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+            txt2midi.StartInfo.FileName = "TXT2MIDI.exe";
+            txt2midi.StartInfo.Arguments = "sample.txt SAMPLE.MID";
+            txt2midi.StartInfo.UseShellExecute = true;
+            txt2midi.Start();
             
         }
 
@@ -126,7 +128,7 @@ namespace Automatone
             sequencer.OutputDevice = synthesizer;
 
             // Load MIDI File
-            sequencer.LoadMidi("Content\\audio\\SAMPLE.MID");
+            sequencer.LoadMidi("SAMPLE.MID");
             sequencer.PlayMidi();
 
             tempo = 54.0f;

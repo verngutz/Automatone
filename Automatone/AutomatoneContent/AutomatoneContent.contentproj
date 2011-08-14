@@ -435,12 +435,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="audio\SAMPLE.MID">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Name>SAMPLE</Name>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="audio\WavetablePrograms.xap">
       <Name>WavetablePrograms</Name>
       <Importer>XactImporter</Importer>
@@ -452,18 +446,6 @@
       <Project>{D7CCFF12-BF43-436A-9E93-FCED82F7C136}</Project>
       <Name>XACTPatch</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TXT2MIDI.EXE">
-      <Name>TXT2MIDI</Name>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="sample.txt">
-      <Name>sample</Name>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

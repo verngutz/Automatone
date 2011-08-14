@@ -31,8 +31,6 @@ namespace Automatone
 		    List<CellState[,]> generatedVerses = new List<CellState[,]>();
 		    CellState[,] songCells = vg.generateVerse(theory);
 		    generatedVerses.Add( songCells );
-
-            int i = 0;
 		
 		    bool done = false;
 		    double doneProb = INIT_DONE_PROBABILITY;
@@ -40,10 +38,8 @@ namespace Automatone
 		    double makeNewProb = INIT_MAKENEW_PROBABILITY;
 		    while(!done)
 		    {
-                System.Console.WriteLine("Generating Verses Iteration: " + i++);
 			    if(random.GetUniform() < makeNewProb)
 			    {
-                    System.Console.WriteLine("Make New Verse");
 				    songCells = vg.generateVerse(theory);
 				    generatedVerses.Add( songCells );
 				    makeNewProb -= PROBABILITY_ADJUSTOR;
@@ -55,7 +51,6 @@ namespace Automatone
 			    {
 				    if(random.GetUniform() < repeatProb)
 				    {
-                        System.Console.WriteLine("Repeat Verse");
 					    songCells = generatedVerses.ElementAt<CellState[,]>(random.GetUniformInt(generatedVerses.Count));
 					    generatedVerses.Add( songCells );
 					    repeatProb -= PROBABILITY_ADJUSTOR;
@@ -64,7 +59,6 @@ namespace Automatone
 				    }
 				    else if(random.GetUniform() < doneProb)
 				    {
-                        System.Console.WriteLine("Done");
 					    done = true;
 				    }
 				
@@ -74,9 +68,7 @@ namespace Automatone
 		    int measureCounter = 0;
 		    foreach(CellState[,] cs in generatedVerses)
 		    {
-                System.Console.WriteLine("Writing at Measure " + measureCounter);
 			    measureCounter = verseToThread(cs, measureCounter);
-                System.Console.WriteLine("Finished Writing at Measure " + measureCounter);
 		    }
 		    return thread.ToString();
 	    }
@@ -200,14 +192,6 @@ namespace Automatone
 			    List<Note> expiredNotes = new List<Note>();
 			    while(notes.Count > 0 || activeNotes.Count > 0)
 			    {
-                    
-                    System.Console.WriteLine("Time Passed: " + timePassed);
-                    if (notes.Count > 0)
-                    {
-                        System.Console.WriteLine("Next Note Time: " + notes.First<Note>().getStartMeasure() + notes.First<Note>().getStartBeat());
-                        System.Console.WriteLine(Math.Abs(notes.First<Note>().getStartMeasure() + notes.First<Note>().getStartBeat() - timePassed) <= EPSILON);
-                    }
-                    System.Console.WriteLine("Converting to String, Notes Left: " + notes.Count + ", Active Notes Left: " + activeNotes.Count);
 				    while(notes.Count > 0 && Math.Abs(notes.First<Note>().getStartMeasure() + notes.First<Note>().getStartBeat() - timePassed) <= EPSILON)
 				    {
 					    Note toActivate = notes.First<Note>();
