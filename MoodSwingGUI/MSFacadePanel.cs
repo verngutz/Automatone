@@ -50,7 +50,7 @@ namespace MoodSwingGUI
         public MSFacadePanel(Texture2D background, Rectangle boundingRectangle, float topPadding, float bottomPadding, float leftPadding, float rightPadding, Color highlight, MSToolTip toolTip, Shape shape, SpriteBatch spriteBatch, Game game)
             : base(background, boundingRectangle, topPadding, bottomPadding, leftPadding, rightPadding, highlight, toolTip, shape, spriteBatch, game) 
         {
-            HasFocus = false;
+            HasFocus = true;
         }
 
         public virtual bool HandleMouseInput(bool careIfMouseHasMoved)

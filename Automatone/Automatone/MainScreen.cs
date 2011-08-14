@@ -11,11 +11,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Automatone
 {
-    class MainScreen : MSScreen
+    public class MainScreen : MSScreen
     {
         MSButton randomButton;
         MSTabbedPanel inputTabs;
-        MSButton playButton;
+        MSCheckbox playButton;
         MSButton rewindButton;
         MSButton forwardButton;
         MSImageHolder slider;
@@ -23,9 +23,9 @@ namespace Automatone
         MSPanel topLeftPanel;
         MSPanel topRightPanel;
         MSPanel topPanel;
-        MSPanel gridPanel;
+        public MSPanel gridPanel;
 
-        const int CELLSIZE = 12;
+        public const int CELLSIZE = 12;
 
         List<CellState[,]> songCells;
 
@@ -43,7 +43,7 @@ namespace Automatone
         {
             songCells = new List<CellState[,]>();
             songCells.Add(new CellState[10, 10]);
-            randomButton = new MSButton(null, new SongRandomizer(songCells, graphics, CELLSIZE), new Rectangle(0, 0, 117, 45),
+            randomButton = new MSButton(null, new SongRandomizer(songCells), new Rectangle(0, 0, 117, 45),
                 game.Content.Load<Texture2D>("random"),
                 game.Content.Load<Texture2D>("random"),
                 game.Content.Load<Texture2D>("random"),
@@ -52,14 +52,26 @@ namespace Automatone
                 spriteBatch,
                 game);
 
-            playButton = new MSButton(null, null, new Rectangle(0, 0, 45, 42),
-                game.Content.Load<Texture2D>("play"),
-                game.Content.Load<Texture2D>("play"),
-                game.Content.Load<Texture2D>("play"),
-                null,
-                Shape.RECTANGULAR,
-                spriteBatch,
-                game);
+            playButton = new MSCheckbox(
+                new MSButton(
+                    null, new Play(), new Rectangle(0, 0, 45, 42),
+                    game.Content.Load<Texture2D>("play"),
+                    game.Content.Load<Texture2D>("play"),
+                    game.Content.Load<Texture2D>("play"),
+                    null,
+                    Shape.RECTANGULAR,
+                    spriteBatch,
+                    game),
+                new MSButton(
+                    null, new Stop(), new Rectangle(0, 0, 45, 42),
+                    game.Content.Load<Texture2D>("play"),
+                    game.Content.Load<Texture2D>("play"),
+                    game.Content.Load<Texture2D>("play"),
+                    null,
+                    Shape.RECTANGULAR,
+                    spriteBatch,
+                    game),
+                false);
 
             rewindButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
                 game.Content.Load<Texture2D>("rev"),

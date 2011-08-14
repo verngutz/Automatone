@@ -30,12 +30,12 @@ namespace Automatone
         ContentManager content;
 
         // Graphics Objects
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
         // Audio Objects
         Synthesizer synthesizer;
-        Sequencer sequencer;
+        public Sequencer sequencer;
 
         // Services
         private IAudioSystemService audioService;
@@ -48,7 +48,7 @@ namespace Automatone
         private byte instrument = 0;
 
         //GUI
-        MainScreen gameScreen;
+        public MainScreen gameScreen;
 
         public Automatone()
         {
@@ -91,10 +91,6 @@ namespace Automatone
 
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
-
-            // Load MIDI File
-            sequencer.LoadMidi("sample.mid");
-            //sequencer.PlayMidi();
 
             tempo = 54.0f;
             audioService.BeatsPerMinute = (ulong)tempo;

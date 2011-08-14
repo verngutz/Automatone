@@ -16,26 +16,22 @@ namespace Automatone
     public class SongRandomizer : MSAction
     {
         private List<CellState[,]> songCells;
-        private GraphicsDeviceManager graphics;
-        private MSPanel gridPanel;
-        private int cellsize;
-        public SongRandomizer(List<CellState[,]> songCells, GraphicsDeviceManager graphics, int cellsize)
+        public SongRandomizer(List<CellState[,]> songCells)
         {
             this.songCells = songCells;
-            this.graphics = graphics;
-            this.cellsize = cellsize;
         }
 
         public void PerformAction(Game game)
         {
             System.Console.WriteLine("Create MIDI");
-            //Create MIDI
+
+            (game as Automatone).sequencer.StopMidi();
 
             StreamWriter sw = new StreamWriter("sample.txt");
             sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
             sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
             const int SEED = 40;
-            MSRandom random = new MSRandom(SEED);
+            MSRandom random = new MSRandom();
             Theory theory = new BasicWesternTheory(random);
             SongGenerator sg = new SongGenerator(random);
             String song = sg.generateSong(theory, out songCells);
@@ -48,30 +44,50 @@ namespace Automatone
             txt2midi.StartInfo.FileName = "TXT2MIDI.exe";
             txt2midi.StartInfo.Arguments = "sample.txt SAMPLE.MID";
             txt2midi.StartInfo.UseShellExecute = true;
-            //txt2midi.Start();
-            System.Console.WriteLine("txt2midi.Start()");
+            txt2midi.Start();
 
-            gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE), null, Shape.RECTANGULAR, spriteBatch, game);
+            (game as Automatone).gameScreen.RemoveComponent((game as Automatone).gameScreen.gridPanel);
 
-            Random r = new Random();
+            (game as Automatone).gameScreen.gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * MainScreen.CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * MainScreen.CELLSIZE), null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game);
+
             for (int i = 0; i < songCells.ElementAt<CellState[,]>(0).GetLength(0); i++)
             {
                 for (int j = 0; j < songCells.ElementAt<CellState[,]>(0).GetLength(1); j++)
                 {
-                    gridPanel.AddComponent(
+                    (game as Automatone).gameScreen.gridPanel.AddComponent(
                         new MSImageHolder(
                             new Rectangle(
-                                gridPanel.BoundingRectangle.X + j * cellsize,
-                                gridPanel.BoundingRectangle.Y + i * cellsize,
-                                cellsize, cellsize),
+                                (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE,
+                                (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + i * MainScreen.CELLSIZE,
+                                MainScreen.CELLSIZE, MainScreen.CELLSIZE),
                             (songCells.ElementAt<CellState[,]>(0)[i, j] != CellState.SILENT ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("darkbox")),
                             (game as Automatone).spriteBatch,
                             game));
                 }
             }
 
-            graphics.PreferredBackBufferWidth = songCells.ElementAt<CellState[,]>(0).GetLength(1) * cellsize;
-            graphics.PreferredBackBufferHeight = 150 + songCells.ElementAt<CellState[,]>(0).GetLength(0) * cellsize;
+            (game as Automatone).gameScreen.AddComponent((game as Automatone).gameScreen.gridPanel);
+
+            (game as Automatone).graphics.PreferredBackBufferWidth = songCells.ElementAt<CellState[,]>(0).GetLength(1) * MainScreen.CELLSIZE;
+            (game as Automatone).graphics.PreferredBackBufferHeight = 150 + songCells.ElementAt<CellState[,]>(0).GetLength(0) * MainScreen.CELLSIZE;
+            (game as Automatone).graphics.ApplyChanges();
+        }
+    }
+
+    public class Play : MSAction
+    {
+        public void PerformAction(Game game)
+        {
+            (game as Automatone).sequencer.LoadMidi("sample.mid");
+            (game as Automatone).sequencer.PlayMidi();
+        }
+    }
+
+    public class Stop : MSAction
+    {
+        public void PerformAction(Game game)
+        {
+            (game as Automatone).sequencer.StopMidi();
         }
     }
 }
