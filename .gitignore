@@ -6,3 +6,4 @@ bin/
 obj/
 *.cachefile
 *.db
+*.pfx
