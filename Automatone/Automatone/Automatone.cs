@@ -94,7 +94,7 @@ namespace Automatone
             txt2midi.StartInfo.FileName = "TXT2MIDI.exe";
             txt2midi.StartInfo.Arguments = "sample.txt SAMPLE.MID";
             txt2midi.StartInfo.UseShellExecute = true;
-            txt2midi.Start();
+            //txt2midi.Start();
             
         }
 
