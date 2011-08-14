@@ -58,7 +58,7 @@ namespace Automatone
 	    public static NoteName NOTE_B_DOUBLE_SHARP = new NoteName('c', '#');
 	    public static NoteName NOTE_B_DOUBLE_FLAT  = new NoteName('a', ' ');
 
-	    private const int PIANO_SIZE = 88;
+	    private const int PIANO_SIZE = 60;
 	    private const int NOTENAME_OFFSET = 7;
 	    private const int OCTAVE_OFFSET = 9;
 	
@@ -799,7 +799,7 @@ namespace Automatone
 	
 	    public override int getOctave(int pitchNumber)
 	    {
-		    return (pitchNumber + OCTAVE_OFFSET) / CHROMATIC_SCALE.Length;
+		    return (pitchNumber + OCTAVE_OFFSET) / CHROMATIC_SCALE.Length + 1;
 	    }
 	
     }

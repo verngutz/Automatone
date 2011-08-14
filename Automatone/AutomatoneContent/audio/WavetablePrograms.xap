@@ -637,30 +637,7 @@ Wave Bank
             Last Modified Low = 4030793984;
             Last Modified High = 29889946;
         }
-	}
-
-	Wave
-	{
-		Name = PianoC7_4x;
-		File = GrandPiano\PianoC6_4x.wav;
-		Build Settings Last Modified Low = 1357864189;
-		Build Settings Last Modified High = 29889876;
-
-		Cache
-		{
-			Format Tag = 0;
-			Channels = 2;
-			Sampling Rate = 44100;
-			Bits Per Sample = 1;
-			Play Region Offset = 44;
-			Play Region Length = 450692;
-			Loop Region Offset = 0;
-			Loop Region Length = 0;
-			File Type = 1;
-			Last Modified Low = 4030793984;
-			Last Modified High = 29889946;
-		}
-	}
+    }
 
     Wave
     {
@@ -2122,63 +2099,6 @@ Sound Bank
                     Bank Name = Wave Bank;
                     Bank Index = 0;
                     Entry Name = PianoC6_4x;
-                    Entry Index = 12;
-                    Weight = 255;
-                    Weight Min = 0;
-                }
-            }
-        }
-    }
-
-	Sound
-    {
-        Name = PianoC7_4x;
-        Volume = -1200;
-        Pitch = 0;
-        Priority = 0;
-
-        Category Entry
-        {
-            Name = Default;
-        }
-
-        RPC Entry
-        {
-            RPC Name = Pitch RPC;
-        }
-
-        RPC Entry
-        {
-            RPC Name = Volume RPC;
-        }
-
-        Track
-        {
-            Volume = 0;
-            Use Filter = 0;
-
-            Play Wave Event
-            {
-                Break Loop = 0;
-                Use Speaker Position = 0;
-                Use Center Speaker = 1;
-                New Speaker Position On Loop = 1;
-                Speaker Position Angle = 0.000000;
-                Speaker Position Arc = 0.000000;
-
-                Event Header
-                {
-                    Timestamp = 0;
-                    Relative = 0;
-                    Random Recurrence = 0;
-                    Random Offset = 0;
-                }
-
-                Wave Entry
-                {
-                    Bank Name = Wave Bank;
-                    Bank Index = 0;
-                    Entry Name = PianoC7_4x;
                     Entry Index = 12;
                     Weight = 255;
                     Weight Min = 0;
@@ -4151,26 +4071,6 @@ Sound Bank
     Cue
     {
         Name = Piano_C6;
-
-        Variation
-        {
-            Variation Type = 3;
-            Variation Table Type = 1;
-            New Variation on Loop = 0;
-        }
-
-        Sound Entry
-        {
-            Name = PianoC6_4x;
-            Index = 12;
-            Weight Min = 0;
-            Weight Max = 255;
-        }
-    }
-
-	Cue
-    {
-        Name = Piano_C7;
 
         Variation
         {

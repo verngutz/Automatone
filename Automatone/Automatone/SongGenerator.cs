@@ -23,12 +23,12 @@ namespace Automatone
 		    this.random = random;
 	    }
 	
-	    public String generateSong(Theory theory)
+	    public String generateSong(Theory theory, out List<CellState[,]> generatedVerses)
 	    {
 		    this.theory = theory;
 		    thread = new NoteThread(theory.getBeatResolution());
 		    VerseGenerator vg = new VerseGenerator();
-		    List<CellState[,]> generatedVerses = new List<CellState[,]>();
+		    generatedVerses = new List<CellState[,]>();
 		    CellState[,] songCells = vg.generateVerse(theory);
 		    generatedVerses.Add( songCells );
 		

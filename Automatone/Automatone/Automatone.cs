@@ -59,16 +59,18 @@ namespace Automatone
         MSPanel topRightPanel;
         MSPanel topPanel;
         MSPanel gridPanel;
+        const int CELLSIZE = 10;
 
         //TXT2MIDI
         Process txt2midi;
 
+        //Song Cells
+        List<CellState[,]> songCells;
+
         public Automatone()
         {
             graphics = new GraphicsDeviceManager(this);
-            MSResolution.Init(ref graphics);
-            MSResolution.SetVirtualResolution(50 * 16, 150 + 44 * 16);
-            MSResolution.SetResolution(50 * 16, 150 + 44 * 16, false);
+            
 
             content = new ContentManager(Services);
             Content.RootDirectory = "Content";
@@ -76,8 +78,6 @@ namespace Automatone
             IsMouseVisible = true;
             Window.Title = "Automatone";
 
-            //create midi
-            /**
             StreamWriter sw = new StreamWriter("sample.txt");
 		    sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
 		    sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
@@ -85,7 +85,7 @@ namespace Automatone
 		    MSRandom random = new MSRandom(SEED);
 		    Theory theory = new BasicWesternTheory(random);
 		    SongGenerator sg = new SongGenerator(random);
-            String song = sg.generateSong(theory);
+            String song = sg.generateSong(theory, out songCells);
 		    sw.Write(song);
 		    sw.Close();
 
@@ -96,8 +96,10 @@ namespace Automatone
             txt2midi.StartInfo.Arguments = "sample.txt SAMPLE.MID";
             txt2midi.StartInfo.UseShellExecute = true;
             txt2midi.Start();
-             */
-            
+
+            graphics.PreferredBackBufferWidth = songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE;
+            graphics.PreferredBackBufferHeight = 150 + songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE;
+            System.Console.WriteLine(graphics.PreferredBackBufferWidth + "," + graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>
@@ -130,7 +132,7 @@ namespace Automatone
             sequencer.OutputDevice = synthesizer;
 
             // Load MIDI File
-            sequencer.LoadMidi("Piano.mid");
+            sequencer.LoadMidi("sample.mid");
             sequencer.PlayMidi();
 
             tempo = 54.0f;
@@ -193,9 +195,9 @@ namespace Automatone
             slider = new MSImageHolder(new Rectangle(0, 0, 101, 13), Content.Load<Texture2D>("slider"), spriteBatch, this);
             sliderCursor = new MSImageHolder(new Rectangle(0, 0, 15, 15), Content.Load<Texture2D>("slidercursor"), spriteBatch, this);
 
-            topLeftPanel = new MSPanel(null, new Rectangle(0, 0, 30 * 16, 150), null, Shape.RECTANGULAR, spriteBatch, this);
+            topLeftPanel = new MSPanel(null, new Rectangle(0, 0, 30 * CELLSIZE, 150), null, Shape.RECTANGULAR, spriteBatch, this);
 
-            MSPanel basicPanel = new MSPanel(Content.Load<Texture2D>("darkblue"), new Rectangle(0, 45, 30 * 16, 105), 6, 6, 25, 15, null, Shape.RECTANGULAR, spriteBatch, this);
+            MSPanel basicPanel = new MSPanel(Content.Load<Texture2D>("darkblue"), new Rectangle(0, 45, 30 * CELLSIZE, 105), 6, 6, 25, 15, null, Shape.RECTANGULAR, spriteBatch, this);
             basicPanel.AddComponent(new MSFontScalingLabel("Mood:", new Rectangle(0, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this), Alignment.TOP_LEFT);
             basicPanel.AddComponent(new MSButton(
                 new MSFontScalingLabel("Happy", new Rectangle(50, 0, 50, 25), Content.Load<SpriteFont>("Temp"), spriteBatch, this),
@@ -301,7 +303,7 @@ namespace Automatone
 
             topLeftPanel.AddComponent(basicPanel);
 
-            topRightPanel = new MSPanel(Content.Load<Texture2D>("darkblue"), new Rectangle(30 * 16, 0, 20 * 16, 150), 10, 5, 85, 85, null, Shape.RECTANGULAR, spriteBatch, this);
+            topRightPanel = new MSPanel(Content.Load<Texture2D>("darkblue"), new Rectangle(30 * CELLSIZE, 0, 20 * CELLSIZE, 150), 10, 5, 85, 85, null, Shape.RECTANGULAR, spriteBatch, this);
             topRightPanel.AddComponent(randomButton, Alignment.TOP_CENTER);
             topRightPanel.AddComponent(playButton, Alignment.MIDDLE_CENTER);
             topRightPanel.AddComponent(rewindButton, Alignment.MIDDLE_LEFT);
@@ -309,24 +311,24 @@ namespace Automatone
             topRightPanel.AddComponent(slider, Alignment.BOTTOM_CENTER);
             topRightPanel.AddComponent(sliderCursor, Alignment.BOTTOM_CENTER);
 
-            topPanel = new MSPanel(null, new Rectangle(0, 0, 50 * 16, 150), null, Shape.RECTANGULAR, spriteBatch, this);
+            topPanel = new MSPanel(null, new Rectangle(0, 0, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE, 150), null, Shape.RECTANGULAR, spriteBatch, this);
             topPanel.AddComponent(topLeftPanel);
             topPanel.AddComponent(topRightPanel);
 
-            gridPanel = new MSPanel(null, new Rectangle(0, 150, 50 * 16, 44 * 16), null, Shape.RECTANGULAR, spriteBatch, this);
+            gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE), null, Shape.RECTANGULAR, spriteBatch, this);
 
             Random r = new Random();
-            for (int i = 0; i < 44; i++)
+            for (int i = 0; i < songCells.ElementAt<CellState[,]>(0).GetLength(0); i++)
             {
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < songCells.ElementAt<CellState[,]>(0).GetLength(1); j++)
                 {
                     gridPanel.AddComponent(
                         new MSImageHolder(
                             new Rectangle(
-                                gridPanel.BoundingRectangle.X + j * 16,
-                                gridPanel.BoundingRectangle.Y + i * 16,
-                                16, 16),
-                            (r.NextDouble() > 0.8 ? Content.Load<Texture2D>("lightbox") : Content.Load<Texture2D>("darkbox")),
+                                gridPanel.BoundingRectangle.X + j * CELLSIZE,
+                                gridPanel.BoundingRectangle.Y + i * CELLSIZE,
+                                CELLSIZE, CELLSIZE),
+                            (songCells.ElementAt<CellState[,]>(0)[i, j] != CellState.SILENT ? Content.Load<Texture2D>("lightbox") : Content.Load<Texture2D>("darkbox")),
                             spriteBatch,
                             this));
                 }
