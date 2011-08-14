@@ -77,6 +77,7 @@ namespace Automatone
             Window.Title = "Automatone";
 
             //create midi
+            /**
             StreamWriter sw = new StreamWriter("sample.txt");
 		    sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
 		    sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats 140\n\tkey \"Cmaj\"\nend mtrk\n");
@@ -95,6 +96,7 @@ namespace Automatone
             txt2midi.StartInfo.Arguments = "sample.txt SAMPLE.MID";
             txt2midi.StartInfo.UseShellExecute = true;
             txt2midi.Start();
+             */
             
         }
 
@@ -128,7 +130,7 @@ namespace Automatone
             sequencer.OutputDevice = synthesizer;
 
             // Load MIDI File
-            sequencer.LoadMidi("SAMPLE.MID");
+            sequencer.LoadMidi("Piano.mid");
             sequencer.PlayMidi();
 
             tempo = 54.0f;
