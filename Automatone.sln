@@ -5,20 +5,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automatone", "Automatone\Au
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatoneContent", "Automatone\AutomatoneContent\AutomatoneContent.contentproj", "{497F80D0-8FE2-4E6D-AAF0-0362468DCABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidDemo", "MidDemo\MidDemo\MidDemo.csproj", "{E923ECF8-2244-47E7-BE5E-784DB60F3931}"
-	ProjectSection(ProjectDependencies) = postProject
-		{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1} = {026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidDemoContent", "MidDemo\MidDemoContent\MidDemoContent.contentproj", "{F1D5DCAF-0A18-4891-A085-2DF0D3214879}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duet", "Duet\Duet.csproj", "{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XACTPatch", "XACTPatch\XACTPatch.csproj", "{D7CCFF12-BF43-436A-9E93-FCED82F7C136}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingGUI", "..\MoodSwing\MoodSwingGUI\MoodSwingGUI.csproj", "{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingCoreComponents", "MoodSwingCoreComponents\MoodSwingCoreComponents.csproj", "{7D56E792-6966-4AAC-812B-2064A5C7810C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingCoreComponents", "..\MoodSwing\MoodSwingCoreComponents\MoodSwingCoreComponents.csproj", "{7D56E792-6966-4AAC-812B-2064A5C7810C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingGUI", "MoodSwingGUI\MoodSwingGUI.csproj", "{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,12 +25,6 @@ Global
 		{2245BD03-EC8C-4A40-BCB3-DF6E0EC24F5A}.Release|x86.Build.0 = Release|x86
 		{497F80D0-8FE2-4E6D-AAF0-0362468DCABF}.Debug|x86.ActiveCfg = Debug|x86
 		{497F80D0-8FE2-4E6D-AAF0-0362468DCABF}.Release|x86.ActiveCfg = Release|x86
-		{E923ECF8-2244-47E7-BE5E-784DB60F3931}.Debug|x86.ActiveCfg = Debug|x86
-		{E923ECF8-2244-47E7-BE5E-784DB60F3931}.Debug|x86.Build.0 = Debug|x86
-		{E923ECF8-2244-47E7-BE5E-784DB60F3931}.Release|x86.ActiveCfg = Release|x86
-		{E923ECF8-2244-47E7-BE5E-784DB60F3931}.Release|x86.Build.0 = Release|x86
-		{F1D5DCAF-0A18-4891-A085-2DF0D3214879}.Debug|x86.ActiveCfg = Debug|x86
-		{F1D5DCAF-0A18-4891-A085-2DF0D3214879}.Release|x86.ActiveCfg = Release|x86
 		{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}.Debug|x86.ActiveCfg = Debug|x86
 		{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}.Debug|x86.Build.0 = Debug|x86
 		{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}.Release|x86.ActiveCfg = Release|x86
@@ -46,14 +33,14 @@ Global
 		{D7CCFF12-BF43-436A-9E93-FCED82F7C136}.Debug|x86.Build.0 = Debug|x86
 		{D7CCFF12-BF43-436A-9E93-FCED82F7C136}.Release|x86.ActiveCfg = Debug|x86
 		{D7CCFF12-BF43-436A-9E93-FCED82F7C136}.Release|x86.Build.0 = Debug|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.ActiveCfg = Debug|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.Build.0 = Debug|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.ActiveCfg = Release|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.Build.0 = Release|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Debug|x86.ActiveCfg = Debug|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Debug|x86.Build.0 = Debug|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Release|x86.ActiveCfg = Release|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Release|x86.Build.0 = Release|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.ActiveCfg = Debug|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.Build.0 = Debug|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.ActiveCfg = Release|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
