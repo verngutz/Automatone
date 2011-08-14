@@ -12,8 +12,8 @@ namespace Automatone
 	    public BasicWesternTheory(MSRandom random) : base(random) { }
 	
 	    //AUTOMATON CONSTANTS
-	    private const int NUM_GENERATIONS = 10;
-	    private const int CROWDEDNESS_TOLERANCE = 3;
+	    private const int NUM_GENERATIONS = 100;
+	    private const int CROWDEDNESS_TOLERANCE = 1;
 	
 	    //KEYBOARD CONSTANTS
 	    public static NoteName NOTE_C              = new NoteName('c', ' ');
@@ -696,7 +696,7 @@ namespace Automatone
 	    {
 		    initializeMelody();
 		    initializeHarmony(songCells.GetLength(1));
-		    initializeRhythm(0.375, Math.Min(1, random.GetUniform() + 0.5)); //@param ( notesmean, beatsloyalty )
+		    initializeRhythm(0.375, random.GetUniform()); //@param ( notesmean, beatsloyalty )
 		    initializeForm();
 		    CellState[,] previousState = new CellState[songCells.GetLength(0), songCells.GetLength(1)];
 		

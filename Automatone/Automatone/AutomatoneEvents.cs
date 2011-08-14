@@ -50,25 +50,30 @@ namespace Automatone
 
             (game as Automatone).gameScreen.gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * MainScreen.CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * MainScreen.CELLSIZE), null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game);
 
-            for (int i = 0; i < songCells.ElementAt<CellState[,]>(0).GetLength(0); i++)
+            int xOffset = 0;
+            for (int x = 0; x < songCells.Count; x++)
             {
-                for (int j = 0; j < songCells.ElementAt<CellState[,]>(0).GetLength(1); j++)
+                for (int i = 0; i < songCells.ElementAt<CellState[,]>(x).GetLength(0); i++)
                 {
-                    (game as Automatone).gameScreen.gridPanel.AddComponent(
-                        new MSImageHolder(
-                            new Rectangle(
-                                (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE,
-                                (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + i * MainScreen.CELLSIZE,
-                                MainScreen.CELLSIZE, MainScreen.CELLSIZE),
-                            (songCells.ElementAt<CellState[,]>(0)[i, j] != CellState.SILENT ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("darkbox")),
-                            (game as Automatone).spriteBatch,
-                            game));
+                    for (int j = 0; j < songCells.ElementAt<CellState[,]>(x).GetLength(1); j++)
+                    {
+                        (game as Automatone).gameScreen.gridPanel.AddComponent(
+                            new MSImageHolder(
+                                new Rectangle(
+                                    (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE + xOffset,
+                                    (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + i * MainScreen.CELLSIZE,
+                                    MainScreen.CELLSIZE, MainScreen.CELLSIZE),
+                                (songCells.ElementAt<CellState[,]>(x)[i, j] != CellState.SILENT ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("darkbox")),
+                                (game as Automatone).spriteBatch,
+                                game));
+                    }
                 }
+                xOffset += songCells.ElementAt<CellState[,]>(x).GetLength(1) * MainScreen.CELLSIZE;
             }
 
             (game as Automatone).gameScreen.AddComponent((game as Automatone).gameScreen.gridPanel);
 
-            (game as Automatone).graphics.PreferredBackBufferWidth = songCells.ElementAt<CellState[,]>(0).GetLength(1) * MainScreen.CELLSIZE;
+            (game as Automatone).graphics.PreferredBackBufferWidth = 800;
             (game as Automatone).graphics.PreferredBackBufferHeight = 150 + songCells.ElementAt<CellState[,]>(0).GetLength(0) * MainScreen.CELLSIZE;
             (game as Automatone).graphics.ApplyChanges();
         }
@@ -88,6 +93,24 @@ namespace Automatone
         public void PerformAction(Game game)
         {
             (game as Automatone).sequencer.StopMidi();
+        }
+    }
+
+    public class MoveLeft : MSAction
+    {
+        public void PerformAction(Game game)
+        {
+            (game as Automatone).gameScreen.GridMove = true;
+            (game as Automatone).gameScreen.MoveDirection = false;
+        }
+    }
+
+    public class MoveRight : MSAction
+    {
+        public void PerformAction(Game game)
+        {
+            (game as Automatone).gameScreen.GridMove = true;
+            (game as Automatone).gameScreen.MoveDirection = true;
         }
     }
 }

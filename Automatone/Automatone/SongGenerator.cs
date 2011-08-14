@@ -31,7 +31,7 @@ namespace Automatone
 		    generatedVerses = new List<CellState[,]>();
 		    CellState[,] songCells = vg.generateVerse(theory);
 		    generatedVerses.Add( songCells );
-		
+
 		    bool done = false;
 		    double doneProb = INIT_DONE_PROBABILITY;
 		    double repeatProb = INIT_REPEAT_PROBABILITY;

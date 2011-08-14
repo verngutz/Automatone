@@ -8,6 +8,7 @@ using MoodSwingCoreComponents;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Automatone
 {
@@ -29,6 +30,13 @@ namespace Automatone
 
         List<CellState[,]> songCells;
 
+        public bool GridMove { set; get; }
+        public bool MoveDirection { set; get; }
+        int moveVal = 0;
+
+        const int MOVE = 1;
+        const int MOVE_LIMIT = 25;
+
         public MainScreen(Texture2D background, SpriteBatch spriteBatch, Game game, GraphicsDeviceManager graphics)
             : this(background, 0, 0, 0, 0, Color.White, spriteBatch, game, graphics) { }
         
@@ -42,7 +50,7 @@ namespace Automatone
             : base(background, topPadding, bottomPadding, leftPadding, rightPadding, highlight, spriteBatch, game)
         {
             songCells = new List<CellState[,]>();
-            songCells.Add(new CellState[10, 10]);
+            songCells.Add(new CellState[0, 0]);
             randomButton = new MSButton(null, new SongRandomizer(songCells), new Rectangle(0, 0, 117, 45),
                 game.Content.Load<Texture2D>("random"),
                 game.Content.Load<Texture2D>("random"),
@@ -64,16 +72,16 @@ namespace Automatone
                     game),
                 new MSButton(
                     null, new Stop(), new Rectangle(0, 0, 45, 42),
-                    game.Content.Load<Texture2D>("play"),
-                    game.Content.Load<Texture2D>("play"),
-                    game.Content.Load<Texture2D>("play"),
+                    game.Content.Load<Texture2D>("stop"),
+                    game.Content.Load<Texture2D>("stop"),
+                    game.Content.Load<Texture2D>("stop"),
                     null,
                     Shape.RECTANGULAR,
                     spriteBatch,
                     game),
                 false);
 
-            rewindButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
+            rewindButton = new MSButton(null, new MoveLeft(), new Rectangle(0, 0, 33, 36),
                 game.Content.Load<Texture2D>("rev"),
                 game.Content.Load<Texture2D>("rev"),
                 game.Content.Load<Texture2D>("rev"),
@@ -82,7 +90,7 @@ namespace Automatone
                 spriteBatch,
                 game);
 
-            forwardButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
+            forwardButton = new MSButton(null, new MoveRight(), new Rectangle(0, 0, 33, 36),
                 game.Content.Load<Texture2D>("fwd"),
                 game.Content.Load<Texture2D>("fwd"),
                 game.Content.Load<Texture2D>("fwd"),
@@ -94,12 +102,12 @@ namespace Automatone
             slider = new MSImageHolder(new Rectangle(0, 0, 101, 13), game.Content.Load<Texture2D>("slider"), spriteBatch, game);
             sliderCursor = new MSImageHolder(new Rectangle(0, 0, 15, 15), game.Content.Load<Texture2D>("slidercursor"), spriteBatch, game);
 
-            topLeftPanel = new MSPanel(null, new Rectangle(0, 0, 30 * CELLSIZE, 150), null, Shape.RECTANGULAR, spriteBatch, game);
+            topLeftPanel = new MSPanel(null, new Rectangle(0, 0, 400, 150), null, Shape.RECTANGULAR, spriteBatch, game);
 
-            MSPanel basicPanel = new MSPanel(game.Content.Load<Texture2D>("darkblue"), new Rectangle(0, 45, 30 * CELLSIZE, 105), 6, 6, 25, 15, null, Shape.RECTANGULAR, spriteBatch, game);
-            basicPanel.AddComponent(new MSFontScalingLabel("Mood:", new Rectangle(0, 0, 50, 25), game.Content.Load<SpriteFont>("Temp"), spriteBatch, game), Alignment.TOP_LEFT);
+            MSPanel basicPanel = new MSPanel(null, new Rectangle(0, 45, 30 * CELLSIZE, 105), 6, 6, 25, 15, null, Shape.RECTANGULAR, spriteBatch, game);
+            basicPanel.AddComponent(new MSWrappingLabel(new Point(0, 0), "Mood:",  game.Content.Load<SpriteFont>("Temp"), Color.White, null, null, null, spriteBatch, game), Alignment.TOP_LEFT);
             basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Happy", new Rectangle(50, 0, 50, 25), game.Content.Load<SpriteFont>("Temp"), spriteBatch, game),
+                new MSWrappingLabel(new Point(50, 0), "Happy", game.Content.Load<SpriteFont>("Temp"), Color.White, null, null, null, spriteBatch, game),
                 null,
                 new Rectangle(0, 0, 50, 35),
                 game.Content.Load<Texture2D>("radiobutton"),
@@ -110,7 +118,7 @@ namespace Automatone
                 spriteBatch,
                 game), Alignment.MIDDLE_LEFT);
             basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Sad", new Rectangle(50, 0, 50, 25), game.Content.Load<SpriteFont>("Temp"), spriteBatch, game),
+                new MSWrappingLabel(new Point(50, 0), "Sad", game.Content.Load<SpriteFont>("Temp"), Color.White, null, null, null, spriteBatch, game),
                 null,
                 new Rectangle(0, 0, 33, 30),
                 game.Content.Load<Texture2D>("radiobuttonempty"),
@@ -121,9 +129,9 @@ namespace Automatone
                 spriteBatch,
                 game), Alignment.BOTTOM_LEFT);
 
-            basicPanel.AddComponent(new MSFontScalingLabel("Speed:", new Rectangle(0, 0, 50, 25), game.Content.Load<SpriteFont>("Temp"), spriteBatch, game), Alignment.TOP_CENTER);
+            basicPanel.AddComponent(new MSWrappingLabel(new Point(0, 0), "Speed:", game.Content.Load<SpriteFont>("Temp"), Color.White, null, null, null, spriteBatch, game), Alignment.TOP_CENTER);
             basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Fast", new Rectangle(50, 0, 50, 25), game.Content.Load<SpriteFont>("Temp"), spriteBatch, game),
+                new MSWrappingLabel(new Point(50, 0), "Fast", game.Content.Load<SpriteFont>("Temp"), Color.White, null, null, null, spriteBatch, game),
                 null,
                 new Rectangle(0, 0, 33, 30),
                 game.Content.Load<Texture2D>("radiobuttonempty"),
@@ -134,7 +142,7 @@ namespace Automatone
                 spriteBatch,
                 game), Alignment.MIDDLE_CENTER);
             basicPanel.AddComponent(new MSButton(
-                new MSFontScalingLabel("Slow", new Rectangle(50, 0, 50, 25), game.Content.Load<SpriteFont>("Temp"), spriteBatch, game),
+                new MSWrappingLabel(new Point(50, 0), "Slow", game.Content.Load<SpriteFont>("Temp"), Color.White, null, null, null, spriteBatch, game),
                 null,
                 new Rectangle(0, 0, 50, 35),
                 game.Content.Load<Texture2D>("radiobutton"),
@@ -150,7 +158,7 @@ namespace Automatone
             inputTabs = new MSTabbedPanel(topLeftPanel);
             inputTabs.AddTab(new MSTab(
                 new MSButton(
-                    new MSFontScalingLabel("Basic", new Rectangle(10, 10, 50, 25), game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, game),
+                    new MSWrappingLabel(new Point(10, 10), "Basic", game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, null, null, null, spriteBatch, game),
                     null,
                     new Rectangle(0, 0, 117, 45),
                     game.Content.Load<Texture2D>("tab"),
@@ -161,7 +169,7 @@ namespace Automatone
                     spriteBatch,
                     game),
                 new MSButton(
-                    new MSFontScalingLabel("Basic", new Rectangle(10, 10, 50, 25), game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, game),
+                    new MSWrappingLabel(new Point(10, 10), "Basic", game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, null, null, null, spriteBatch, game),
                     null,
                     new Rectangle(0, 0, 117, 45),
                     game.Content.Load<Texture2D>("tab"),
@@ -176,7 +184,7 @@ namespace Automatone
 
             inputTabs.AddTab(new MSTab(
                 new MSButton(
-                    new MSFontScalingLabel("Expert", new Rectangle(10, 10, 50, 25), game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, game),
+                    new MSWrappingLabel(new Point(10, 10), "Expert", game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, null, null, null, spriteBatch, game),
                     null,
                     new Rectangle(117, 0, 117, 45),
                     game.Content.Load<Texture2D>("tab"),
@@ -187,7 +195,7 @@ namespace Automatone
                     spriteBatch,
                     game),
                 new MSButton(
-                    new MSFontScalingLabel("Expert", new Rectangle(10, 10, 50, 25), game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, spriteBatch, game),
+                    new MSWrappingLabel(new Point(10, 10), "Expert", game.Content.Load<SpriteFont>("Temp"), Color.LightBlue, null, null, null, spriteBatch, game),
                     null,
                     new Rectangle(117, 0, 117, 45),
                     game.Content.Load<Texture2D>("tab"),
@@ -202,7 +210,9 @@ namespace Automatone
 
             topLeftPanel.AddComponent(basicPanel);
 
-            topRightPanel = new MSPanel(game.Content.Load<Texture2D>("darkblue"), new Rectangle(30 * CELLSIZE, 0, 20 * CELLSIZE, 150), 10, 5, 85, 85, null, Shape.RECTANGULAR, spriteBatch, game);
+
+            topRightPanel = new MSPanel(null, new Rectangle(400, 0, 400, 150), 10, 5, 85, 85, null, Shape.RECTANGULAR, spriteBatch, game);
+
             topRightPanel.AddComponent(randomButton, Alignment.TOP_CENTER);
             topRightPanel.AddComponent(playButton, Alignment.MIDDLE_CENTER);
             topRightPanel.AddComponent(rewindButton, Alignment.MIDDLE_LEFT);
@@ -210,34 +220,50 @@ namespace Automatone
             topRightPanel.AddComponent(slider, Alignment.BOTTOM_CENTER);
             topRightPanel.AddComponent(sliderCursor, Alignment.BOTTOM_CENTER);
 
-            topPanel = new MSPanel(null, new Rectangle(0, 0, songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE, 150), null, Shape.RECTANGULAR, spriteBatch, game);
+            topPanel = new MSPanel(null, new Rectangle(0, 0, 800, 150), null, Shape.RECTANGULAR, spriteBatch, game);
             topPanel.AddComponent(topLeftPanel);
             topPanel.AddComponent(topRightPanel);
 
             gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE), null, Shape.RECTANGULAR, spriteBatch, game);
-
-            for (int i = 0; i < songCells.ElementAt<CellState[,]>(0).GetLength(0); i++)
-            {
-                for (int j = 0; j < songCells.ElementAt<CellState[,]>(0).GetLength(1); j++)
-                {
-                    gridPanel.AddComponent(
-                        new MSImageHolder(
-                            new Rectangle(
-                                gridPanel.BoundingRectangle.X + j * CELLSIZE,
-                                gridPanel.BoundingRectangle.Y + i * CELLSIZE,
-                                CELLSIZE, CELLSIZE),
-                            (songCells.ElementAt<CellState[,]>(0)[i, j] != CellState.SILENT ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("darkbox")),
-                            spriteBatch,
-                            game));
-                }
-            }
+            
             AddComponent(topPanel);
             AddComponent(gridPanel);
-            AddComponent(randomButton);
+
+            GridMove = false;
         }
 
         public override void Update(GameTime gameTime)
         {
+            if(Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                foreach (MSGUIUnclickable component in gridPanel.UnclickableComponents)
+                {
+                    component.Position = new Vector2(component.Position.X + MOVE, component.Position.Y);
+                }
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                foreach (MSGUIUnclickable component in gridPanel.UnclickableComponents)
+                {
+                    component.Position = new Vector2(component.Position.X - MOVE, component.Position.Y);
+                }
+            }
+            if (GridMove)
+            {
+                foreach (MSGUIUnclickable component in gridPanel.UnclickableComponents)
+                {
+                    component.Position = new Vector2(component.Position.X + (MoveDirection ? -MOVE : MOVE), component.Position.Y);
+                }
+
+                moveVal++;
+
+                if (moveVal >= MOVE_LIMIT)
+                {
+                    GridMove = false;
+                    moveVal = 0;
+                }
+
+            }
             HandleMouseInput(false);
  	        base.Update(gameTime);
         }
