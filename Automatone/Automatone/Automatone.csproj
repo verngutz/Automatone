@@ -109,6 +109,8 @@
   <ItemGroup>
     <Compile Include="BasicWesternTheory.cs" />
     <Compile Include="CellState.cs" />
+    <Compile Include="MainScreen.cs" />
+    <Compile Include="SongRandomizer.cs" />
     <Compile Include="NoteName.cs" />
     <Compile Include="PhraseGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
