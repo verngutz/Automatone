@@ -245,8 +245,8 @@ namespace Duet.Audio_System
             }
             catch (Exception e)
             {
-                Console.WriteLine("Attempting to create " + resourceName);
-                Console.WriteLine(e.Message);
+                //Console.WriteLine("Attempting to create " + resourceName);
+                //Console.WriteLine(e.Message);
             }
         }
 

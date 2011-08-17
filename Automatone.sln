@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duet", "Duet\Duet.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XACTPatch", "XACTPatch\XACTPatch.csproj", "{D7CCFF12-BF43-436A-9E93-FCED82F7C136}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingGUI", "..\MoodSwing\MoodSwingGUI\MoodSwingGUI.csproj", "{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingCoreComponents", "MoodSwingCoreComponents\MoodSwingCoreComponents.csproj", "{7D56E792-6966-4AAC-812B-2064A5C7810C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingCoreComponents", "..\MoodSwing\MoodSwingCoreComponents\MoodSwingCoreComponents.csproj", "{7D56E792-6966-4AAC-812B-2064A5C7810C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoodSwingGUI", "MoodSwingGUI\MoodSwingGUI.csproj", "{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +33,14 @@ Global
 		{D7CCFF12-BF43-436A-9E93-FCED82F7C136}.Debug|x86.Build.0 = Debug|x86
 		{D7CCFF12-BF43-436A-9E93-FCED82F7C136}.Release|x86.ActiveCfg = Debug|x86
 		{D7CCFF12-BF43-436A-9E93-FCED82F7C136}.Release|x86.Build.0 = Debug|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.ActiveCfg = Debug|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.Build.0 = Debug|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.ActiveCfg = Release|x86
-		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.Build.0 = Release|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Debug|x86.ActiveCfg = Debug|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Debug|x86.Build.0 = Debug|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Release|x86.ActiveCfg = Release|x86
 		{7D56E792-6966-4AAC-812B-2064A5C7810C}.Release|x86.Build.0 = Release|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.ActiveCfg = Debug|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Debug|x86.Build.0 = Debug|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.ActiveCfg = Release|x86
+		{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
