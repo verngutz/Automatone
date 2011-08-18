@@ -50,7 +50,8 @@ namespace Automatone
         //GUI
         public MainScreen gameScreen;
 
-        public const int TEMPO = 60;
+        public const int TEMPO = 100;
+        public SongGenerator2 generator;
 
         public Automatone()
         {
@@ -62,7 +63,7 @@ namespace Automatone
 
             IsMouseVisible = true;
             Window.Title = "Automatone";
-
+            generator = new SongGenerator2(this);
         }
 
         /// <summary>
@@ -100,6 +101,7 @@ namespace Automatone
             this.Components.Add(input);
 
             base.Initialize();
+            generator.SongTest();
            
         }
 
@@ -136,6 +138,7 @@ namespace Automatone
                 this.Exit();
 
             // TODO: Add your update logic here
+            generator.Play();
             sequencer.Update(gameTime);
             synthesizer.Update(gameTime);
 

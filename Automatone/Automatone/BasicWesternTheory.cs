@@ -708,8 +708,8 @@ namespace Automatone
 					    previousState[i, j] = songCells[i, j];
 					
 			    //GAME OF LIFE
-                int midsectionStart = 30;
-                int midsectionEnd = 20;
+                int midsectionStart = 10;
+                int midsectionEnd = 10;
                 int[] crowd = { 3, 0, 3 };
                 for (int section = 0; section < 3; section++)
                 {
