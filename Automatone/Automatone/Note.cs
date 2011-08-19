@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Automatone
+{
+    public class Note : IComparable<Note>
+    {
+        private NoteName noteName;
+        private int octave;
+        private double remainingDuration;
+        private int startMeasure;
+        private double startBeat;
+
+        //octave - should be between ?
+        //duration - 1 means whole note, 0.5 means half note, and so on
+        //start_measure - start counting at 0
+        //start_beat - 0 means start immediately once start_measure has been reached, 
+        //             0.5 means start a half note after start_measure has been reached, and so on.
+        public Note(NoteName note_name, int octave, double duration, int start_measure, double start_beat)
+        {
+            this.noteName = note_name;
+            this.octave = octave;
+            this.remainingDuration = duration;
+            this.startMeasure = start_measure;
+            this.startBeat = start_beat;
+        }
+
+        public int getStartMeasure()
+        {
+            return startMeasure;
+        }
+
+        public double getStartBeat()
+        {
+            return startBeat;
+        }
+
+        //beat_resolution will be passed by NoteThread and should ideally be less than the initial duration of any Note
+        public double update(double beat_resolution)
+        {
+            remainingDuration -= beat_resolution;
+            return remainingDuration;
+        }
+
+        public override String ToString()
+        {
+            return noteName.ToString() + octave;
+        }
+
+        public int CompareTo(Note n)
+        {
+            return (int)Math.Round((startMeasure + startBeat) * 100 - (n.startMeasure + n.startBeat) * 100);
+        }
+    }
+}

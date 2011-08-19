@@ -8,15 +8,16 @@ namespace Automatone
 {
     public class Verse
     {
-        List<Phrase> phrases;
-        public enum CADENCE_NAMES { HALF, AUTHENTIC, PLAGAL, DECEPTIVE, SILENT };
-		static double[][] CADENCES = new double[][] { new double[] {0, 1, 0.3, 0.6}, new double[] {1, 0, 0.5, 0.2} };
-		const double CADENCE_SMOOTHNESS = 0.5;
-        Automatone aut;
-        public Verse(Automatone aut, Random rand)
+        private List<Phrase> verse;
+
+        private CellState[,] grid;
+        public CellState[,] Grid { get { return grid; } }
+
+        public Verse(MusicTheory theory, Random rand)
         {
-            phrases = new List<Phrase>();
-            int verseLength = 8;
+            verse = new List<Phrase>();
+            int verseLength = (int)(theory.MEAN_VERSE_LENGTHINESS * InputParameters.meanVerseLength);
+            verseLength += (int)(verseLength * ((rand.Next() - 0.5) * InputParameters.verseLengthVariance));
 		    List<double> fractalCurve = Enumerable.Repeat<double>(1.0, verseLength).ToList<double>();
             
 		    int x = verseLength;
@@ -28,7 +29,7 @@ namespace Automatone
 				    {
 					    if((j + 1) % x != 0)
 					    {
-						    fractalCurve[j] *= CADENCE_SMOOTHNESS;
+						    fractalCurve[j] *= theory.CADENCE_SMOOTHNESS;
 					    }
 				    }
 				    x /= i;
@@ -42,7 +43,7 @@ namespace Automatone
 				    a = 1;
 			    }
 			    double sum = 0;
-			    foreach(double j in CADENCES[a])
+			    foreach(double j in MusicTheory.CADENCES[a])
 			    {
 				    sum += j;
 			    }
@@ -50,38 +51,42 @@ namespace Automatone
                 bool addDefaultPhrase = true;
 			    for(int j = 0; j < 4; j++)
 			    {
-				    if(r < CADENCES[a][j])
+				    if(r < MusicTheory.CADENCES[a][j])
 				    {
-                        phrases.Add(new Phrase((CADENCE_NAMES)j, aut));
+                        verse.Add(new Phrase((MusicTheory.CADENCE_NAMES)j));
                         addDefaultPhrase = false;
 					    break;
 				    }
 				    else
 				    {
-					    r -= CADENCES[a][j];
+					    r -= MusicTheory.CADENCES[a][j];
 				    }
 			    }
 			    if(addDefaultPhrase)
 			    {
-				    phrases.Add(new Phrase(CADENCE_NAMES.SILENT, aut));
+				    verse.Add(new Phrase(MusicTheory.CADENCE_NAMES.SILENT));
 			    }
 		    }
-            this.aut = aut;
-            old = new KeyboardState();
-            foreach (Phrase p in phrases)
+
+            //build grid
+            int gridSize = 0;
+            foreach (Phrase phrase in verse)
             {
-                System.Console.WriteLine(p.midi);
+                gridSize += phrase.Grid.GetLength(1);
             }
-        }
-        KeyboardState old;
-        public void Play()
-        {
-            if (Keyboard.GetState().IsKeyDown(Keys.P) && old.IsKeyUp(Keys.P))
+            grid = new CellState[theory.PIANO_SIZE, gridSize];
+            int gridStartPosition = 0;
+            foreach (Phrase phrase in verse)
             {
-                phrases.First<Phrase>().Play();
-                phrases.RemoveAt(0);
+                for (int i = 0; i < phrase.Grid.GetLength(0); i++)
+                {
+                    for (int j = 0; j < phrase.Grid.GetLength(1); j++)
+                    {
+                        grid[i, j + gridStartPosition] = phrase.Grid[i, j];
+                    }
+                }
+                gridStartPosition += phrase.Grid.GetLength(1);
             }
-            old = Keyboard.GetState();
         }
     }
 }

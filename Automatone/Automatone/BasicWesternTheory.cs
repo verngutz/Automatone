@@ -7,77 +7,16 @@ using MoodSwingCoreComponents;
 
 namespace Automatone
 {
-    public class BasicWesternTheory : Theory
+    public class BasicWesternTheory
     {
+        /**
 	    public BasicWesternTheory(MSRandom random) : base(random) { }
 	
 	    //AUTOMATON CONSTANTS
 	    private const int NUM_GENERATIONS = 100;
 	    private const int CROWDEDNESS_TOLERANCE = 1;
 	
-	    //KEYBOARD CONSTANTS
-	    public static NoteName NOTE_C              = new NoteName('c', ' ');
-	    public static NoteName NOTE_C_SHARP        = new NoteName('c', '#');
-	    public static NoteName NOTE_C_FLAT         = new NoteName('b', ' ');
-	    public static NoteName NOTE_C_DOUBLE_SHARP = new NoteName('d', ' ');
-	    public static NoteName NOTE_C_DOUBLE_FLAT  = new NoteName('a', '#');
-	
-	    public static NoteName NOTE_D              = new NoteName('d', ' ');
-	    public static NoteName NOTE_D_SHARP        = new NoteName('d', '#');
-	    public static NoteName NOTE_D_FLAT         = new NoteName('c', '#');
-	    public static NoteName NOTE_D_DOUBLE_SHARP = new NoteName('e', ' ');
-	    public static NoteName NOTE_D_DOUBLE_FLAT  = new NoteName('c', ' ');
-	
-	    public static NoteName NOTE_E              = new NoteName('e', ' ');
-	    public static NoteName NOTE_E_SHARP        = new NoteName('f', ' ');
-	    public static NoteName NOTE_E_FLAT         = new NoteName('d', '#');
-	    public static NoteName NOTE_E_DOUBLE_SHARP = new NoteName('f', '#');
-	    public static NoteName NOTE_E_DOUBLE_FLAT  = new NoteName('d', ' ');
-	
-	    public static NoteName NOTE_F              = new NoteName('f', ' ');
-	    public static NoteName NOTE_F_SHARP        = new NoteName('f', '#');
-	    public static NoteName NOTE_F_FLAT         = new NoteName('e', ' ');
-	    public static NoteName NOTE_F_DOUBLE_SHARP = new NoteName('g', ' ');
-	    public static NoteName NOTE_F_DOUBLE_FLAT  = new NoteName('d', '#');
-	
-	    public static NoteName NOTE_G              = new NoteName('g', ' ');
-	    public static NoteName NOTE_G_SHARP        = new NoteName('g', '#');
-	    public static NoteName NOTE_G_FLAT         = new NoteName('f', '#');
-	    public static NoteName NOTE_G_DOUBLE_SHARP = new NoteName('a', ' ');
-	    public static NoteName NOTE_G_DOUBLE_FLAT  = new NoteName('f', ' ');
-	
-	    public static NoteName NOTE_A              = new NoteName('a', ' ');
-	    public static NoteName NOTE_A_SHARP        = new NoteName('a', '#');
-	    public static NoteName NOTE_A_FLAT         = new NoteName('g', '#');
-	    public static NoteName NOTE_A_DOUBLE_SHARP = new NoteName('b', ' ');
-	    public static NoteName NOTE_A_DOUBLE_FLAT  = new NoteName('g', ' ');
-	
-	    public static NoteName NOTE_B              = new NoteName('b', ' ');
-	    public static NoteName NOTE_B_SHARP        = new NoteName('c', ' ');
-	    public static NoteName NOTE_B_FLAT         = new NoteName('a', '#');
-	    public static NoteName NOTE_B_DOUBLE_SHARP = new NoteName('c', '#');
-	    public static NoteName NOTE_B_DOUBLE_FLAT  = new NoteName('a', ' ');
-
-	    private const int PIANO_SIZE = 60;
-	    private const int NOTENAME_OFFSET = 7;
-	    private const int OCTAVE_OFFSET = 9;
-	
-	    //CHROMATIC SCALE
-	    private static NoteName[] CHROMATIC_SCALE = 
-	    {
-		    NOTE_C,
-		    NOTE_C_SHARP,
-		    NOTE_D,
-		    NOTE_D_SHARP,
-		    NOTE_E,
-		    NOTE_F,
-		    NOTE_F_SHARP,
-		    NOTE_G,
-		    NOTE_G_SHARP,
-		    NOTE_A,
-		    NOTE_A_SHARP,
-		    NOTE_B
-	    };
+	    
 
 	    private static Dictionary<NoteName, int> CHROMATIC_EQUIVALENTS = createChromaticEquivalents();
 	    private static Dictionary<NoteName, int> createChromaticEquivalents()
@@ -647,7 +586,7 @@ namespace Automatone
 			    return 1 - prob;
 	    }
 	
-	    private const int SUBBEATS_PER_MEASURE = 8;
+	    
 	    private double notesMean;
 	    private double beatsLoyalty;
 	
@@ -660,10 +599,7 @@ namespace Automatone
 	    private const int NUM_MEASURES_UBOUND = 8;
 	
 	
-	    public override double getBeatResolution()
-	    {
-		    return 1.0 / SUBBEATS_PER_MEASURE;
-	    }
+	    
 	
 	    public override CellState[,] initialize()
 	    {
@@ -811,6 +747,6 @@ namespace Automatone
 	    {
 		    return (pitchNumber + OCTAVE_OFFSET) / CHROMATIC_SCALE.Length + 1;
 	    }
-	
+	    */
     }
 }
