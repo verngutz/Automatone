@@ -19,6 +19,8 @@ namespace Automatone
             int verseLength = (int)(theory.MEAN_VERSE_LENGTHINESS * InputParameters.meanVerseLength);
             verseLength += (int)(verseLength * ((rand.Next() - 0.5) * InputParameters.verseLengthVariance));
 		    List<double> fractalCurve = Enumerable.Repeat<double>(1.0, verseLength).ToList<double>();
+
+
             
 		    int x = verseLength;
 		    for(int i = 2; i <= Math.Sqrt(verseLength); i++)
@@ -53,7 +55,7 @@ namespace Automatone
 			    {
 				    if(r < MusicTheory.CADENCES[a][j])
 				    {
-                        verse.Add(new Phrase((MusicTheory.CADENCE_NAMES)j));
+                        verse.Add(new Phrase((MusicTheory.CADENCE_NAMES)j));//change this to choose from random pre generated phrases
                         addDefaultPhrase = false;
 					    break;
 				    }
@@ -64,7 +66,7 @@ namespace Automatone
 			    }
 			    if(addDefaultPhrase)
 			    {
-				    verse.Add(new Phrase(MusicTheory.CADENCE_NAMES.SILENT));
+				    verse.Add(new Phrase(MusicTheory.CADENCE_NAMES.SILENT));//this too.
 			    }
 		    }
 

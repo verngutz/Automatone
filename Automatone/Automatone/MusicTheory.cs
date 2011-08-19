@@ -26,5 +26,8 @@ namespace Automatone
 
         //Beat Resolution
         public abstract double getBeatResolution();
+
+        //Rhythm
+        public abstract List<double> RHYTHM_CURVE_SAMPLE { get; }
     }
 }

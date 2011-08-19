@@ -14,5 +14,9 @@ namespace Automatone
         //Verse Parameters
         public static double meanVerseLength = 0.5;
         public static double verseLengthVariance = 0.5;
+        public static double phraseVariance = 0.5;
+
+        //Rhythm
+        public static double rhythmObedience = 0.5;
     }
 }
