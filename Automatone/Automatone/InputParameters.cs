@@ -21,5 +21,8 @@ namespace Automatone
         public static double meanPhraseLength = 0.5;
         public static double phraseLengthVariance = 0.5;
         public static double phraseDistinctiveness = 0.5;
+
+        //Rhythm
+        public static double rhythmObedience = 0.5;
     }
 }

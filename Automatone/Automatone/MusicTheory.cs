@@ -30,5 +30,8 @@ namespace Automatone
         //Beat Resolution
         public abstract int SUBBEATS_PER_MEASURE { get; }
         public abstract double getBeatResolution();
+
+        //Rhythm
+        public abstract List<double> RHYTHM_CURVE_SAMPLE { get; }
     }
 }
