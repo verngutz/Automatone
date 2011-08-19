@@ -107,7 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicWesternTheory.cs" />
+    <Compile Include="Harmony.cs" />
     <Compile Include="CellState.cs" />
     <Compile Include="ClassicalTheory.cs" />
     <Compile Include="InputParameters.cs" />

@@ -7,34 +7,34 @@ using MoodSwingCoreComponents;
 
 namespace Automatone
 {
-    public class BasicWesternTheory
+    public class Harmony
     {
-        /**
-	    public BasicWesternTheory(MSRandom random) : base(random) { }
-	
-	    //AUTOMATON CONSTANTS
-	    private const int NUM_GENERATIONS = 100;
-	    private const int CROWDEDNESS_TOLERANCE = 1;
-	
-	    
+        private Random random;
+        private MusicTheory theory;
+
+	    public Harmony (MusicTheory theory, Random random) 
+        {
+            this.random = random;
+            this.theory = theory;
+        }
 
 	    private static Dictionary<NoteName, int> CHROMATIC_EQUIVALENTS = createChromaticEquivalents();
 	    private static Dictionary<NoteName, int> createChromaticEquivalents()
 	    {
 		    Dictionary<NoteName, int> equivalents = new Dictionary<NoteName, int>();
 		
-		    equivalents.Add(NOTE_C, 0);
-		    equivalents.Add(NOTE_C_SHARP, 1);
-		    equivalents.Add(NOTE_D, 2);
-		    equivalents.Add(NOTE_D_SHARP, 3);
-		    equivalents.Add(NOTE_E, 4);
-		    equivalents.Add(NOTE_F, 5);
-		    equivalents.Add(NOTE_F_SHARP, 6);
-		    equivalents.Add(NOTE_G, 7);
-		    equivalents.Add(NOTE_G_SHARP, 8);
-		    equivalents.Add(NOTE_A, 9);
-		    equivalents.Add(NOTE_A_SHARP, 10);
-		    equivalents.Add(NOTE_B, 11);
+		    equivalents.Add(NoteName.NOTE_C, 0);
+            equivalents.Add(NoteName.NOTE_C_SHARP, 1);
+            equivalents.Add(NoteName.NOTE_D, 2);
+            equivalents.Add(NoteName.NOTE_D_SHARP, 3);
+            equivalents.Add(NoteName.NOTE_E, 4);
+            equivalents.Add(NoteName.NOTE_F, 5);
+            equivalents.Add(NoteName.NOTE_F_SHARP, 6);
+            equivalents.Add(NoteName.NOTE_G, 7);
+            equivalents.Add(NoteName.NOTE_G_SHARP, 8);
+            equivalents.Add(NoteName.NOTE_A, 9);
+            equivalents.Add(NoteName.NOTE_A_SHARP, 10);
+            equivalents.Add(NoteName.NOTE_B, 11);
 		
 		    return equivalents;
 	    }
@@ -72,15 +72,7 @@ namespace Automatone
 	    public const int WHOLE_STEP = 2;
 	    public const int HALF_STEP = 1;
 	
-	    //MELODY
-	    private void initializeMelody()
-	    {
-		    tonality = 0.9;
-	    }
-	
-	    private double tonality; //how much the melody notes conform to the diatonic scale of a given key versus the chromatic scale
-	
-	    private enum ScaleMode { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR, GENERIC_MINOR }
+	    public enum ScaleMode { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR, GENERIC_MINOR }
 	
 	    private static List<NoteName> createDiatonicScale(NoteName key, ScaleMode mode)
 	    {
@@ -94,94 +86,94 @@ namespace Automatone
 			    case ScaleMode.MAJOR:
 				    for(int i = 0; i < 2; i++)
 				    {
-					    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+                        curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                         CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 					    scale.Add(curr);
 				    }
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+                    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    for(int i = 0; i < 3; i++)
 				    {
-					    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+                        curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                         CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 					    scale.Add(curr);
 				    }
 				    break;
 			    case ScaleMode.NATURAL_MINOR:
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+                    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+                    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    for(int i = 0; i < 2; i++)
 				    {
-					    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+                        curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                         CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 					    scale.Add(curr);
 				    }
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+                    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    break;
 			    case ScaleMode.HARMONIC_MINOR:
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    for(int i = 0; i < 2; i++)
 				    {
-					    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+					    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                         CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 					    scale.Add(curr);
 				    }
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    break;
 			    case ScaleMode.MELODIC_MINOR:
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    for(int i = 0; i < 4; i++)
 				    {
-					    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+					    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                         CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 					    scale.Add(curr);
 				    }
 				    break;
 			    case ScaleMode.GENERIC_MINOR:
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    for(int i = 0; i < 2; i++)
 				    {
-					    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+					    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                         CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 					    scale.Add(curr);
 				    }
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + WHOLE_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
-				    curr = CHROMATIC_SCALE[(noteVal + HALF_STEP) % CHROMATIC_SCALE.Length];
+				    curr = ClassicalTheory.CHROMATIC_SCALE[(noteVal + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length];
                     CHROMATIC_EQUIVALENTS.TryGetValue(curr, out noteVal);
 				    scale.Add(curr);
 				    break;
@@ -198,13 +190,13 @@ namespace Automatone
 	    private const double RELATIVE_MODE_MODULATION_PROBABILITY = 0.1;
 	    private const double ABSOLUTE_MODE_MODULATION_PROBABILITY = 0.04;
 	
-	    private void initializeHarmony(int phraseLength)
+	    public void initializeHarmony(int phraseLength)
 	    {
 		    jazzyness = 0;
 		    beatHarmonicCovariance = MEAN_BEATHARMONIC_COVARIANCE;
-		    double offset = random.GetUniform() / BEAT_HARMONIC_COVARIANCE_OFFSET_DIVISOR;
-		
-		    if(random.GetUniform() < 0.5)
+		    double offset = random.NextDouble() / BEAT_HARMONIC_COVARIANCE_OFFSET_DIVISOR;
+
+            if (random.NextDouble() < 0.5)
 			    beatHarmonicCovariance += offset;
 		    else
 			    beatHarmonicCovariance -= offset;
@@ -213,20 +205,20 @@ namespace Automatone
 		    ScaleMode originalMode;
 		    if(key == null)
 		    {
-			    key = CHROMATIC_SCALE[(int)(random.GetUniform() * CHROMATIC_SCALE.Length)];
-			    mode = (random.GetUniform() < 0.5 ? ScaleMode.MAJOR : ScaleMode.GENERIC_MINOR);
+                key = ClassicalTheory.CHROMATIC_SCALE[(int)(random.NextDouble() * ClassicalTheory.CHROMATIC_SCALE.Length)];
+                mode = (random.NextDouble() < 0.5 ? ScaleMode.MAJOR : ScaleMode.GENERIC_MINOR);
 			    originalKey = key;
 			    originalMode = mode;
 		    }
 		    else
 		    {
-			    originalKey = new NoteName(key.getLetter(), key.getAccidental());
+                originalKey = key;
 			    originalMode = mode;
-			    double rand = random.GetUniform();
+			    double rand = random.NextDouble();
 			    double cdf = RANDOM_MODULATION_PROBABILITY;
 			    if(rand < cdf)
 			    {
-				    key = CHROMATIC_SCALE[(int)(random.GetUniform() * CHROMATIC_SCALE.Length)];
+				    key = ClassicalTheory.CHROMATIC_SCALE[(int)(random.NextDouble() * ClassicalTheory.CHROMATIC_SCALE.Length)];
 			    }
 			    else 
 			    {
@@ -235,14 +227,14 @@ namespace Automatone
                     CHROMATIC_EQUIVALENTS.TryGetValue(originalKey, out originalKeyValue);
 				    if(rand < cdf)
 				    {
-                        key = CHROMATIC_SCALE[(originalKeyValue + PERFECT_FIFTH_INTERVAL) % CHROMATIC_SCALE.Length];
+                        key = ClassicalTheory.CHROMATIC_SCALE[(originalKeyValue + PERFECT_FIFTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length];
 				    }
 				    else
 				    {
 					    cdf += PERFECT_FOURTH_MODULATION_PROBABILITY;
 					    if(rand < cdf)
 					    {
-                            key = CHROMATIC_SCALE[(originalKeyValue + PERFECT_FOURTH_INTERVAL) % CHROMATIC_SCALE.Length];
+                            key = ClassicalTheory.CHROMATIC_SCALE[(originalKeyValue + PERFECT_FOURTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length];
 					    }
 					    else
 					    {
@@ -251,12 +243,12 @@ namespace Automatone
 						    {
 							    if(mode == ScaleMode.MAJOR)
 							    {
-                                    key = CHROMATIC_SCALE[(originalKeyValue + MAJOR_SIXTH_INTERVAL) % CHROMATIC_SCALE.Length];
+                                    key = ClassicalTheory.CHROMATIC_SCALE[(originalKeyValue + MAJOR_SIXTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length];
 								    mode = ScaleMode.GENERIC_MINOR;
 							    }
 							    else
 							    {
-                                    key = CHROMATIC_SCALE[(originalKeyValue + MINOR_THIRD_INTERVAL) % CHROMATIC_SCALE.Length];
+                                    key = ClassicalTheory.CHROMATIC_SCALE[(originalKeyValue + MINOR_THIRD_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length];
 								    mode = ScaleMode.MAJOR;
 							    }
 						    }
@@ -289,7 +281,7 @@ namespace Automatone
 	    private ScaleMode mode;
 	    private double jazzyness; //how much blue notes and sixth, seventh, ninth, etc. chords will be used.
 	    private double beatHarmonicCovariance; //how much chord changes are likely to fall on strong beats.
-	    private List<List<NoteName>> chordProgression;
+	    public List<List<NoteName>> chordProgression;
 	
 	    private enum ChordMode { MAJOR, MINOR, AUGMENTED, DIMINISHED }
 	
@@ -302,26 +294,26 @@ namespace Automatone
 		    switch(mode)
 		    {
 			    case ChordMode.MAJOR:
-				    chord.Add(CHROMATIC_SCALE[(noteVal + MAJOR_THIRD_INTERVAL) % CHROMATIC_SCALE.Length]);
-				    chord.Add(CHROMATIC_SCALE[(noteVal + PERFECT_FIFTH_INTERVAL) % CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + MAJOR_THIRD_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + PERFECT_FIFTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
 				    break;
 			    case ChordMode.MINOR:
-				    chord.Add(CHROMATIC_SCALE[(noteVal + MINOR_THIRD_INTERVAL) % CHROMATIC_SCALE.Length]);
-				    chord.Add(CHROMATIC_SCALE[(noteVal + PERFECT_FIFTH_INTERVAL) % CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + MINOR_THIRD_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + PERFECT_FIFTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
 				    break;
 			    case ChordMode.AUGMENTED:
-				    chord.Add(CHROMATIC_SCALE[(noteVal + MAJOR_THIRD_INTERVAL) % CHROMATIC_SCALE.Length]);
-				    chord.Add(CHROMATIC_SCALE[(noteVal + AUGMENTED_FIFTH_INTERVAL) % CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + MAJOR_THIRD_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + AUGMENTED_FIFTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
 				    break;
 			    case ChordMode.DIMINISHED:
-				    chord.Add(CHROMATIC_SCALE[(noteVal + MINOR_THIRD_INTERVAL) % CHROMATIC_SCALE.Length]);
-				    chord.Add(CHROMATIC_SCALE[(noteVal + DIMINISHED_FIFTH_INTERVAL) % CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + MINOR_THIRD_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
+				    chord.Add(ClassicalTheory.CHROMATIC_SCALE[(noteVal + DIMINISHED_FIFTH_INTERVAL) % ClassicalTheory.CHROMATIC_SCALE.Length]);
 				    break;
 		    }
 		    return chord;
 	    }
 	
-	    private List<List<NoteName>> createChordProgression(NoteName key, ScaleMode mode, int phraseLength)
+	    public List<List<NoteName>> createChordProgression(NoteName key, ScaleMode mode, int phraseLength)
 	    {
 		    Dictionary<DiatonicNumeral, List<NoteName>> diatonicTriads = createDiatonicTriads(key, mode);
 		    List<List<NoteName>> rawProgression = new List<List<NoteName>>();
@@ -355,7 +347,7 @@ namespace Automatone
 		    List<int> progressionChangeIndices = new List<int>();
 		    List<int> rands = new List<int>();
 		    int randsSize = phraseLength;
-		    int increment = SUBBEATS_PER_MEASURE;
+		    int increment = theory.SUBBEATS_PER_MEASURE;
 		    while(randsSize / increment < rawProgression.Count)
 		    {
 			    randsSize *= 4;
@@ -363,12 +355,12 @@ namespace Automatone
 		    }
 		    for(int i = 0; i < randsSize; i+= increment)
 		    {
-			    int deviation = (int)((1 - beatHarmonicCovariance) * SUBBEATS_PER_MEASURE / 2 * random.GetUniform());
-			    rands.Add((random.GetUniform() < 0.5 ? i + deviation : Math.Max(i - deviation, 0)));
+			    int deviation = (int)((1 - beatHarmonicCovariance) * theory.SUBBEATS_PER_MEASURE / 2 * random.NextDouble());
+			    rands.Add((random.NextDouble() < 0.5 ? i + deviation : Math.Max(i - deviation, 0)));
 		    }
 		    for(int i = 0; i < rawProgression.Count; i++)
 		    {
-			    int randomIndex = random.GetUniformInt(rands.Count);
+			    int randomIndex = random.Next(rands.Count);
                 progressionChangeIndices.Add(rands.ElementAt<int>(randomIndex));
 			    rands.Remove(randomIndex);
 		    }
@@ -393,9 +385,9 @@ namespace Automatone
 		    return organizedProgression;
 	    }
 	
-	    private static DiatonicNumeral getNextDiatonicTriad(DiatonicNumeral currentTriad, ScaleMode mode)
+	    private DiatonicNumeral getNextDiatonicTriad(DiatonicNumeral currentTriad, ScaleMode mode)
 	    {
-		    double rand = random.GetUniform();
+		    double rand = random.NextDouble();
 		    switch(mode)
 		    {
 			    case ScaleMode.MAJOR:
@@ -468,9 +460,9 @@ namespace Automatone
 	
 	    private enum DiatonicNumeral { I, i, ii, iio, III, iii, IV, iv, V, v, VI, vi, VII, viio, N, INVALID }
 
-        private static DiatonicNumeral getRandomMajor()
+        private DiatonicNumeral getRandomMajor()
 		{
-			double rand = random.GetUniform();
+			double rand = random.NextDouble();
 			if(rand < 1.0 / 7)
 				return DiatonicNumeral.I;
 			else if(rand < 2.0 / 7)
@@ -486,9 +478,9 @@ namespace Automatone
 			else
                 return DiatonicNumeral.viio;
 		}
-		private static DiatonicNumeral getRandomMinor()
+		private DiatonicNumeral getRandomMinor()
 		{
-			double rand = random.GetUniform();
+			double rand = random.NextDouble();
 			if(rand < 1.0 / 8)
                 return DiatonicNumeral.i;
 			else if(rand < 2.0 / 8)
@@ -545,208 +537,10 @@ namespace Automatone
 		    diatonicTriads.Add
 		    (
 			    DiatonicNumeral.N, 
-			    createChord(CHROMATIC_SCALE[(rootKeyValue + HALF_STEP) % CHROMATIC_SCALE.Length], ChordMode.MAJOR)
+			    createChord(ClassicalTheory.CHROMATIC_SCALE[(rootKeyValue + HALF_STEP) % ClassicalTheory.CHROMATIC_SCALE.Length], ChordMode.MAJOR)
 		    );
 		
 		    return diatonicTriads;
 	    }
-	
-	    //RHYTHM
-	    private void initializeRhythm(double notesMean, double beatsLoyalty)
-	    {
-		    this.notesMean = notesMean;
-		    this.beatsLoyalty = beatsLoyalty;
-		    double[] beats = new double[SUBBEATS_PER_MEASURE];
-		    beatsProb = new double[SUBBEATS_PER_MEASURE];
-		
-		    for(int i=0; i<SUBBEATS_PER_MEASURE; i++)
-			    beats[i] = i;
-		    for(int i=0; i<SUBBEATS_PER_MEASURE; i++)
-		    {
-			    beatsProb[i] = ( i == 0 ?  0 : getProbability( beats, beats[i] ) );
-		    }
-	    }
-	
-	    private double[] beatsProb;
-	
-	    private double getProbability( double[] beats, double beat )
-	    {
-		    return getProbability( beats, beat, 1.0, 1, beats.Length - 1 );
-	    }
-	
-	    private double getProbability( double[] beats, double beat, double prob, int low, int high )
-	    {
-		    prob /= 2;
-		    int mid = ( low + high ) / 2;
-		    if( beats[mid] > beat )
-			    return getProbability( beats, beat, prob, low, mid - 1 );
-		    else if( beats[mid] < beat )
-			    return getProbability( beats, beat, prob, mid + 1, high );
-		    else
-			    return 1 - prob;
-	    }
-	
-	    
-	    private double notesMean;
-	    private double beatsLoyalty;
-	
-	    //FORM
-	    private void initializeForm()
-	    {
-	    }
-	
-	    private const int NUM_MEASURES_LBOUND = 2;
-	    private const int NUM_MEASURES_UBOUND = 8;
-	
-	
-	    
-	
-	    public override CellState[,] initialize()
-	    {
-		    int numMeasures = (int)Math.Round(NUM_MEASURES_LBOUND + Math.Abs(random.GetNormal()) * (NUM_MEASURES_UBOUND - NUM_MEASURES_LBOUND));
-		    int phraseLength = SUBBEATS_PER_MEASURE * numMeasures;
-		    CellState[,] songCells = new CellState[PIANO_SIZE, phraseLength];
-		    for(int i = 0; i < PIANO_SIZE; i++)
-		    {
-			    for(int j = 0; j < phraseLength; j++)
-			    {
-				    switch(random.GetUniformInt(3))
-				    {
-					    case 0:
-						    songCells[i, j] = CellState.START;
-						    break;
-					    case 1:
-						    songCells[i, j] = CellState.HOLD;
-						    break;
-					    case 2:
-						    songCells[i, j] = CellState.SILENT;
-						    break;
-				    }
-			    }
-		    }
-		
-		    return songCells;
-	    }
-	
-	    public override void Evolve(CellState[,] songCells)
-	    {
-		    initializeMelody();
-		    initializeHarmony(songCells.GetLength(1));
-		    initializeRhythm(0.375, Math.Min(1, random.GetUniform() + 0.5f)); //@param ( notesmean, beatsloyalty )
-		    initializeForm();
-		    CellState[,] previousState = new CellState[songCells.GetLength(0), songCells.GetLength(1)];
-		
-		
-		    for(int x = 0; x < NUM_GENERATIONS; x++)
-		    {
-			    for(int i = 0; i < songCells.GetLength(0); i++)
-				    for(int j = 0; j < songCells.GetLength(1); j++)
-					    previousState[i, j] = songCells[i, j];
-					
-			    //GAME OF LIFE
-                int midsectionStart = 10;
-                int midsectionEnd = 10;
-                int[] crowd = { 3, 0, 3 };
-                for (int section = 0; section < 3; section++)
-                {
-                    for (int i = midsectionStart*(section%2) + (songCells.GetLength(0)-midsectionEnd)*(section/2);
-                        (i < midsectionStart && section == 0) || (i < songCells.GetLength(0) - midsectionEnd && section == 1) || i < songCells.GetLength(0);
-                        i++)
-                    {
-                        for (int j = 0; j < songCells.GetLength(1); j++)
-                        {
-                            int crowdedness = crowd[section];
-                            for (int k = Math.Max(0, i - 2); k < Math.Min(songCells.GetLength(0), i + 2); k++)
-                            {
-                                switch (previousState[k, j])
-                                {
-                                    case CellState.START:
-                                        crowdedness += 2;
-                                        break;
-                                    case CellState.HOLD:
-                                        crowdedness++;
-                                        break;
-                                }
-                            }
-                            if (crowdedness > CROWDEDNESS_TOLERANCE)
-                            {
-                                songCells[i, j] = CellState.SILENT;
-                            }
-                            else
-                            {
-                                songCells[i, j] = CellState.START;
-                            }
-                        }
-                    }
-                }
-                
-
-			    //MELODY AND RANGE
-			    for(int i = 0; i < songCells.GetLength(0); i++)
-			    {
-				    for(int j = 0; j < songCells.GetLength(1); j++)
-				    {
-					    if(j > songCells.GetLength(1) - SUBBEATS_PER_MEASURE)
-						    songCells[i, j] = CellState.HOLD;
-				    }
-			    }
-			
-			    //HARMONY
-			    for(int i = 0; i < songCells.GetLength(0); i++)
-			    {
-				    for(int j = 0; j < songCells.GetLength(1); j++)
-				    {
-					    if(!(chordProgression.ElementAt<List<NoteName>>(j)).Contains(getNoteName(i)))
-					    {
-						    if(random.GetUniform() * (i / PIANO_SIZE) < tonality)
-						    {
-							    songCells[i, j] = CellState.SILENT;
-						    }
-					    }
-				    }
-			    }
-			
-			    //RHYTHM
-			    for(int i = 0; i < songCells.GetLength(0); i++)
-			    {
-				    for(int j = 0; j < songCells.GetLength(1); j++)
-				    {
-					    if(random.GetUniform() < beatsProb[j%SUBBEATS_PER_MEASURE] * beatsLoyalty + ( 1 - notesMean ) * ( 1 - beatsLoyalty ))
-						    songCells[i, j] = CellState.SILENT;
-				    }
-			    }
-			    for(int i = 0; i < songCells.GetLength(0); i++)//pitch
-			    {
-				    for(int j = 0; j < songCells.GetLength(1) - 1; j++)//time
-				    {
-					    if(songCells[i, j] == CellState.START)
-					    {
-						    int distCounter = 0;
-						    while(j < songCells.GetLength(1) - 1 && songCells[i, j+1] != CellState.START && songCells[i, j] != CellState.HOLD)
-						    {
-							    distCounter++;
-							    j++;
-							    if(random.GetUniform() < 1.0 / distCounter)
-								    songCells[i, j] = CellState.HOLD;
-							    else 
-								    break;
-						    }
-					    }
-				    }
-			    }
-			    //END RHYTHM	
-		    }
-	    }
-	
-	    public override NoteName getNoteName(int pitchNumber)
-	    {
-		    return CHROMATIC_SCALE[(pitchNumber + NOTENAME_OFFSET) % CHROMATIC_SCALE.Length];
-	    }
-	
-	    public override int getOctave(int pitchNumber)
-	    {
-		    return (pitchNumber + OCTAVE_OFFSET) / CHROMATIC_SCALE.Length + 1;
-	    }
-	    */
     }
 }

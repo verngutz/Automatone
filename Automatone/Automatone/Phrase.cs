@@ -17,15 +17,29 @@ namespace Automatone
             phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * InputParameters.phraseLengthVariance));
             phraseLength *= theory.SUBBEATS_PER_MEASURE;
 
+            Harmony harm = new Harmony(theory, rand);
+            harm.initializeHarmony(phraseLength);
+            List<List<NoteName>> progression = harm.chordProgression;
+
             double[] rhythmCurve = rhythm.GetRhythmCurve(phraseLength);
 
-
             grid = new CellState[theory.PIANO_SIZE, phraseLength];
+            double a = rand.NextDouble();
             for (int i = 0; i < phraseLength; i++)
             {
-                if (rand.NextDouble() < rhythmCurve[i])
+                int chordNumber = (i / phraseLength) * progression.Count;
+                List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
+                if (a < rhythmCurve[i])
                 {
-                    grid[30 + (int)(rand.NextDouble() * 10), i] = CellState.START;
+                    for (int j = 0; j < 5; j++)
+                    {
+                        int pitch = (int)(0 + rand.NextDouble() * 24);
+                        while(!chord.Contains(theory.getNoteName(pitch)))
+                            pitch = (int)(0 + rand.NextDouble() * 24);
+                        grid[pitch, i] = CellState.START;
+                        for(int k = 1; k < 4; k++)
+                            grid[pitch, Math.Min(i + k, phraseLength - 1)] = CellState.HOLD;
+                    }
                 }
             }
         }

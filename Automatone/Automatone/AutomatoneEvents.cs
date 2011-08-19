@@ -32,7 +32,7 @@ namespace Automatone
             sw.WriteLine("mthd\n\tversion 1\n\tunit 192\nend mthd\n");
             sw.WriteLine("mtrk\n\ttact 4 / 4 24 8\n\tbeats " + Automatone.TEMPO + "\n\tkey \"Cmaj\"\nend mtrk\n");
 
-            String song = SongGenerator.generateSong(new Random(SEED), new ClassicalTheory(), out songCells);
+            String song = SongGenerator.generateSong(new Random(), new ClassicalTheory(), out songCells);
             sw.Write(song);
             sw.Close();
 

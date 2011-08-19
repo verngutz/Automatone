@@ -25,13 +25,13 @@ namespace Automatone
             {
                 List<double> sample = new List<double>();
                 sample.Add(1);
-                sample.Add(0.125);
-                sample.Add(0.25);
-                sample.Add(0.125);
-                sample.Add(0.5);
-                sample.Add(0.125);
-                sample.Add(0.25);
-                sample.Add(0.125);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
                 return sample;
             }
         }
