@@ -8,12 +8,12 @@ namespace Automatone
     public class ClassicalTheory : MusicTheory
     {
         //Song Constants
-        public override int LENGTHINESS { get { return 10; } }
+        public override int SONG_LENGTHINESS { get { return 10; } }
         public override double CHORUS_EXISTENCE { get { return 1; } }
 
         //Verse Constants
         public override double CADENCE_SMOOTHNESS { get { return 0.5; } }
-        public override int MEAN_VERSE_LENGTHINESS { get { return 8; } }
+        public override int VERSE_LENGTHINESS { get { return 8; } }
 
         //Pitch Range and Offset
         public override int PIANO_SIZE { get { return 60; } }
@@ -48,7 +48,7 @@ namespace Automatone
 	    };
 
         //Beat Resolution
-        public int SUBBEATS_PER_MEASURE = 8;
+        public override int SUBBEATS_PER_MEASURE { get { return 8; } }
         public override double getBeatResolution()
         {
             return 1.0 / SUBBEATS_PER_MEASURE;

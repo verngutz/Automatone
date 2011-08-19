@@ -48,8 +48,7 @@ namespace Automatone
 
 		    private List<Note> notes;
 		    private double beatResolution;
-		
-		    //Limited to 4/4 time as of now
+
 		    public NoteThread(double beat_resolution)
 		    {
 			    notes = new List<Note>();
@@ -82,7 +81,7 @@ namespace Automatone
 					    activeNotes.Add(toActivate);
 					    thread += "\t\t+" + toActivate.ToString() + " $7F;\n";
 				    }
-				    thread += "\t1/8;\n";//beats per minute
+				    thread += "\t1/" + (int)Math.Round(1 / beatResolution) + ";\n";
 				    timePassed += beatResolution;
 				    foreach(Note n in activeNotes)
 				    {

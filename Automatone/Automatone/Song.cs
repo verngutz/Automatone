@@ -16,17 +16,24 @@ namespace Automatone
         {
             song = new List<Verse>();
 
+            //generate rhythms
+            List<Rhythm> rhythms = new List<Rhythm>();
+            for (int i = 0; i < 1 + 2 * InputParameters.songRhythmVariety * InputParameters.songLength * theory.SONG_LENGTHINESS; i++)
+            {
+                rhythms.Add(new Rhythm(rand.NextDouble(), theory));
+            }
+
             //generate verses
 		    List<Verse> verses = new List<Verse>();
-		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVar * InputParameters.length * theory.LENGTHINESS; i++)
+		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVar * InputParameters.songLength * theory.SONG_LENGTHINESS; i++)
 		    {
-			    verses.Add(new Verse(theory, rand));
+			    verses.Add(new Verse(theory, rand, rhythms));
 		    }
 		
             //select verses to include in song
 		    double chorusProb = rand.NextDouble();
             int? prev = null;
-		    for(int i = 0; i < InputParameters.length * theory.LENGTHINESS; i++)
+		    for(int i = 0; i < InputParameters.songLength * theory.SONG_LENGTHINESS; i++)
 		    {
 			    int curr = (int)(rand.NextDouble() * verses.Count);
 			    if(chorusProb < theory.CHORUS_EXISTENCE)
