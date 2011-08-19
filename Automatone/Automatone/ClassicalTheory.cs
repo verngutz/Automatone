@@ -15,10 +15,31 @@ namespace Automatone
         public override double CADENCE_SMOOTHNESS { get { return 0.5; } }
         public override int VERSE_LENGTHINESS { get { return 8; } }
 
+        //Phrase Constants
+        public override double PHRASE_LENGTHINESS { get { return 8; } }
+
+        //Rhythm
+        public override List<double> RHYTHM_CURVE_SAMPLE 
+        {
+            get
+            {
+                List<double> sample = new List<double>();
+                sample.Add(1);
+                sample.Add(0.125);
+                sample.Add(0.25);
+                sample.Add(0.125);
+                sample.Add(0.5);
+                sample.Add(0.125);
+                sample.Add(0.25);
+                sample.Add(0.125);
+                return sample;
+            }
+        }
+
         //Pitch Range and Offset
         public override int PIANO_SIZE { get { return 60; } }
         public const int NOTENAME_OFFSET = 7;
-        public const int OCTAVE_OFFSET = 9;
+        public const int OCTAVE_OFFSET = 5;
 
         public override NoteName getNoteName(int pitchNumber)
         {
@@ -48,7 +69,7 @@ namespace Automatone
 	    };
 
         //Beat Resolution
-        public override int SUBBEATS_PER_MEASURE { get { return 8; } }
+        public override int SUBBEATS_PER_MEASURE { get { return 16; } }
         public override double getBeatResolution()
         {
             return 1.0 / SUBBEATS_PER_MEASURE;

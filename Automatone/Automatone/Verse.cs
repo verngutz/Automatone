@@ -17,7 +17,7 @@ namespace Automatone
         {
             //Calculate verse length
             int verseLength = (int)(theory.VERSE_LENGTHINESS * InputParameters.meanVerseLength);
-            verseLength += (int)(verseLength * ((rand.Next() - 0.5) * InputParameters.verseLengthVariance));
+            verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * InputParameters.verseLengthVariance));
             
             //Select rhythms
             List<Rhythm> selectedRhythms = new List<Rhythm>();

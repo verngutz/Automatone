@@ -5,5 +5,5 @@ using System.Text;
 
 namespace Automatone
 {
-    public enum CellState { START, HOLD, SILENT }
+    public enum CellState { SILENT, START, HOLD }
 }
