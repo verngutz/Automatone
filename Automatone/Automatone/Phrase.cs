@@ -23,6 +23,9 @@ namespace Automatone
 
             double[] rhythmCurve = rhythm.GetRhythmCurve(phraseLength);
 
+            double[] thisSeed = new double[rhythmSeed.Length];
+            rhythmSeed.CopyTo(thisSeed, 0);
+
             grid = new CellState[theory.PIANO_SIZE, phraseLength];
             for (int i = 0; i < phraseLength; i++)
             {
@@ -30,13 +33,13 @@ namespace Automatone
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
                 
                 //get next seedvalue
-                rhythmSeed[i % rhythmSeed.Length] += rhythmSeed[(i + 1) % rhythmSeed.Length];
-                while (rhythmSeed[i % rhythmSeed.Length] > 1)
+                thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
+                while (thisSeed[i % thisSeed.Length] > 1)
                 {
-                    rhythmSeed[i % rhythmSeed.Length]--;
+                    thisSeed[i % thisSeed.Length]--;
                 }
 
-                if (rhythmSeed[i % rhythmSeed.Length] < rhythmCurve[i])
+                if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
                 {
                     for (int j = 0; j < 5; j++)
                     {
