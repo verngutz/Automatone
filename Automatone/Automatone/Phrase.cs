@@ -10,7 +10,7 @@ namespace Automatone
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, double[] rhythmSeed)
         {
             //Calculate phrase length
             int phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
@@ -24,12 +24,19 @@ namespace Automatone
             double[] rhythmCurve = rhythm.GetRhythmCurve(phraseLength);
 
             grid = new CellState[theory.PIANO_SIZE, phraseLength];
-            double a = rand.NextDouble();
             for (int i = 0; i < phraseLength; i++)
             {
                 int chordNumber = (i / phraseLength) * progression.Count;
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
-                if (a < rhythmCurve[i])
+                
+                //get next seedvalue
+                rhythmSeed[i % rhythmSeed.Length] += rhythmSeed[(i + 1) % rhythmSeed.Length];
+                while (rhythmSeed[i % rhythmSeed.Length] > 1)
+                {
+                    rhythmSeed[i % rhythmSeed.Length]--;
+                }
+
+                if (rhythmSeed[i % rhythmSeed.Length] < rhythmCurve[i])
                 {
                     for (int j = 0; j < 5; j++)
                     {

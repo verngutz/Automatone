@@ -17,17 +17,18 @@ namespace Automatone
             song = new List<Verse>();
 
             //generate rhythms
-            List<Rhythm> rhythms = new List<Rhythm>();
+            Rhythm rhythm = new Rhythm(theory);
+            List<double[]> rhythmSeeds = new List<double[]>();
             for (int i = 0; i < 1 + 2 * InputParameters.songRhythmVariety * InputParameters.songLength * theory.SONG_LENGTHINESS; i++)
             {
-                rhythms.Add(new Rhythm(rand.NextDouble(), theory));
+                rhythmSeeds.Add(new double[] {rand.NextDouble(),rand.NextDouble()});
             }
 
             //generate verses
 		    List<Verse> verses = new List<Verse>();
 		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVar * InputParameters.songLength * theory.SONG_LENGTHINESS; i++)
 		    {
-			    verses.Add(new Verse(theory, rand, rhythms));
+			    verses.Add(new Verse(theory, rand, rhythm, rhythmSeeds));
 		    }
 		
             //select verses to include in song

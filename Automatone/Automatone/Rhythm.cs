@@ -8,10 +8,9 @@ namespace Automatone
     public class Rhythm
     {
         private List<double> rhythmCurve;
-        private double mutation;
         private MusicTheory theory;
 
-        public Rhythm(double mutation, MusicTheory musicTheory)
+        public Rhythm(MusicTheory musicTheory)
         {
             rhythmCurve = new List<double>();
             List<double> rhythmCurveSample = musicTheory.RHYTHM_CURVE_SAMPLE;
@@ -24,8 +23,6 @@ namespace Automatone
                 c = c + (InputParameters.rhythmObedience - 1) * (c - 0.5);
                 rhythmCurve.Add(c);
             }
-
-            this.mutation = mutation;
             theory = musicTheory;
         }
 

@@ -13,17 +13,17 @@ namespace Automatone
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
 
-        public Verse(MusicTheory theory, Random rand, List<Rhythm> rhythms)
+        public Verse(MusicTheory theory, Random rand, Rhythm rhythm, List<double[]> rhythmSeeds)
         {
             //Calculate verse length
             int verseLength = (int)(theory.VERSE_LENGTHINESS * InputParameters.meanVerseLength);
             verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * InputParameters.verseLengthVariance));
             
             //Select rhythms
-            List<Rhythm> selectedRhythms = new List<Rhythm>();
+            List<double[]> selectedRhythmSeeds = new List<double[]>();
             for (int i = 0; i < 1 + 2 * InputParameters.verseRhythmVariety * verseLength; i++)
             {
-                selectedRhythms.Add(rhythms.ElementAt<Rhythm>((int)(rand.NextDouble() * rhythms.Count)));
+                selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
             }
 
             //Build cadence curve
@@ -64,7 +64,7 @@ namespace Automatone
 			    {
 				    if(r < MusicTheory.CADENCES[a][j])
 				    {
-                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, selectedRhythms.ElementAt<Rhythm>((int)(rand.NextDouble() * rhythms.Count))));
+                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, rhythm, selectedRhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count))));
                         addDefaultPhrase = false;
 					    break;
 				    }
@@ -75,7 +75,7 @@ namespace Automatone
 			    }
 			    if(addDefaultPhrase)
 			    {
-                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, selectedRhythms.ElementAt<Rhythm>((int)(rand.NextDouble() * rhythms.Count))));
+                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, rhythm, selectedRhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count))));
 			    }
 		    }
 
