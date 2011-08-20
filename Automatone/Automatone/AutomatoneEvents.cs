@@ -58,7 +58,7 @@ namespace Automatone
                                 (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE,
                                 (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + (songCells.GetLength(0) - i - 1) * MainScreen.CELLSIZE,
                                 MainScreen.CELLSIZE, MainScreen.CELLSIZE),
-                            (songCells[i, j] != CellState.SILENT ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("darkbox")),
+                            (songCells[i, j] != CellState.SILENT ? (songCells[i, j] == CellState.START ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("holdbox")) : game.Content.Load<Texture2D>("darkbox")),
                             (game as Automatone).spriteBatch,
                             game));
                 }
