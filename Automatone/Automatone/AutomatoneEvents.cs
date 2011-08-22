@@ -46,7 +46,7 @@ namespace Automatone
 
             (game as Automatone).gameScreen.RemoveComponent((game as Automatone).gameScreen.gridPanel);
 
-            (game as Automatone).gameScreen.gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.GetLength(1) * MainScreen.CELLSIZE, songCells.GetLength(0) * MainScreen.CELLSIZE), null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game);
+            (game as Automatone).gameScreen.gridPanel = new MSPanel(null, new Rectangle(0, 150, Math.Min(800, songCells.GetLength(1) * MainScreen.CELLSIZE), Math.Min(450, songCells.GetLength(0) * MainScreen.CELLSIZE)), null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game);
 
             for (int i = 0; i < songCells.GetLength(0); i++)
             {
@@ -67,7 +67,7 @@ namespace Automatone
             (game as Automatone).gameScreen.AddComponent((game as Automatone).gameScreen.gridPanel);
 
             (game as Automatone).graphics.PreferredBackBufferWidth = 800;
-            (game as Automatone).graphics.PreferredBackBufferHeight = 150 + songCells.GetLength(0) * MainScreen.CELLSIZE;
+            (game as Automatone).graphics.PreferredBackBufferHeight = 600;
             (game as Automatone).graphics.ApplyChanges();
         }
     }
