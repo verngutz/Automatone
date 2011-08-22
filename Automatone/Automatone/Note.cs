@@ -7,18 +7,22 @@ namespace Automatone
 {
     public class Note : IComparable<Note>
     {
+        
         private NoteName noteName;
-        private int octave;
+        private byte octave;
         private double remainingDuration;
         private int startMeasure;
         private double startBeat;
 
-        //octave - should be between ?
+        public byte MidiNumber { get { return (byte)(noteName.ChromaticIndex + (octave + 1) * 12); } }
+
+        //lowest note is a0 = 21
+        //highest note is c8 = 108
         //duration - 1 means whole note, 0.5 means half note, and so on
         //start_measure - start counting at 0
         //start_beat - 0 means start immediately once start_measure has been reached, 
         //             0.5 means start a half note after start_measure has been reached, and so on.
-        public Note(NoteName note_name, int octave, double duration, int start_measure, double start_beat)
+        public Note(NoteName note_name, byte octave, double duration, int start_measure, double start_beat)
         {
             this.noteName = note_name;
             this.octave = octave;
@@ -27,26 +31,20 @@ namespace Automatone
             this.startBeat = start_beat;
         }
 
-        public int getStartMeasure()
+        public int GetStartMeasure()
         {
             return startMeasure;
         }
 
-        public double getStartBeat()
+        public double GetStartBeat()
         {
             return startBeat;
         }
 
-        //beat_resolution will be passed by NoteThread and should ideally be less than the initial duration of any Note
-        public double update(double beat_resolution)
+        public double Update(double beat_resolution)
         {
             remainingDuration -= beat_resolution;
             return remainingDuration;
-        }
-
-        public override String ToString()
-        {
-            return noteName.ToString() + octave;
         }
 
         public int CompareTo(Note n)

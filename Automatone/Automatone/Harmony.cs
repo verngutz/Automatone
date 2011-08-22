@@ -23,18 +23,18 @@ namespace Automatone
 	    {
 		    Dictionary<NoteName, int> equivalents = new Dictionary<NoteName, int>();
 		
-		    equivalents.Add(NoteName.NOTE_C, 0);
-            equivalents.Add(NoteName.NOTE_C_SHARP, 1);
-            equivalents.Add(NoteName.NOTE_D, 2);
-            equivalents.Add(NoteName.NOTE_D_SHARP, 3);
-            equivalents.Add(NoteName.NOTE_E, 4);
-            equivalents.Add(NoteName.NOTE_F, 5);
-            equivalents.Add(NoteName.NOTE_F_SHARP, 6);
-            equivalents.Add(NoteName.NOTE_G, 7);
-            equivalents.Add(NoteName.NOTE_G_SHARP, 8);
-            equivalents.Add(NoteName.NOTE_A, 9);
-            equivalents.Add(NoteName.NOTE_A_SHARP, 10);
-            equivalents.Add(NoteName.NOTE_B, 11);
+		    equivalents.Add(NoteName.C, 0);
+            equivalents.Add(NoteName.C_SHARP, 1);
+            equivalents.Add(NoteName.D, 2);
+            equivalents.Add(NoteName.D_SHARP, 3);
+            equivalents.Add(NoteName.E, 4);
+            equivalents.Add(NoteName.F, 5);
+            equivalents.Add(NoteName.F_SHARP, 6);
+            equivalents.Add(NoteName.G, 7);
+            equivalents.Add(NoteName.G_SHARP, 8);
+            equivalents.Add(NoteName.A, 9);
+            equivalents.Add(NoteName.A_SHARP, 10);
+            equivalents.Add(NoteName.B, 11);
 		
 		    return equivalents;
 	    }

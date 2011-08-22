@@ -9,7 +9,8 @@ namespace Automatone
 {
     public class SongGenerator
     {
-	    public static String generateSong(Random random, MusicTheory theory, out CellState[,] song)
+        private const byte START_OFFSET = 21;
+	    public static String GenerateSong(Random random, MusicTheory theory, out CellState[,] song)
 	    {
 		    NoteThread thread = new NoteThread(theory.getBeatResolution());
             Song s = new Song(theory, random);
@@ -27,7 +28,7 @@ namespace Automatone
                         for (int x = j + 1; x < song.GetLength(1) && song[i, x] == CellState.HOLD; x++)
                             integerDuration++;
 
-                        thread.addNote(new Note(theory.getNoteName(i), theory.getOctave(i), integerDuration * theory.getBeatResolution(), (int)(j * theory.getBeatResolution()), startBeat));
+                        thread.AddNote(new Note(new NoteName((byte)((i + START_OFFSET) % 12)), (byte)((i + START_OFFSET) / 12), integerDuration * theory.getBeatResolution(), (int)(j * theory.getBeatResolution()), startBeat));
                     }
                 }
             }
@@ -46,6 +47,12 @@ namespace Automatone
 	    {
 		    private const double EPSILON = 0.00001;
 
+            private const string START_TRACK = "MTrk\n";
+            private const string PREFIX_PORT = "0 Meta 0x21 00\n";
+            private const string PREFIX_CHANNEL = "0 Meta 0x20 00\n";
+            private const string META_END_TRACK = " Meta TrkEnd\n";
+            private const string END_TRACK = "TrkEnd\n";
+
 		    private List<Note> notes;
 		    private double beatResolution;
 
@@ -55,40 +62,73 @@ namespace Automatone
 			    beatResolution = beat_resolution;
 		    }
 		
-		    public void addNote(Note n)
+		    public void AddNote(Note n)
 		    {
 			    notes.Add(n);
 		    }
 		
-		    private String startTrack(int track, int port, int channel, String instr, int volume, int balance, int reverb)
-		    {
-			    return "mtrk(" + track + ")\n\tprefixport " + port + "\n\tprefixchannel " + channel + "\n\tprogram " + instr + "\n\tvolume " + volume + "\n\tbalance " + balance + "\n\treverb " + reverb + "\n";
-		    }
+            private string ProgramChange(ulong time, byte channel, byte programNumber)
+            {
+                return time + " PrCh ch=" + channel + " p=" + programNumber + "\n";
+            }
+
+            private string SetVolume(ulong time, byte channel, byte volume)
+            {
+                return time + " Par ch=" + channel + " c=7 v=" + volume + "\n";
+            }
+
+            private string SetPanning(ulong time, byte channel, byte pan)
+            {
+                return time + " Par ch=" + channel + " c=10 v=" + pan + "\n";
+            }
+
+            private string SetReverb(ulong time, byte channel, byte reverb)
+            {
+                return time + " Par ch=" + channel + " c=91 v=" + reverb + "\n";
+            }
+
+            private string TurnNoteOn(ulong time, byte channel, byte noteMidiNumber, byte velocity)
+            {
+                return time + " On ch=" + channel + " n=" + noteMidiNumber + " v=" + velocity + "\n";
+            }
+
+            private string TurnNoteOff(ulong time, byte channel, byte noteMidiNumber, byte velocity)
+            {
+                return time + " Off ch=" + channel + " n=" + noteMidiNumber + " v=" + velocity + "\n";
+            }
 		
 		    public override String ToString()
 		    {
                 notes.Sort();
-			    String thread = startTrack(1, 0, 1, "GrandPno", 127, 64, 64);
+                StringBuilder thread = new StringBuilder();
+                thread.Append(START_TRACK);
+                thread.Append(PREFIX_PORT);
+                thread.Append(PREFIX_CHANNEL);
+                thread.Append(ProgramChange(0, 1, 0));
+                thread.Append(SetVolume(0, 1, 127));
+                thread.Append(SetPanning(0, 1, 64));
+                thread.Append(SetReverb(0, 1, 64));
 			    double timePassed = 0;
+                ulong midiTimePassed = 0;
 			    List<Note> activeNotes = new List<Note>();
 			    List<Note> expiredNotes = new List<Note>();
 			    while(notes.Count > 0 || activeNotes.Count > 0)
 			    {
-				    while(notes.Count > 0 && Math.Abs(notes.First<Note>().getStartMeasure() + notes.First<Note>().getStartBeat() - timePassed) <= EPSILON)
+				    while(notes.Count > 0 && Math.Abs(notes.First<Note>().GetStartMeasure() + notes.First<Note>().GetStartBeat() - timePassed) <= EPSILON)
 				    {
 					    Note toActivate = notes.First<Note>();
                         notes.Remove(notes.First<Note>());
 					    activeNotes.Add(toActivate);
-					    thread += "\t\t+" + toActivate.ToString() + " $7F;\n";
+					    thread.Append(TurnNoteOn(midiTimePassed, 1, toActivate.MidiNumber, 127));
 				    }
-				    thread += "\t1/" + (int)Math.Round(1 / beatResolution) + ";\n";
 				    timePassed += beatResolution;
+                    midiTimePassed += (ulong)(beatResolution * 768);
 				    foreach(Note n in activeNotes)
 				    {
-					    if(n.update(beatResolution) <= EPSILON)
+					    if(n.Update(beatResolution) <= EPSILON)
 					    {
 						    expiredNotes.Add(n);
-						    thread += "\t\t-" + n.ToString() + " $00;\n";
+                            thread.Append(TurnNoteOff(midiTimePassed, 1, n.MidiNumber, 0));
 					    }
 				    }
 				    foreach(Note n in expiredNotes)
@@ -97,8 +137,10 @@ namespace Automatone
 				    }
 				    expiredNotes.Clear();
 			    }
-			    thread += "end mtrk\n";
-			    return thread;
+                thread.Append(midiTimePassed);
+                thread.Append(META_END_TRACK);
+                thread.Append(END_TRACK);
+			    return thread.ToString();
 		    }
 	    }
     }

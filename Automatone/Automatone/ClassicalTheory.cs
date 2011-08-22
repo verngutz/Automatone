@@ -41,31 +41,21 @@ namespace Automatone
         public const int NOTENAME_OFFSET = 7;
         public const int OCTAVE_OFFSET = 5;
 
-        public override NoteName getNoteName(int pitchNumber)
-        {
-            return CHROMATIC_SCALE[(pitchNumber + NOTENAME_OFFSET) % CHROMATIC_SCALE.Length];
-        }
-
-        public override int getOctave(int pitchNumber)
-        {
-            return (pitchNumber + OCTAVE_OFFSET) / CHROMATIC_SCALE.Length + 1;
-        }
-
         //CHROMATIC SCALE
         public static NoteName[] CHROMATIC_SCALE = 
 	    {
-		    NoteName.NOTE_C,
-		    NoteName.NOTE_C_SHARP,
-		    NoteName.NOTE_D,
-		    NoteName.NOTE_D_SHARP,
-		    NoteName.NOTE_E,
-		    NoteName.NOTE_F,
-		    NoteName.NOTE_F_SHARP,
-		    NoteName.NOTE_G,
-		    NoteName.NOTE_G_SHARP,
-		    NoteName.NOTE_A,
-		    NoteName.NOTE_A_SHARP,
-		    NoteName.NOTE_B
+		    NoteName.C,
+		    NoteName.C_SHARP,
+		    NoteName.D,
+		    NoteName.D_SHARP,
+		    NoteName.E,
+		    NoteName.F,
+		    NoteName.F_SHARP,
+		    NoteName.G,
+		    NoteName.G_SHARP,
+		    NoteName.A,
+		    NoteName.A_SHARP,
+		    NoteName.B
 	    };
 
         //Beat Resolution

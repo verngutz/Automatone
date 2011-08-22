@@ -24,8 +24,6 @@ namespace Automatone
 
         //Pitch Range and Offset
         public abstract int PIANO_SIZE { get; }
-        public abstract NoteName getNoteName(int pitchNumber);
-        public abstract int getOctave(int pitchNumber);
 
         //Beat Resolution
         public abstract int SUBBEATS_PER_MEASURE { get; }
