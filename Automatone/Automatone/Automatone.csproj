@@ -107,25 +107,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicWesternTheory.cs" />
+    <Compile Include="Harmony.cs" />
     <Compile Include="CellState.cs" />
+    <Compile Include="ClassicalTheory.cs" />
+    <Compile Include="InputParameters.cs" />
     <Compile Include="MainScreen.cs" />
     <Compile Include="AutomatoneEvents.cs" />
+    <Compile Include="Note.cs" />
     <Compile Include="NoteName.cs" />
-    <Compile Include="PhraseGenerator.cs" />
+    <Compile Include="Phrase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Automatone.cs" />
+    <Compile Include="Rhythm.cs" />
     <Compile Include="SongGenerator.cs" />
-    <Compile Include="Theory.cs" />
-    <Compile Include="VerseGenerator.cs" />
+    <Compile Include="Song.cs" />
+    <Compile Include="MusicTheory.cs" />
+    <Compile Include="Verse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="Piano.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="TXT2MIDI.EXE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -144,8 +146,9 @@
       <Name>MoodSwingGUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutomatoneContent\AutomatoneContent.contentproj">
-      <Name>AutomatoneContent</Name>
+      <Name>AutomatoneContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{497F80D0-8FE2-4E6D-AAF0-0362468DCABF}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

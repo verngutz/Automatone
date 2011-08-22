@@ -1,9 +1,0 @@
-Tasks:
-1. Documentation and Managing
-2. GUI
-	a. graphics/animation
-	b. user input
-3. Backend
-	a. (Monte Carlo) Algorithms
-	b. (Music) Theory
-4. Audio (and other needed libraries) Integration

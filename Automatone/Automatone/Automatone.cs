@@ -16,8 +16,6 @@ using MoodSwingGUI;
 
 using Duet;
 using Duet.Audio_System;
-using Duet.Render_System;
-using Duet.Input_System;
 
 namespace Automatone
 {
@@ -39,18 +37,11 @@ namespace Automatone
 
         // Services
         private IAudioSystemService audioService;
-        private InputComponent input;
-
-        // Random Shit
-        private float tempoChangeSpeed = 0.0f;
-        private float tempo;
-        private bool buttonDown = false;
-        private byte instrument = 0;
 
         //GUI
         public MainScreen gameScreen;
 
-        public const int TEMPO = 60;
+        public const ushort TEMPO = 120;
 
         public Automatone()
         {
@@ -62,7 +53,6 @@ namespace Automatone
 
             IsMouseVisible = true;
             Window.Title = "Automatone";
-
         }
 
         /// <summary>
@@ -84,20 +74,19 @@ namespace Automatone
             options.audioSettingsPath = "Content\\audio\\WavetablePrograms.xgs";
             audioService.Startup(options);
 
+            //Setup Synthesizer
             synthesizer = new Synthesizer(this);
             synthesizer.WaveBankPath = "Content\\audio\\Wave Bank.xwb";
             synthesizer.SoundBankPath = "Content\\audio\\Sound Bank.xsb";
             synthesizer.m_Patch = content.Load<XACTPatch>(@"content\audio\xact");
 
+            //Construct Sequencer
             sequencer = new Sequencer(this);
 
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
 
             audioService.BeatsPerMinute = TEMPO;
-
-            input = new InputComponent(this);
-            this.Components.Add(input);
 
             base.Initialize();
            
@@ -109,10 +98,8 @@ namespace Automatone
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameScreen = new MainScreen(null, spriteBatch, this, graphics);
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -131,14 +118,8 @@ namespace Automatone
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            // TODO: Add your update logic here
             sequencer.Update(gameTime);
             synthesizer.Update(gameTime);
-
             gameScreen.Update(gameTime);
 
             base.Update(gameTime);
@@ -153,9 +134,7 @@ namespace Automatone
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-
             gameScreen.Draw(gameTime);
-
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -28,7 +28,7 @@ namespace Automatone
 
         public const int CELLSIZE = 12;
 
-        List<CellState[,]> songCells;
+        CellState[,] songCells;
 
         public bool GridMove { set; get; }
         public bool MoveDirection { set; get; }
@@ -49,8 +49,6 @@ namespace Automatone
         public MainScreen(Texture2D background, float topPadding, float bottomPadding, float leftPadding, float rightPadding, Color highlight, SpriteBatch spriteBatch, Game game, GraphicsDeviceManager graphics)
             : base(background, topPadding, bottomPadding, leftPadding, rightPadding, highlight, spriteBatch, game)
         {
-            songCells = new List<CellState[,]>();
-            songCells.Add(new CellState[0, 0]);
             randomButton = new MSButton(null, new SongRandomizer(songCells), new Rectangle(0, 0, 117, 45),
                 game.Content.Load<Texture2D>("random"),
                 game.Content.Load<Texture2D>("random"),
@@ -224,7 +222,7 @@ namespace Automatone
             topPanel.AddComponent(topLeftPanel);
             topPanel.AddComponent(topRightPanel);
 
-            gridPanel = new MSPanel(null, new Rectangle(0, 150, songCells.ElementAt<CellState[,]>(0).GetLength(1) * CELLSIZE, songCells.ElementAt<CellState[,]>(0).GetLength(0) * CELLSIZE), null, Shape.RECTANGULAR, spriteBatch, game);
+            gridPanel = new MSPanel(null, new Rectangle(0, 150, 0, 0), null, Shape.RECTANGULAR, spriteBatch, game);
             
             AddComponent(topPanel);
             AddComponent(gridPanel);
