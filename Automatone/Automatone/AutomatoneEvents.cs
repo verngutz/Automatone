@@ -20,10 +20,7 @@ namespace Automatone
         private const int SEED = 40;
         private const int TEMPO_DIVIDEND = 60000000;
 
-        public SongRandomizer(CellState[,] songCells)
-        {
-            this.songCells = songCells;
-        }
+        public SongRandomizer() { }
 
         public void PerformAction(Game game)
         {

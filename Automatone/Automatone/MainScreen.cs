@@ -28,8 +28,6 @@ namespace Automatone
 
         public const int CELLSIZE = 12;
 
-        CellState[,] songCells;
-
         public bool GridMove { set; get; }
         public bool MoveDirection { set; get; }
         int moveVal = 0;
@@ -49,7 +47,7 @@ namespace Automatone
         public MainScreen(Texture2D background, float topPadding, float bottomPadding, float leftPadding, float rightPadding, Color highlight, SpriteBatch spriteBatch, Game game, GraphicsDeviceManager graphics)
             : base(background, topPadding, bottomPadding, leftPadding, rightPadding, highlight, spriteBatch, game)
         {
-            randomButton = new MSButton(null, new SongRandomizer(songCells), new Rectangle(0, 0, 117, 45),
+            randomButton = new MSButton(null, new SongRandomizer(), new Rectangle(0, 0, 117, 45),
                 game.Content.Load<Texture2D>("random"),
                 game.Content.Load<Texture2D>("random"),
                 game.Content.Load<Texture2D>("random"),
