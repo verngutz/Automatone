@@ -43,6 +43,12 @@ namespace Automatone
 
         public const ushort TEMPO = 120;
 
+        public const int SUBBEATS_PER_MEASURE = 8;
+        public static double getBeatResolution()
+        {
+            return 1.0 / SUBBEATS_PER_MEASURE;
+        }
+
         public Automatone()
         {
             graphics = new GraphicsDeviceManager(this);

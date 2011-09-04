@@ -244,7 +244,7 @@ namespace Automatone
 
             if (ScrollWithMidi)
             {
-                playOffset -= Automatone.TEMPO / 900.0f * CELLSIZE;
+                playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLSIZE;
                 gridOffset.X = Math.Min(playOffset + 100, 0);
             }
             else
@@ -273,31 +273,31 @@ namespace Automatone
 
                     gridOffset.X -= moveValX;
                 }
+            }
 
-                if (newKeyboardState.IsKeyDown(Keys.Up) == newKeyboardState.IsKeyDown(Keys.Down))
+            if (newKeyboardState.IsKeyDown(Keys.Up) == newKeyboardState.IsKeyDown(Keys.Down))
+            {
+                moveValY = INIT_GRID_MOVE_SPEED;
+            }
+            else if (newKeyboardState.IsKeyDown(Keys.Up))
+            {
+                moveValY += GRID_MOVE_ACCELERATION;
+                if (moveValY > MAX_GRID_MOVE_SPEED)
                 {
-                    moveValY = INIT_GRID_MOVE_SPEED;
+                    moveValY = MAX_GRID_MOVE_SPEED;
                 }
-                else if (newKeyboardState.IsKeyDown(Keys.Up))
-                {
-                    moveValY+= GRID_MOVE_ACCELERATION;
-                    if (moveValY > MAX_GRID_MOVE_SPEED)
-                    {
-                        moveValY = MAX_GRID_MOVE_SPEED;
-                    }
 
-                    gridOffset.Y += moveValY;
-                }
-                else if (newKeyboardState.IsKeyDown(Keys.Down))
+                gridOffset.Y += moveValY;
+            }
+            else if (newKeyboardState.IsKeyDown(Keys.Down))
+            {
+                moveValY += GRID_MOVE_ACCELERATION;
+                if (moveValY > MAX_GRID_MOVE_SPEED)
                 {
-                    moveValY += GRID_MOVE_ACCELERATION;
-                    if (moveValY > MAX_GRID_MOVE_SPEED)
-                    {
-                        moveValY = MAX_GRID_MOVE_SPEED;
-                    }
-
-                    gridOffset.Y -= moveValY;
+                    moveValY = MAX_GRID_MOVE_SPEED;
                 }
+
+                gridOffset.Y -= moveValY;
             }
             
             gridOffset.X = MathHelper.Clamp(gridOffset.X, gridPanel.BoundingRectangle.Width - 10 - CELLSIZE - (gridWidth * CELLSIZE), 0);

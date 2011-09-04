@@ -15,7 +15,7 @@ namespace Automatone
             //Calculate phrase length
             int phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
             phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * InputParameters.phraseLengthVariance));
-            phraseLength *= theory.SUBBEATS_PER_MEASURE;
+            phraseLength *= Automatone.SUBBEATS_PER_MEASURE;
 
             Harmony harm = new Harmony(theory, rand);
             harm.initializeHarmony(phraseLength);

@@ -57,12 +57,5 @@ namespace Automatone
 		    NoteName.A_SHARP,
 		    NoteName.B
 	    };
-
-        //Beat Resolution
-        public override int SUBBEATS_PER_MEASURE { get { return 16; } }
-        public override double getBeatResolution()
-        {
-            return 1.0 / SUBBEATS_PER_MEASURE;
-        }
     }
 }
