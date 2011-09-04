@@ -14,26 +14,28 @@ namespace Automatone
 {
     public class MainScreen : MSScreen
     {
-        MSButton randomButton;
-        MSTabbedPanel inputTabs;
-        MSCheckbox playButton;
-        MSButton rewindButton;
-        MSButton forwardButton;
-        MSImageHolder slider;
-        MSImageHolder sliderCursor;
-        MSPanel topLeftPanel;
-        MSPanel topRightPanel;
-        MSPanel topPanel;
+        private MSButton randomButton;
+        private MSTabbedPanel inputTabs;
+        private MSCheckbox playButton;
+        private MSButton rewindButton;
+        private MSButton forwardButton;
+        private MSImageHolder slider;
+        private MSImageHolder sliderCursor;
+        private MSPanel topLeftPanel;
+        private MSPanel topRightPanel;
+        private MSPanel topPanel;
         public MSPanel gridPanel;
-        Vector2 gridOffset;
+        private Vector2 gridOffset;
 
         public const int CELLSIZE = 12;
 
-        public bool GridMove { set; get; }
-        public bool MoveDirection { set; get; }
-        int moveVal = 0;
+        private int moveVal = 0;
 
-        const int MOVE = 1;
+        private const int INIT_GRID_MOVE_SPEED = 1;
+        private const int GRID_MOVE_ACCELERATION = 1;
+        private const int MAX_GRID_MOVE_SPEED = 5;
+
+        private KeyboardState oldKeyBoardState;
 
         public MainScreen(Texture2D background, SpriteBatch spriteBatch, Game game, GraphicsDeviceManager graphics)
             : this(background, 0, 0, 0, 0, Color.White, spriteBatch, game, graphics) { }
@@ -219,34 +221,75 @@ namespace Automatone
             topPanel = new MSPanel(null, new Rectangle(0, 0, 800, 150), null, Shape.RECTANGULAR, spriteBatch, game);
             topPanel.AddComponent(topLeftPanel);
             topPanel.AddComponent(topRightPanel);
-
-            gridPanel = new MSPanel(null, new Rectangle(0, 150, 0, 0), null, Shape.RECTANGULAR, spriteBatch, game);
             
             AddComponent(topPanel);
 
-            GridMove = false;
+            gridPanel = new MSPanel(null, new Rectangle(0, 150, 0, 0), null, Shape.RECTANGULAR, spriteBatch, game);
             gridOffset = new Vector2(0, 0);
+            oldKeyBoardState = Keyboard.GetState();
         }
 
         public override void Update(GameTime gameTime)
         {
-            if(Keyboard.GetState().IsKeyDown(Keys.Left))
+            KeyboardState newKeyboardState = Keyboard.GetState();
+            if(newKeyboardState.IsKeyDown(Keys.Left))
             {
-                gridOffset.X += MOVE;
+                if (oldKeyBoardState.IsKeyDown(Keys.Left))
+                {
+                    moveVal += GRID_MOVE_ACCELERATION;
+                    if (moveVal > MAX_GRID_MOVE_SPEED)
+                    {
+                        moveVal = MAX_GRID_MOVE_SPEED;
+                    }
+                }
+
+                gridOffset.X += moveVal;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            else if (newKeyboardState.IsKeyDown(Keys.Right))
             {
-                gridOffset.X -= MOVE;
+                if (oldKeyBoardState.IsKeyDown(Keys.Right))
+                {
+                    moveVal += GRID_MOVE_ACCELERATION;
+                    if (moveVal > MAX_GRID_MOVE_SPEED)
+                    {
+                        moveVal = MAX_GRID_MOVE_SPEED;
+                    }
+                }
+
+                gridOffset.X -= moveVal;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            else if (newKeyboardState.IsKeyDown(Keys.Up))
             {
-                gridOffset.Y += MOVE;
+                if (oldKeyBoardState.IsKeyDown(Keys.Up))
+                {
+                    moveVal += GRID_MOVE_ACCELERATION;
+                    if (moveVal > MAX_GRID_MOVE_SPEED)
+                    {
+                        moveVal = MAX_GRID_MOVE_SPEED;
+                    }
+                }
+
+                gridOffset.Y += moveVal;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            else if (newKeyboardState.IsKeyDown(Keys.Down))
             {
-                gridOffset.Y -= MOVE;
+                if (oldKeyBoardState.IsKeyDown(Keys.Down))
+                {
+                    moveVal += GRID_MOVE_ACCELERATION;
+                    if (moveVal > MAX_GRID_MOVE_SPEED)
+                    {
+                        moveVal = MAX_GRID_MOVE_SPEED;
+                    }
+                }
+
+                gridOffset.Y -= moveVal;
+            }
+            else
+            {
+                moveVal = INIT_GRID_MOVE_SPEED;
             }
 
+            oldKeyBoardState = Keyboard.GetState();
             HandleMouseInput(false);
             gridPanel.Update(gameTime);
  	        base.Update(gameTime);
