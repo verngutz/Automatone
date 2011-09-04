@@ -54,6 +54,10 @@ namespace Automatone
 
             (game as Automatone).gameScreen.gridPanel = new MSPanel(null, new Rectangle(0, 150, Math.Min(800, songCells.GetLength(1) * MainScreen.CELLSIZE), Math.Min(450, songCells.GetLength(0) * MainScreen.CELLSIZE)), null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game);
 
+            (game as Automatone).gameScreen.gridHeight = songCells.GetLength(0);
+            (game as Automatone).gameScreen.gridWidth = songCells.GetLength(1);
+            (game as Automatone).gameScreen.gridOffset = Vector2.Zero;
+
             for (int i = 0; i < songCells.GetLength(0); i++)
             {
                 for (int j = 0; j < songCells.GetLength(1); j++)
