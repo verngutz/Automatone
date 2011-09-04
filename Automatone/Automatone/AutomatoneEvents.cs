@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define USESEED
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,7 +38,11 @@ namespace Automatone
             sw.WriteLine("0 Meta TrkEnd");
             sw.WriteLine("TrkEnd");
 
+#if USESEED
+            String song = SongGenerator.GenerateSong(new Random(SEED), new ClassicalTheory(), out songCells);
+#else
             String song = SongGenerator.GenerateSong(new Random(), new ClassicalTheory(), out songCells);
+#endif
             sw.Write(song);
             sw.Close();
 
