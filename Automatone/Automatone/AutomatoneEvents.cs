@@ -25,6 +25,7 @@ namespace Automatone
         public void PerformAction(Game game)
         {
             (game as Automatone).sequencer.StopMidi();
+            (game as Automatone).gameScreen.ScrollWithMidi = false;
 
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
@@ -50,67 +51,65 @@ namespace Automatone
             txt2midi.StartInfo.UseShellExecute = true;
             txt2midi.Start();
 
-            (game as Automatone).gameScreen.RemoveComponent((game as Automatone).gameScreen.gridPanel);
-
-            (game as Automatone).gameScreen.gridPanel = new MSPanel(null, new Rectangle(0, 150, Math.Min(800, songCells.GetLength(1) * MainScreen.CELLSIZE), Math.Min(450, songCells.GetLength(0) * MainScreen.CELLSIZE)), null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game);
+            (game as Automatone).gameScreen.DestroyGridButtons();
 
             (game as Automatone).gameScreen.gridHeight = songCells.GetLength(0);
             (game as Automatone).gameScreen.gridWidth = songCells.GetLength(1);
             (game as Automatone).gameScreen.gridOffset = Vector2.Zero;
+            (game as Automatone).gameScreen.playOffset = 0;
 
             for (int i = 0; i < songCells.GetLength(0); i++)
             {
                 for (int j = 0; j < songCells.GetLength(1); j++)
                 {
-                    Texture2D squareImage = null;
+                    Texture2D CellTexture = null;
                     switch (songCells[i, j])
                     {
                         case CellState.SILENT:
-                            squareImage = game.Content.Load<Texture2D>("darkbox");
+                            CellTexture = game.Content.Load<Texture2D>("darkbox");
                             break;
                         case CellState.START:
-                            squareImage = game.Content.Load<Texture2D>("lightbox");
+                            CellTexture = game.Content.Load<Texture2D>("lightbox");
                             break;
                         case CellState.HOLD:
-                            squareImage = game.Content.Load<Texture2D>("holdbox");
+                            CellTexture = game.Content.Load<Texture2D>("holdbox");
                             break;
                     }
-                    (game as Automatone).gameScreen.gridPanel.AddComponent(
-                        new MSButton(
-                            null,
-                            null,
-                            new Rectangle(
-                                (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE,
-                                (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + (songCells.GetLength(0) - i - 1) * MainScreen.CELLSIZE,
-                                MainScreen.CELLSIZE, MainScreen.CELLSIZE),
-                            squareImage,
-                            squareImage,
-                            squareImage,
-                            null,
-                            Shape.RECTANGULAR,
-                            (game as Automatone).spriteBatch,
-                            game));
+                    (game as Automatone).gameScreen.AddGridButton(
+                        new MSButton(null, null, new Rectangle(), CellTexture, CellTexture, CellTexture, null, Shape.RECTANGULAR, (game as Automatone).spriteBatch, game),
+                            j, (songCells.GetLength(0) - i - 1));
                 }
             }
 
             txt2midi.Kill();
+            (game as Automatone).sequencer.LoadMidi("sample.mid");
         }
     }
 
-    public class Play : MSAction
+    public class PlayMidi : MSAction
     {
         public void PerformAction(Game game)
         {
-            (game as Automatone).sequencer.LoadMidi("sample.mid");
             (game as Automatone).sequencer.PlayMidi();
+            (game as Automatone).gameScreen.ScrollWithMidi = true;
         }
     }
 
-    public class Stop : MSAction
+    public class StopMidi : MSAction
     {
         public void PerformAction(Game game)
         {
             (game as Automatone).sequencer.StopMidi();
+            (game as Automatone).gameScreen.ScrollWithMidi = false;
+        }
+    }
+
+    public class PauseMidi : MSAction
+    {
+        public void PerformAction(Game game)
+        {
+            (game as Automatone).sequencer.PauseMidi();
+            (game as Automatone).gameScreen.ScrollWithMidi = false;
         }
     }
 }
