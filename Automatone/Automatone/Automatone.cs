@@ -25,7 +25,7 @@ namespace Automatone
     public class Automatone : Microsoft.Xna.Framework.Game
     {
         // Content Objects
-        ContentManager content;
+        private ContentManager content;
 
         // Graphics Objects
         public GraphicsDeviceManager graphics;
@@ -46,7 +46,6 @@ namespace Automatone
         public Automatone()
         {
             graphics = new GraphicsDeviceManager(this);
-            
 
             content = new ContentManager(Services);
             Content.RootDirectory = "Content";
@@ -89,9 +88,6 @@ namespace Automatone
             audioService.BeatsPerMinute = TEMPO;
 
             base.Initialize();
-
-
-           
         }
 
         /// <summary>
@@ -126,7 +122,6 @@ namespace Automatone
             sequencer.Update(gameTime);
             synthesizer.Update(gameTime);
             gameScreen.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -142,13 +137,10 @@ namespace Automatone
 
             gameScreen.Draw(gameTime);
 
-
             int frameRate = (int)(1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
             spriteBatch.DrawString(Content.Load<SpriteFont>("Temp"), "Frame Rate: " + frameRate + "fps", Vector2.Zero, Color.White);
 
             spriteBatch.End();
-
-
 
             base.Draw(gameTime);
         }

@@ -24,10 +24,11 @@ namespace Automatone
         private MSPanel topLeftPanel;
         private MSPanel topRightPanel;
         private MSPanel topPanel;
-        public MSPanel gridPanel;
+        private MSPanel gridPanel;
         private Vector2 gridOffset;
 
         public const int CELLSIZE = 12;
+        public const int GRID_Y_POSITION = 150;
 
         private int moveVal = 0;
 
@@ -35,7 +36,11 @@ namespace Automatone
         private const int GRID_MOVE_ACCELERATION = 1;
         private const int MAX_GRID_MOVE_SPEED = 5;
 
+        public bool ScrollWithMidi { set; get; }
+
         private KeyboardState oldKeyBoardState;
+
+        private Dictionary<Vector2, MSButton> gridAccessor;
 
         public MainScreen(Texture2D background, SpriteBatch spriteBatch, Game game, GraphicsDeviceManager graphics)
             : this(background, 0, 0, 0, 0, Color.White, spriteBatch, game, graphics) { }
@@ -60,7 +65,7 @@ namespace Automatone
 
             playButton = new MSCheckbox(
                 new MSButton(
-                    null, new Play(), new Rectangle(0, 0, 45, 42),
+                    null, new PlayMidi(), new Rectangle(0, 0, 45, 42),
                     game.Content.Load<Texture2D>("play"),
                     game.Content.Load<Texture2D>("play"),
                     game.Content.Load<Texture2D>("play"),
@@ -69,7 +74,7 @@ namespace Automatone
                     spriteBatch,
                     game),
                 new MSButton(
-                    null, new Stop(), new Rectangle(0, 0, 45, 42),
+                    null, new PauseMidi(), new Rectangle(0, 0, 45, 42),
                     game.Content.Load<Texture2D>("stop"),
                     game.Content.Load<Texture2D>("stop"),
                     game.Content.Load<Texture2D>("stop"),
@@ -224,41 +229,53 @@ namespace Automatone
             
             AddComponent(topPanel);
 
-            gridPanel = new MSPanel(null, new Rectangle(0, 150, 0, 0), null, Shape.RECTANGULAR, spriteBatch, game);
+            gridPanel = new MSPanel(null, new Rectangle(0, GRID_Y_POSITION, 800, 600), null, Shape.RECTANGULAR, spriteBatch, game);
             gridOffset = new Vector2(0, 0);
             oldKeyBoardState = Keyboard.GetState();
+            gridAccessor = new Dictionary<Vector2, MSButton>();
         }
 
         public override void Update(GameTime gameTime)
         {
             KeyboardState newKeyboardState = Keyboard.GetState();
-            if(newKeyboardState.IsKeyDown(Keys.Left))
+            if (ScrollWithMidi)
             {
-                if (oldKeyBoardState.IsKeyDown(Keys.Left))
-                {
-                    moveVal += GRID_MOVE_ACCELERATION;
-                    if (moveVal > MAX_GRID_MOVE_SPEED)
-                    {
-                        moveVal = MAX_GRID_MOVE_SPEED;
-                    }
-                }
-
-                gridOffset.X += moveVal;
+                gridOffset.X -= Automatone.TEMPO / 900.0f * CELLSIZE;
             }
-            else if (newKeyboardState.IsKeyDown(Keys.Right))
+            else
             {
-                if (oldKeyBoardState.IsKeyDown(Keys.Right))
+                if(newKeyboardState.IsKeyDown(Keys.Left))
                 {
-                    moveVal += GRID_MOVE_ACCELERATION;
-                    if (moveVal > MAX_GRID_MOVE_SPEED)
+                    if (oldKeyBoardState.IsKeyDown(Keys.Left))
                     {
-                        moveVal = MAX_GRID_MOVE_SPEED;
+                        moveVal += GRID_MOVE_ACCELERATION;
+                        if (moveVal > MAX_GRID_MOVE_SPEED)
+                        {
+                            moveVal = MAX_GRID_MOVE_SPEED;
+                        }
                     }
-                }
 
-                gridOffset.X -= moveVal;
+                    gridOffset.X += moveVal;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Right))
+                {
+                    if (oldKeyBoardState.IsKeyDown(Keys.Right))
+                    {
+                        moveVal += GRID_MOVE_ACCELERATION;
+                        if (moveVal > MAX_GRID_MOVE_SPEED)
+                        {
+                            moveVal = MAX_GRID_MOVE_SPEED;
+                        }
+                    }
+
+                    gridOffset.X -= moveVal;
+                }
+                else
+                {
+                    moveVal = INIT_GRID_MOVE_SPEED;
+                }
             }
-            else if (newKeyboardState.IsKeyDown(Keys.Up))
+            if (newKeyboardState.IsKeyDown(Keys.Up))
             {
                 if (oldKeyBoardState.IsKeyDown(Keys.Up))
                 {
@@ -297,14 +314,37 @@ namespace Automatone
 
         public override void Draw(GameTime gameTime)
         {
-            foreach (MSGUIClickable square in gridPanel.ClickableComponents)
+            foreach (MSGUIClickable cell in gridPanel.ClickableComponents)
             {
-                Vector2 drawPosition = square.Position + gridOffset;
-                if(gridPanel.BoundingRectangle.Intersects(new Rectangle((int)drawPosition.X, (int)drawPosition.Y, CELLSIZE, CELLSIZE)))
-                    spriteBatch.Draw(square.CollisionTexture, drawPosition, Color.White);
+                Vector2 drawPosition = cell.Position + gridOffset;
+                if (gridPanel.BoundingRectangle.Intersects(new Rectangle((int)drawPosition.X, (int)drawPosition.Y, CELLSIZE, CELLSIZE)))
+                {
+                    if (Math.Abs(drawPosition.X) < 0.5 * CELLSIZE)
+                        spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.SpringGreen);
+                    else
+                        spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.White);
+                }
             }
 
             base.Draw(gameTime);
+        }
+
+        public void AddGridButton(MSButton button, int horizontalIndex, int verticalIndex)
+        {
+            gridPanel.AddComponent(button);
+            int buttonXPosition = gridPanel.BoundingRectangle.X + horizontalIndex * MainScreen.CELLSIZE;
+            int buttonYPosition = gridPanel.BoundingRectangle.Y + verticalIndex * MainScreen.CELLSIZE;
+            button.BoundingRectangle = new Rectangle(
+                                buttonXPosition,
+                                buttonYPosition,
+                                MainScreen.CELLSIZE, MainScreen.CELLSIZE);
+            gridAccessor.Add(new Vector2(buttonXPosition, buttonYPosition), button);
+        }
+
+        public void DestroyGridButtons()
+        {
+            gridPanel.ClickableComponents.Clear();
+            gridAccessor.Clear();
         }
     }
 }
