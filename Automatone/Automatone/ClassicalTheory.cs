@@ -26,11 +26,19 @@ namespace Automatone
                 List<double> sample = new List<double>();
                 sample.Add(1);
                 sample.Add(0);
-                sample.Add(0);
+                sample.Add(1);
                 sample.Add(0);
                 sample.Add(1);
                 sample.Add(0);
                 sample.Add(0);
+                sample.Add(1);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(1);
                 sample.Add(0);
                 return sample;
             }

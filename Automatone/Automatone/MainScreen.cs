@@ -301,7 +301,7 @@ namespace Automatone
             }
             
             gridOffset.X = MathHelper.Clamp(gridOffset.X, gridPanel.BoundingRectangle.Width - 10 - CELLSIZE - (gridWidth * CELLSIZE), 0);
-            gridOffset.Y = MathHelper.Clamp(gridOffset.Y, gridPanel.BoundingRectangle.Height - 10 - CELLSIZE - (gridHeight * CELLSIZE), 0);
+            gridOffset.Y = MathHelper.Clamp(gridOffset.Y, gridPanel.BoundingRectangle.Height - 160 - CELLSIZE - (gridHeight * CELLSIZE), 0);
 
             HandleMouseInput(false);
             gridPanel.Update(gameTime);
@@ -315,11 +315,11 @@ namespace Automatone
                 Vector2 drawPosition = cell.Position + gridOffset;
                 if (gridPanel.BoundingRectangle.Intersects(new Rectangle((int)drawPosition.X, (int)drawPosition.Y, CELLSIZE, CELLSIZE)))
                 {
-                    if (Math.Abs(cell.Position.X) < -1 * playOffset - CELLSIZE / 2.0)
+                    if (Math.Abs(cell.Position.X) < -1 * playOffset - CELLSIZE)
                     {
                         spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.Gray);
                     }
-                    else if (Math.Abs(cell.Position.X) < -1 * playOffset + CELLSIZE / 2.0)
+                    else if (Math.Abs(cell.Position.X) < -1 * playOffset)
                     {
                         spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.SpringGreen);
                     }

@@ -41,13 +41,32 @@ namespace Automatone
 
                 if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
                 {
-                    for (int j = 0; j < 5; j++)
+                    for (int j = 0; j < 1; j++)
                     {
-                        int pitch = (int)(30 + rand.NextDouble() * 24);
-                        while(!chord.Contains(new NoteName((byte)(pitch % 12))))
-                            pitch = (int)(30 + rand.NextDouble() * 24);
+                        int pitch = (int)(25 + rand.NextDouble() * 16);
+                        while (!chord.Contains(new NoteName((byte)(pitch % 12))))
+                            pitch = (int)(25 + rand.NextDouble() * 16);
                         grid[pitch, i] = CellState.START;
-                        for(int k = 1; k < 4; k++)
+                        for (int k = 1; k < 4; k++)
+                            grid[pitch, Math.Min(i + k, phraseLength - 1)] = CellState.HOLD;
+                    }
+                }
+
+                //madaya to. left hand. :))
+                thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
+                while (thisSeed[i % thisSeed.Length] > 1)
+                {
+                    thisSeed[i % thisSeed.Length]--;
+                }
+                if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
+                {
+                    for (int j = 0; j < 4 && i % 4 == 0; j++)
+                    {
+                        int pitch = (int)(10 + rand.NextDouble() * 12);
+                        while (!chord.Contains(new NoteName((byte)(pitch % 12))))
+                            pitch = (int)(10 + rand.NextDouble() * 12);
+                        grid[pitch, i] = CellState.START;
+                        for (int k = 1; k < 8; k++)
                             grid[pitch, Math.Min(i + k, phraseLength - 1)] = CellState.HOLD;
                     }
                 }
