@@ -33,16 +33,17 @@ namespace Automatone
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
                 
                 //get next seedvalue
-                thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
-                while (thisSeed[i % thisSeed.Length] > 1)
+                for (int j = 0; j < 2; j++)
                 {
-                    thisSeed[i % thisSeed.Length]--;
-                }
-
-                if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
-                {
-                    for (int j = 0; j < 1; j++)
+                    thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
+                    while (thisSeed[i % thisSeed.Length] > 1)
                     {
+                        thisSeed[i % thisSeed.Length]--;
+                    }
+
+                    if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
+                    {
+                    
                         int pitch = (int)(25 + rand.NextDouble() * 16);
                         while (!chord.Contains(new NoteName((byte)(pitch % 12))))
                             pitch = (int)(25 + rand.NextDouble() * 16);
@@ -53,14 +54,14 @@ namespace Automatone
                 }
 
                 //madaya to. left hand. :))
-                thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
-                while (thisSeed[i % thisSeed.Length] > 1)
+                for (int j = 0; j < 4 && i % 8 == 0; j++)
                 {
-                    thisSeed[i % thisSeed.Length]--;
-                }
-                if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
-                {
-                    for (int j = 0; j < 4 && i % 4 == 0; j++)
+                    thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
+                    while (thisSeed[i % thisSeed.Length] > 1)
+                    {
+                        thisSeed[i % thisSeed.Length]--;
+                    }
+                    if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
                     {
                         int pitch = (int)(10 + rand.NextDouble() * 12);
                         while (!chord.Contains(new NoteName((byte)(pitch % 12))))
