@@ -58,23 +58,38 @@ namespace Automatone
             {
                 for (int j = 0; j < songCells.GetLength(1); j++)
                 {
+                    Texture2D squareImage = null;
+                    switch (songCells[i, j])
+                    {
+                        case CellState.SILENT:
+                            squareImage = game.Content.Load<Texture2D>("darkbox");
+                            break;
+                        case CellState.START:
+                            squareImage = game.Content.Load<Texture2D>("lightbox");
+                            break;
+                        case CellState.HOLD:
+                            squareImage = game.Content.Load<Texture2D>("holdbox");
+                            break;
+                    }
                     (game as Automatone).gameScreen.gridPanel.AddComponent(
-                        new MSImageHolder(
+                        new MSButton(
+                            null,
+                            null,
                             new Rectangle(
                                 (game as Automatone).gameScreen.gridPanel.BoundingRectangle.X + j * MainScreen.CELLSIZE,
                                 (game as Automatone).gameScreen.gridPanel.BoundingRectangle.Y + (songCells.GetLength(0) - i - 1) * MainScreen.CELLSIZE,
                                 MainScreen.CELLSIZE, MainScreen.CELLSIZE),
-                            (songCells[i, j] != CellState.SILENT ? (songCells[i, j] == CellState.START ? game.Content.Load<Texture2D>("lightbox") : game.Content.Load<Texture2D>("holdbox")) : game.Content.Load<Texture2D>("darkbox")),
+                            squareImage,
+                            squareImage,
+                            squareImage,
+                            null,
+                            Shape.RECTANGULAR,
                             (game as Automatone).spriteBatch,
                             game));
                 }
             }
 
-            (game as Automatone).gameScreen.AddComponent((game as Automatone).gameScreen.gridPanel);
-
-            (game as Automatone).graphics.PreferredBackBufferWidth = 800;
-            (game as Automatone).graphics.PreferredBackBufferHeight = 600;
-            (game as Automatone).graphics.ApplyChanges();
+            txt2midi.Kill();
         }
     }
 
@@ -92,24 +107,6 @@ namespace Automatone
         public void PerformAction(Game game)
         {
             (game as Automatone).sequencer.StopMidi();
-        }
-    }
-
-    public class MoveLeft : MSAction
-    {
-        public void PerformAction(Game game)
-        {
-            (game as Automatone).gameScreen.GridMove = true;
-            (game as Automatone).gameScreen.MoveDirection = false;
-        }
-    }
-
-    public class MoveRight : MSAction
-    {
-        public void PerformAction(Game game)
-        {
-            (game as Automatone).gameScreen.GridMove = true;
-            (game as Automatone).gameScreen.MoveDirection = true;
         }
     }
 }

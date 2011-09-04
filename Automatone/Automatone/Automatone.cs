@@ -89,6 +89,8 @@ namespace Automatone
             audioService.BeatsPerMinute = TEMPO;
 
             base.Initialize();
+
+
            
         }
 
@@ -100,6 +102,9 @@ namespace Automatone
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameScreen = new MainScreen(null, spriteBatch, this, graphics);
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -134,8 +139,16 @@ namespace Automatone
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
+
             gameScreen.Draw(gameTime);
+
+
+            int frameRate = (int)(1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
+            spriteBatch.DrawString(Content.Load<SpriteFont>("Temp"), "Frame Rate: " + frameRate + "fps", Vector2.Zero, Color.White);
+
             spriteBatch.End();
+
+
 
             base.Draw(gameTime);
         }

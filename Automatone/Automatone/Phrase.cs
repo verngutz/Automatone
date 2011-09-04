@@ -43,9 +43,9 @@ namespace Automatone
                 {
                     for (int j = 0; j < 5; j++)
                     {
-                        int pitch = (int)(0 + rand.NextDouble() * 24);
+                        int pitch = (int)(30 + rand.NextDouble() * 24);
                         while(!chord.Contains(new NoteName((byte)(pitch % 12))))
-                            pitch = (int)(0 + rand.NextDouble() * 24);
+                            pitch = (int)(30 + rand.NextDouble() * 24);
                         grid[pitch, i] = CellState.START;
                         for(int k = 1; k < 4; k++)
                             grid[pitch, Math.Min(i + k, phraseLength - 1)] = CellState.HOLD;

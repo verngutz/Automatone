@@ -25,6 +25,7 @@ namespace Automatone
         MSPanel topRightPanel;
         MSPanel topPanel;
         public MSPanel gridPanel;
+        Vector2 gridOffset;
 
         public const int CELLSIZE = 12;
 
@@ -33,7 +34,6 @@ namespace Automatone
         int moveVal = 0;
 
         const int MOVE = 1;
-        const int MOVE_LIMIT = 25;
 
         public MainScreen(Texture2D background, SpriteBatch spriteBatch, Game game, GraphicsDeviceManager graphics)
             : this(background, 0, 0, 0, 0, Color.White, spriteBatch, game, graphics) { }
@@ -77,7 +77,7 @@ namespace Automatone
                     game),
                 false);
 
-            rewindButton = new MSButton(null, new MoveLeft(), new Rectangle(0, 0, 33, 36),
+            rewindButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
                 game.Content.Load<Texture2D>("rev"),
                 game.Content.Load<Texture2D>("rev"),
                 game.Content.Load<Texture2D>("rev"),
@@ -86,7 +86,7 @@ namespace Automatone
                 spriteBatch,
                 game);
 
-            forwardButton = new MSButton(null, new MoveRight(), new Rectangle(0, 0, 33, 36),
+            forwardButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
                 game.Content.Load<Texture2D>("fwd"),
                 game.Content.Load<Texture2D>("fwd"),
                 game.Content.Load<Texture2D>("fwd"),
@@ -223,45 +223,45 @@ namespace Automatone
             gridPanel = new MSPanel(null, new Rectangle(0, 150, 0, 0), null, Shape.RECTANGULAR, spriteBatch, game);
             
             AddComponent(topPanel);
-            AddComponent(gridPanel);
 
             GridMove = false;
+            gridOffset = new Vector2(0, 0);
         }
 
         public override void Update(GameTime gameTime)
         {
             if(Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                foreach (MSGUIUnclickable component in gridPanel.UnclickableComponents)
-                {
-                    component.Position = new Vector2(component.Position.X + MOVE, component.Position.Y);
-                }
+                gridOffset.X += MOVE;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                foreach (MSGUIUnclickable component in gridPanel.UnclickableComponents)
-                {
-                    component.Position = new Vector2(component.Position.X - MOVE, component.Position.Y);
-                }
+                gridOffset.X -= MOVE;
             }
-            if (GridMove)
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                foreach (MSGUIUnclickable component in gridPanel.UnclickableComponents)
-                {
-                    component.Position = new Vector2(component.Position.X + (MoveDirection ? -MOVE : MOVE), component.Position.Y);
-                }
-
-                moveVal++;
-
-                if (moveVal >= MOVE_LIMIT)
-                {
-                    GridMove = false;
-                    moveVal = 0;
-                }
-
+                gridOffset.Y += MOVE;
             }
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                gridOffset.Y -= MOVE;
+            }
+
             HandleMouseInput(false);
+            gridPanel.Update(gameTime);
  	        base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            foreach (MSGUIClickable square in gridPanel.ClickableComponents)
+            {
+                Vector2 drawPosition = square.Position + gridOffset;
+                if(gridPanel.BoundingRectangle.Intersects(new Rectangle((int)drawPosition.X, (int)drawPosition.Y, CELLSIZE, CELLSIZE)))
+                    spriteBatch.Draw(square.CollisionTexture, drawPosition, Color.White);
+            }
+
+            base.Draw(gameTime);
         }
     }
 }
