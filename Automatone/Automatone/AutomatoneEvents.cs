@@ -92,7 +92,6 @@ namespace Automatone
         {
             (game as Automatone).sequencer.PlayMidi();
             (game as Automatone).gameScreen.ScrollWithMidi = true;
-            (game as Automatone).gameScreen.ScrollWithMidiReset = false;
         }
     }
 
@@ -103,7 +102,7 @@ namespace Automatone
             (game as Automatone).sequencer.StopMidi();
             (game as Automatone).sequencer.LoadMidi("sample.mid");
             (game as Automatone).gameScreen.ScrollWithMidi = false;
-            (game as Automatone).gameScreen.ScrollWithMidiReset = true;
+            (game as Automatone).gameScreen.setScrollLocation(0);
         }
     }
 
@@ -113,7 +112,6 @@ namespace Automatone
         {
             (game as Automatone).sequencer.PauseMidi();
             (game as Automatone).gameScreen.ScrollWithMidi = false;
-            (game as Automatone).gameScreen.ScrollWithMidiReset = false;
         }
     }
 }

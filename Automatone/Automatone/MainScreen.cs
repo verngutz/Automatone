@@ -43,7 +43,6 @@ namespace Automatone
         private const float MAX_GRID_MOVE_SPEED = 10;
 
         public bool ScrollWithMidi { set; get; }
-        public bool ScrollWithMidiReset { set; get; }
 
         private Dictionary<Vector2, MSButton> gridAccessor;
 
@@ -239,20 +238,19 @@ namespace Automatone
             gridAccessor = new Dictionary<Vector2, MSButton>();
         }
 
+        public void setScrollLocation(int noteNumber)
+        {
+            playOffset = -1 * noteNumber * CELLSIZE;
+        }
+
         public override void Update(GameTime gameTime)
         {
             KeyboardState newKeyboardState = Keyboard.GetState();
 
-            if (ScrollWithMidiReset)
-            {
-                playOffset = 0;
-                ScrollWithMidiReset = false;
-            }
-
             if (ScrollWithMidi)
             {
                 playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLSIZE;
-                gridOffset.X = Math.Min(playOffset + 100, 0);
+                gridOffset.X = playOffset + 150;
             }
             else
             {

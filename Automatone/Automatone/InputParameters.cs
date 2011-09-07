@@ -23,6 +23,6 @@ namespace Automatone
         public static double phraseDistinctiveness = 0.5;
 
         //Rhythm
-        public static double rhythmObedience = 0.9;
+        public static double rhythmObedience = 0.5;
     }
 }
