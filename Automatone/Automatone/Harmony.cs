@@ -347,7 +347,7 @@ namespace Automatone
 		    List<int> progressionChangeIndices = new List<int>();
 		    List<int> rands = new List<int>();
 		    int randsSize = phraseLength;
-		    int increment = theory.SUBBEATS_PER_MEASURE;
+            int increment = Automatone.SUBBEATS_PER_MEASURE;
 		    while(randsSize / increment < rawProgression.Count)
 		    {
 			    randsSize *= 4;
@@ -355,7 +355,7 @@ namespace Automatone
 		    }
 		    for(int i = 0; i < randsSize; i+= increment)
 		    {
-			    int deviation = (int)((1 - beatHarmonicCovariance) * theory.SUBBEATS_PER_MEASURE / 2 * random.NextDouble());
+                int deviation = (int)((1 - beatHarmonicCovariance) * Automatone.SUBBEATS_PER_MEASURE / 2 * random.NextDouble());
 			    rands.Add((random.NextDouble() < 0.5 ? i + deviation : Math.Max(i - deviation, 0)));
 		    }
 		    for(int i = 0; i < rawProgression.Count; i++)

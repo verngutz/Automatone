@@ -12,7 +12,7 @@ namespace Automatone
         private const byte START_OFFSET = 21;
 	    public static String GenerateSong(Random random, MusicTheory theory, out CellState[,] song)
 	    {
-		    NoteThread thread = new NoteThread(theory.getBeatResolution());
+		    NoteThread thread = new NoteThread(Automatone.getBeatResolution());
             Song s = new Song(theory, random);
             song = s.Grid;
 
@@ -22,13 +22,13 @@ namespace Automatone
                 {
                     if (song[i, j] == CellState.START)
                     {
-                        double startBeat = (j % (int)Math.Round(1 / theory.getBeatResolution()) * theory.getBeatResolution());
+                        double startBeat = (j % (int)Math.Round(1 / Automatone.getBeatResolution()) * Automatone.getBeatResolution());
 
                         int integerDuration = 1;
                         for (int x = j + 1; x < song.GetLength(1) && song[i, x] == CellState.HOLD; x++)
                             integerDuration++;
 
-                        thread.AddNote(new Note(new NoteName((byte)((i + START_OFFSET) % 12)), (byte)((i + START_OFFSET) / 12), integerDuration * theory.getBeatResolution(), (int)(j * theory.getBeatResolution()), startBeat));
+                        thread.AddNote(new Note(new NoteName((byte)((i + START_OFFSET) % 12)), (byte)((i + START_OFFSET) / 12), integerDuration * Automatone.getBeatResolution(), (int)(j * Automatone.getBeatResolution()), startBeat));
                     }
                 }
             }

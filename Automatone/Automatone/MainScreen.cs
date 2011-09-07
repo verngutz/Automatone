@@ -24,21 +24,25 @@ namespace Automatone
         private MSPanel topLeftPanel;
         private MSPanel topRightPanel;
         private MSPanel topPanel;
-        private MSPanel gridPanel;
-        private Vector2 gridOffset;
+        public MSPanel gridPanel;
+        public Vector2 gridOffset;
+
+        public float playOffset;
+
+        public int gridWidth = 0;
+        public int gridHeight = 0;
 
         public const int CELLSIZE = 12;
         public const int GRID_Y_POSITION = 150;
 
-        private int moveVal = 0;
+        private float moveValX = 0;
+        private float moveValY = 0;
 
-        private const int INIT_GRID_MOVE_SPEED = 1;
-        private const int GRID_MOVE_ACCELERATION = 1;
-        private const int MAX_GRID_MOVE_SPEED = 5;
+        private const float INIT_GRID_MOVE_SPEED = 1;
+        private const float GRID_MOVE_ACCELERATION = .02F;
+        private const float MAX_GRID_MOVE_SPEED = 10;
 
         public bool ScrollWithMidi { set; get; }
-
-        private KeyboardState oldKeyBoardState;
 
         private Dictionary<Vector2, MSButton> gridAccessor;
 
@@ -231,82 +235,74 @@ namespace Automatone
 
             gridPanel = new MSPanel(null, new Rectangle(0, GRID_Y_POSITION, 800, 600), null, Shape.RECTANGULAR, spriteBatch, game);
             gridOffset = new Vector2(0, 0);
-            oldKeyBoardState = Keyboard.GetState();
             gridAccessor = new Dictionary<Vector2, MSButton>();
         }
 
         public override void Update(GameTime gameTime)
         {
             KeyboardState newKeyboardState = Keyboard.GetState();
+
             if (ScrollWithMidi)
             {
-                gridOffset.X -= Automatone.TEMPO / 900.0f * CELLSIZE;
+                playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLSIZE;
+                gridOffset.X = Math.Min(playOffset + 100, 0);
             }
             else
             {
-                if(newKeyboardState.IsKeyDown(Keys.Left))
+                if (newKeyboardState.IsKeyDown(Keys.Left) == newKeyboardState.IsKeyDown(Keys.Right))
                 {
-                    if (oldKeyBoardState.IsKeyDown(Keys.Left))
+                    moveValX = INIT_GRID_MOVE_SPEED;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Left))
+                {
+                    moveValX += GRID_MOVE_ACCELERATION;
+                    if (moveValX > MAX_GRID_MOVE_SPEED)
                     {
-                        moveVal += GRID_MOVE_ACCELERATION;
-                        if (moveVal > MAX_GRID_MOVE_SPEED)
-                        {
-                            moveVal = MAX_GRID_MOVE_SPEED;
-                        }
+                        moveValX = MAX_GRID_MOVE_SPEED;
                     }
 
-                    gridOffset.X += moveVal;
+                    gridOffset.X += moveValX;
                 }
                 else if (newKeyboardState.IsKeyDown(Keys.Right))
                 {
-                    if (oldKeyBoardState.IsKeyDown(Keys.Right))
+                    moveValX += GRID_MOVE_ACCELERATION;
+                    if (moveValX > MAX_GRID_MOVE_SPEED)
                     {
-                        moveVal += GRID_MOVE_ACCELERATION;
-                        if (moveVal > MAX_GRID_MOVE_SPEED)
-                        {
-                            moveVal = MAX_GRID_MOVE_SPEED;
-                        }
+                        moveValX = MAX_GRID_MOVE_SPEED;
                     }
 
-                    gridOffset.X -= moveVal;
-                }
-                else
-                {
-                    moveVal = INIT_GRID_MOVE_SPEED;
+                    gridOffset.X -= moveValX;
                 }
             }
-            if (newKeyboardState.IsKeyDown(Keys.Up))
+
+            if (newKeyboardState.IsKeyDown(Keys.Up) == newKeyboardState.IsKeyDown(Keys.Down))
             {
-                if (oldKeyBoardState.IsKeyDown(Keys.Up))
+                moveValY = INIT_GRID_MOVE_SPEED;
+            }
+            else if (newKeyboardState.IsKeyDown(Keys.Up))
+            {
+                moveValY += GRID_MOVE_ACCELERATION;
+                if (moveValY > MAX_GRID_MOVE_SPEED)
                 {
-                    moveVal += GRID_MOVE_ACCELERATION;
-                    if (moveVal > MAX_GRID_MOVE_SPEED)
-                    {
-                        moveVal = MAX_GRID_MOVE_SPEED;
-                    }
+                    moveValY = MAX_GRID_MOVE_SPEED;
                 }
 
-                gridOffset.Y += moveVal;
+                gridOffset.Y += moveValY;
             }
             else if (newKeyboardState.IsKeyDown(Keys.Down))
             {
-                if (oldKeyBoardState.IsKeyDown(Keys.Down))
+                moveValY += GRID_MOVE_ACCELERATION;
+                if (moveValY > MAX_GRID_MOVE_SPEED)
                 {
-                    moveVal += GRID_MOVE_ACCELERATION;
-                    if (moveVal > MAX_GRID_MOVE_SPEED)
-                    {
-                        moveVal = MAX_GRID_MOVE_SPEED;
-                    }
+                    moveValY = MAX_GRID_MOVE_SPEED;
                 }
 
-                gridOffset.Y -= moveVal;
+                gridOffset.Y -= moveValY;
             }
-            else
-            {
-                moveVal = INIT_GRID_MOVE_SPEED;
-            }
+            
+            gridOffset.X = MathHelper.Clamp(gridOffset.X, gridPanel.BoundingRectangle.Width - 10 - CELLSIZE - (gridWidth * CELLSIZE), 0);
+            gridOffset.Y = MathHelper.Clamp(gridOffset.Y, gridPanel.BoundingRectangle.Height - 160 - CELLSIZE - (gridHeight * CELLSIZE), 0);
 
-            oldKeyBoardState = Keyboard.GetState();
             HandleMouseInput(false);
             gridPanel.Update(gameTime);
  	        base.Update(gameTime);
@@ -319,10 +315,18 @@ namespace Automatone
                 Vector2 drawPosition = cell.Position + gridOffset;
                 if (gridPanel.BoundingRectangle.Intersects(new Rectangle((int)drawPosition.X, (int)drawPosition.Y, CELLSIZE, CELLSIZE)))
                 {
-                    if (Math.Abs(drawPosition.X) < 0.5 * CELLSIZE)
+                    if (Math.Abs(cell.Position.X) < -1 * playOffset - CELLSIZE)
+                    {
+                        spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.Gray);
+                    }
+                    else if (Math.Abs(cell.Position.X) < -1 * playOffset)
+                    {
                         spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.SpringGreen);
+                    }
                     else
+                    {
                         spriteBatch.Draw(cell.CollisionTexture, drawPosition, Color.White);
+                    }
                 }
             }
 

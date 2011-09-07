@@ -59,6 +59,11 @@ namespace Automatone
 
             (game as Automatone).gameScreen.DestroyGridButtons();
 
+            (game as Automatone).gameScreen.gridHeight = songCells.GetLength(0);
+            (game as Automatone).gameScreen.gridWidth = songCells.GetLength(1);
+            (game as Automatone).gameScreen.gridOffset = Vector2.Zero;
+            (game as Automatone).gameScreen.playOffset = 0;
+
             for (int i = 0; i < songCells.GetLength(0); i++)
             {
                 for (int j = 0; j < songCells.GetLength(1); j++)

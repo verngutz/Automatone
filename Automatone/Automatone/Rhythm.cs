@@ -15,7 +15,7 @@ namespace Automatone
             rhythmCurve = new List<double>();
             List<double> rhythmCurveSample = musicTheory.RHYTHM_CURVE_SAMPLE;
             int l = rhythmCurveSample.Count;
-            int r = musicTheory.SUBBEATS_PER_MEASURE;
+            int r = Automatone.SUBBEATS_PER_MEASURE;
             for (int i = 0; i < r; i++)
             {
                 int j = (l * i) / r;
@@ -31,7 +31,7 @@ namespace Automatone
             double[] curve = new double[phraseLength];
             for (int i = 0; i < phraseLength; i++)
             {
-                curve[i] = rhythmCurve.ElementAt<double>(i % theory.SUBBEATS_PER_MEASURE);
+                curve[i] = rhythmCurve.ElementAt<double>(i % Automatone.SUBBEATS_PER_MEASURE);
             }
             return curve;
         }

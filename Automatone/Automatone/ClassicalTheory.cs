@@ -26,11 +26,19 @@ namespace Automatone
                 List<double> sample = new List<double>();
                 sample.Add(1);
                 sample.Add(0);
-                sample.Add(0);
+                sample.Add(1);
                 sample.Add(0);
                 sample.Add(1);
                 sample.Add(0);
                 sample.Add(0);
+                sample.Add(1);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(1);
                 sample.Add(0);
                 return sample;
             }
@@ -57,12 +65,5 @@ namespace Automatone
 		    NoteName.A_SHARP,
 		    NoteName.B
 	    };
-
-        //Beat Resolution
-        public override int SUBBEATS_PER_MEASURE { get { return 16; } }
-        public override double getBeatResolution()
-        {
-            return 1.0 / SUBBEATS_PER_MEASURE;
-        }
     }
 }
