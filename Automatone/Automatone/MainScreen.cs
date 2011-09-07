@@ -43,6 +43,7 @@ namespace Automatone
         private const float MAX_GRID_MOVE_SPEED = 10;
 
         public bool ScrollWithMidi { set; get; }
+        public bool ScrollWithMidiReset { set; get; }
 
         private Dictionary<Vector2, MSButton> gridAccessor;
 
@@ -88,7 +89,7 @@ namespace Automatone
                     game),
                 false);
 
-            rewindButton = new MSButton(null, null, new Rectangle(0, 0, 33, 36),
+            rewindButton = new MSButton(null, new StopMidi(), new Rectangle(0, 0, 33, 36),
                 game.Content.Load<Texture2D>("rev"),
                 game.Content.Load<Texture2D>("rev"),
                 game.Content.Load<Texture2D>("rev"),
@@ -241,6 +242,12 @@ namespace Automatone
         public override void Update(GameTime gameTime)
         {
             KeyboardState newKeyboardState = Keyboard.GetState();
+
+            if (ScrollWithMidiReset)
+            {
+                playOffset = 0;
+                ScrollWithMidiReset = false;
+            }
 
             if (ScrollWithMidi)
             {

@@ -33,7 +33,7 @@ namespace Automatone
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
                 
                 //get next seedvalue
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j < 2 && i % 2 == 0; j++)
                 {
                     thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
                     while (thisSeed[i % thisSeed.Length] > 1)
