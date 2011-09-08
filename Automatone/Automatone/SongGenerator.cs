@@ -22,7 +22,7 @@ namespace Automatone
                 {
                     if (song[i, j] == CellState.START)
                     {
-                        double startBeat = (j % (int)Math.Round(1 / Automatone.getBeatResolution()) * Automatone.getBeatResolution());
+                        double startBeat = (j % Automatone.SUBBEATS_PER_MEASURE * Automatone.getBeatResolution());
 
                         int integerDuration = 1;
                         for (int x = j + 1; x < song.GetLength(1) && song[i, x] == CellState.HOLD; x++)

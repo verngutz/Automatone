@@ -26,6 +26,7 @@ namespace Automatone
         {
             (game as Automatone).sequencer.StopMidi();
             (game as Automatone).gameScreen.ScrollWithMidi = false;
+            (game as Automatone).gameScreen.setScrollLocation(0);
 
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
