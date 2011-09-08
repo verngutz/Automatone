@@ -18,7 +18,7 @@ namespace Automatone
         public Vector2 gridOffset;
         public float playOffset;
 
-        public const byte CELLSIZE = 12;
+        public const byte CELLSIZE = 20;
 
         private static Texture2D silentCell;
         private static Texture2D startCell;
@@ -70,7 +70,7 @@ namespace Automatone
             if (automatone.SongCells != null)
             {
                 KeyboardState newKeyboardState = Keyboard.GetState();
-
+                
                 if (ScrollWithMidi)
                 {
                     playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLSIZE;
@@ -129,8 +129,8 @@ namespace Automatone
                     gridOffset.Y -= moveValY;
                 }
 
-                gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1) + 1) * CELLSIZE), 0);
-                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION - ((automatone.SongCells.GetLength(0) + 1) * CELLSIZE), 0);
+                gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1)) * CELLSIZE), 0);
+                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - ((automatone.SongCells.GetLength(0)) * CELLSIZE), 0);
 
             }
             base.Update(gameTime);
@@ -145,34 +145,23 @@ namespace Automatone
                 {
                     for (int j = 0; j < automatone.SongCells.GetLength(1); j++)
                     {
-                        Rectangle drawRectangle = new Rectangle((int)(j * CELLSIZE + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLSIZE + gridOffset.Y), CELLSIZE, CELLSIZE);
-                        if (boundingRectangle.Intersects(drawRectangle))
+                        if (!ScrollWithMidi || j % Automatone.SUBBEATS_PER_MEASURE == 0 ||automatone.SongCells[i, j] != CellState.SILENT)
                         {
-                            Texture2D cellTexture = null;
-                            switch (automatone.SongCells[i, j])
+                            Rectangle drawRectangle = new Rectangle((int)(j * CELLSIZE + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLSIZE + gridOffset.Y), CELLSIZE, CELLSIZE);
+                            if (boundingRectangle.Intersects(drawRectangle))
                             {
-                                case CellState.SILENT:
-                                    cellTexture = silentCell;
-                                    break;
-                                case CellState.START:
-                                    cellTexture = startCell;
-                                    break;
-                                case CellState.HOLD:
-                                    cellTexture = holdCell;
-                                    break;
-                            }
-
-                            if (j * CELLSIZE < -playOffset - CELLSIZE)
-                            {
-                                automatone.SpriteBatch.Draw(cellTexture, drawRectangle, Color.Gray);
-                            }
-                            else if (j * CELLSIZE < -playOffset)
-                            {
-                                automatone.SpriteBatch.Draw(cellTexture, drawRectangle, Color.SpringGreen);
-                            }
-                            else
-                            {
-                                automatone.SpriteBatch.Draw(cellTexture, drawRectangle, Color.White);
+                                if (j * CELLSIZE < -playOffset - CELLSIZE)
+                                {
+                                    automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, Color.Gray);
+                                }
+                                else if (j * CELLSIZE < -playOffset)
+                                {
+                                    automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, Color.White);
+                                }
+                                else
+                                {
+                                    automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, Color.LightGray);
+                                }
                             }
                         }
                     }
@@ -180,6 +169,20 @@ namespace Automatone
                 automatone.SpriteBatch.End();
             }
             base.Draw(gameTime);
+        }
+
+        private Texture2D GetCellTexture(int i, int j)
+        {
+            switch (automatone.SongCells[i, j])
+            {
+                case CellState.SILENT:
+                    return silentCell;
+                case CellState.START:
+                    return startCell;
+                case CellState.HOLD:
+                    return holdCell;
+            }
+            return null;
         }
 
         public void Reset()

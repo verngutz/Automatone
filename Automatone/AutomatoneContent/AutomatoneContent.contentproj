@@ -69,8 +69,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Temp.spritefont">
-      <Name>Temp</Name>
+    <Compile Include="Title.spritefont">
+      <Name>Title</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

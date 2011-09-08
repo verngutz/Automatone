@@ -1,14 +1,19 @@
+using System.Windows.Forms;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-using Nuclex.UserInterface;
 using Nuclex.Input;
+using Nuclex.UserInterface;
+using Nuclex.UserInterface.Visuals.Flat;
 
 using Duet.Audio_System;
 
 namespace Automatone
 {
+    using Screen = Nuclex.UserInterface.Screen;
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -42,6 +47,7 @@ namespace Automatone
         //Grid (Visual)
         private GridScreen gridScreen;
         public GridScreen GridScreen { get { return gridScreen; } }
+        public const byte GRID_PADDING = 10;
 
         public const byte X_DIMENSION = 1;
         public const byte Y_DIMENSION = 0;
@@ -129,6 +135,8 @@ namespace Automatone
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
+
+            gui.Visualizer = FlatGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
         }
 
         /// <summary>
@@ -159,13 +167,6 @@ namespace Automatone
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin();
-
-            int frameRate = (int)(1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
-            spriteBatch.DrawString(Content.Load<SpriteFont>("Temp"), "Frame Rate: " + frameRate + "fps", Vector2.Zero, Color.White);
-
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }

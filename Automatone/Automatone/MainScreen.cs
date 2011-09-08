@@ -32,8 +32,7 @@ namespace Automatone
         
         private void InitializeComponent()
         {
-            Bounds = new UniRectangle(0, 0, Automatone.SCREEN_WIDTH, Automatone.CONTROLS_AND_GRID_DIVISION);
-            Title = "Automatone";
+            Bounds = new UniRectangle(0, 0, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT);
 
             // Construct children
             randomizeButton = new ButtonControl();
