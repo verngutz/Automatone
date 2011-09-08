@@ -7,69 +7,76 @@ namespace Automatone
 {
     public class Phrase
     {
+        private List<Measure> phrase;
+
+        private int phraseLength;
+        public int PhraseLength { get { return phraseLength; } }
+        private int measureCount;
+        public int MeasureCount { get { return measureCount; } }
+
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
+        private List<Note> notes;
+        public List<Note> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, double[] rhythmSeed)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, List<double[]> rhythmSeeds)
         {
+            phrase = new List<Measure>();
+
             //Calculate phrase length
-            int phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
+            phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
             phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * InputParameters.phraseLengthVariance));
-            phraseLength *= Automatone.SUBBEATS_PER_MEASURE;
+            measureCount = phraseLength;
+
+            System.Console.WriteLine(" length " + phraseLength); //remove later
+
+            //Select rhythms
+            List<double[]> selectedRhythmSeeds = new List<double[]>();
+            for (int i = 0; i < 1 + 2 * InputParameters.phraseRhythmVariety * phraseLength; i++)
+            {
+                selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
+            }
 
             Harmony harm = new Harmony(theory, rand);
-            harm.initializeHarmony(phraseLength);
+            harm.initializeHarmony(phraseLength * Automatone.SUBBEATS_PER_MEASURE);
             List<List<NoteName>> progression = harm.chordProgression;
 
-            double[] rhythmCurve = rhythm.GetRhythmCurve(phraseLength);
-
-            double[] thisSeed = new double[rhythmSeed.Length];
-            rhythmSeed.CopyTo(thisSeed, 0);
-
-            grid = new CellState[theory.PIANO_SIZE, phraseLength];
             for (int i = 0; i < phraseLength; i++)
             {
-                int chordNumber = (i / phraseLength) * progression.Count;
+                int chordNumber = (i * progression.Count / phraseLength);
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
-                
-                //get next seedvalue
-                thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
-                while (thisSeed[i % thisSeed.Length] > 1)
-                {
-                    thisSeed[i % thisSeed.Length]--;
-                }
 
-                if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
+                phrase.Add(new Measure(theory, rand, rhythm, rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)), chord));
+            }
+
+            notes = new List<Note>();
+            for (int i = 0; i < phrase.Count; i++)
+            {
+                foreach (Note n in phrase.ElementAt<Measure>(i).Notes)
                 {
-                    for (int j = 0; j < 1; j++)
+                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + i, n.GetStartBeat());
+                    notes.Add(n2);
+                }
+            }
+
+            //Build grid
+            int gridSize = 0;
+            foreach (Measure m in phrase)
+            {
+                gridSize += m.Grid.GetLength(1);
+            }
+            grid = new CellState[theory.PIANO_SIZE, gridSize];
+            int gridStartPosition = 0;
+            foreach (Measure m in phrase)
+            {
+                for (int i = 0; i < m.Grid.GetLength(0); i++)
+                {
+                    for (int j = 0; j < m.Grid.GetLength(1); j++)
                     {
-                        int pitch = (int)(25 + rand.NextDouble() * 16);
-                        while (!chord.Contains(new NoteName((byte)(pitch % 12))))
-                            pitch = (int)(25 + rand.NextDouble() * 16);
-                        grid[pitch, i] = CellState.START;
-                        for (int k = 1; k < 4; k++)
-                            grid[pitch, Math.Min(i + k, phraseLength - 1)] = CellState.HOLD;
+                        grid[i, j + gridStartPosition] = m.Grid[i, j];
                     }
                 }
-
-                //madaya to. left hand. :))
-                thisSeed[i % thisSeed.Length] += thisSeed[(i + 1) % thisSeed.Length];
-                while (thisSeed[i % thisSeed.Length] > 1)
-                {
-                    thisSeed[i % thisSeed.Length]--;
-                }
-                if (thisSeed[i % thisSeed.Length] < rhythmCurve[i])
-                {
-                    for (int j = 0; j < 4 && i % 4 == 0; j++)
-                    {
-                        int pitch = (int)(10 + rand.NextDouble() * 12);
-                        while (!chord.Contains(new NoteName((byte)(pitch % 12))))
-                            pitch = (int)(10 + rand.NextDouble() * 12);
-                        grid[pitch, i] = CellState.START;
-                        for (int k = 1; k < 8; k++)
-                            grid[pitch, Math.Min(i + k, phraseLength - 1)] = CellState.HOLD;
-                    }
-                }
+                gridStartPosition += m.Grid.GetLength(1);
             }
         }
     }

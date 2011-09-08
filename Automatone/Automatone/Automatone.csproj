@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GridScreen.cs" />
+    <Compile Include="Measure.cs" />
     <Compile Include="Harmony.cs" />
     <Compile Include="CellState.cs" />
     <Compile Include="ClassicalTheory.cs" />

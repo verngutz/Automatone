@@ -130,7 +130,7 @@ namespace Automatone
                 }
 
                 gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1) + 1) * CELLSIZE), 0);
-                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT + Automatone.CONTROLS_AND_GRID_DIVISION - ((automatone.SongCells.GetLength(0) + 1) * CELLSIZE), 0);
+                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION - ((automatone.SongCells.GetLength(0) + 1) * CELLSIZE), 0);
 
             }
             base.Update(gameTime);
@@ -145,7 +145,7 @@ namespace Automatone
                 {
                     for (int j = 0; j < automatone.SongCells.GetLength(1); j++)
                     {
-                        Rectangle drawRectangle = new Rectangle((int)(i * CELLSIZE + gridOffset.X), (int)(j * CELLSIZE + gridOffset.Y), CELLSIZE, CELLSIZE);
+                        Rectangle drawRectangle = new Rectangle((int)(j * CELLSIZE + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLSIZE + gridOffset.Y), CELLSIZE, CELLSIZE);
                         if (boundingRectangle.Intersects(drawRectangle))
                         {
                             Texture2D cellTexture = null;
@@ -162,11 +162,11 @@ namespace Automatone
                                     break;
                             }
 
-                            if (Math.Abs(drawRectangle.X) < -playOffset - CELLSIZE)
+                            if (j * CELLSIZE < -playOffset - CELLSIZE)
                             {
                                 automatone.SpriteBatch.Draw(cellTexture, drawRectangle, Color.Gray);
                             }
-                            else if (Math.Abs(drawRectangle.X) < -playOffset)
+                            else if (j * CELLSIZE < -playOffset)
                             {
                                 automatone.SpriteBatch.Draw(cellTexture, drawRectangle, Color.SpringGreen);
                             }
@@ -186,6 +186,11 @@ namespace Automatone
         {
             gridOffset = Vector2.Zero;
             playOffset = 0;
+        }
+
+        public void setScrollLocation(int noteNumber)
+        {
+            playOffset = -1 * noteNumber * CELLSIZE;
         }
     }
 }

@@ -26,10 +26,10 @@ namespace Automatone
             theory = musicTheory;
         }
 
-        public double[] GetRhythmCurve(int phraseLength)
+        public double[] GetRhythmCurve(int measureLength)
         {
-            double[] curve = new double[phraseLength];
-            for (int i = 0; i < phraseLength; i++)
+            double[] curve = new double[measureLength];
+            for (int i = 0; i < measureLength; i++)
             {
                 curve[i] = rhythmCurve.ElementAt<double>(i % Automatone.SUBBEATS_PER_MEASURE);
             }

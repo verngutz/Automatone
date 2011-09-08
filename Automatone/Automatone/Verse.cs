@@ -10,15 +10,25 @@ namespace Automatone
     {
         private List<Phrase> verse;
 
+        private int verseLength;
+        public int VerseLength { get { return verseLength; } }
+        private int measureCount;
+        public int MeasureCount { get { return measureCount; } }
+
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
+        private List<Note> notes;
+        public List<Note> Notes { get { return notes; } }
 
         public Verse(MusicTheory theory, Random rand, Rhythm rhythm, List<double[]> rhythmSeeds)
         {
             //Calculate verse length
-            int verseLength = (int)(theory.VERSE_LENGTHINESS * InputParameters.meanVerseLength);
+            verseLength = (int)(theory.VERSE_LENGTHINESS * InputParameters.meanVerseLength);
             verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * InputParameters.verseLengthVariance));
-            
+            measureCount = 0;
+
+            System.Console.WriteLine(" length " + verseLength); //remove later
+
             //Select rhythms
             List<double[]> selectedRhythmSeeds = new List<double[]>();
             for (int i = 0; i < 1 + 2 * InputParameters.verseRhythmVariety * verseLength; i++)
@@ -48,6 +58,7 @@ namespace Automatone
             verse = new List<Phrase>();
 		    for(int i = 0; i < verseLength; i++)
 		    {
+                System.Console.Write("\tPhrase " + i); //remove later
 			    int a = 0;
 			    if(rand.NextDouble() > cadenceFractalCurve[i])
 			    {
@@ -64,7 +75,7 @@ namespace Automatone
 			    {
 				    if(r < MusicTheory.CADENCES[a][j])
 				    {
-                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, rhythm, selectedRhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count))));
+                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, rhythm, selectedRhythmSeeds));
                         addDefaultPhrase = false;
 					    break;
 				    }
@@ -75,9 +86,21 @@ namespace Automatone
 			    }
 			    if(addDefaultPhrase)
 			    {
-                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, rhythm, selectedRhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count))));
+                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, rhythm, selectedRhythmSeeds));
 			    }
-		    }
+            }
+
+            //make note lists
+            notes = new List<Note>();
+            for (int i = 0; i < verse.Count; i++)
+            {
+                foreach (Note n in verse.ElementAt<Phrase>(i).Notes)
+                {
+                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + measureCount, n.GetStartBeat());
+                    notes.Add(n2);
+                }
+                measureCount += verse.ElementAt<Phrase>(i).MeasureCount;
+            }
 
             //build grid
             int gridSize = 0;
