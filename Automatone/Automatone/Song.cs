@@ -11,10 +11,8 @@ namespace Automatone
         private int measureCount;
         public int MeasureCount { get { return measureCount; } }
 
-        private CellState[,] grid;
-        public CellState[,] Grid { get { return grid; } }
-        private List<Note> notes;
-        public List<Note> Notes { get { return notes; } }
+        private List<List<Note>> notes;
+        public List<List<Note>> Notes { get { return notes; } }
 
         public Song(MusicTheory theory, Random rand)
         {
@@ -30,15 +28,27 @@ namespace Automatone
             List<double[]> rhythmSeeds = new List<double[]>();
             for (int i = 0; i < 1 + 2 * InputParameters.songRhythmVariety * songLength; i++)
             {
-                rhythmSeeds.Add(new double[] {rand.NextDouble(),rand.NextDouble()});
+                rhythmSeeds.Add(new double[] { rand.NextDouble(), rand.NextDouble() });
             }
+            //generate melodies
+            Melody melody = new Melody(theory);
+            List<double[]> melodySeeds = new List<double[]>();
+            for (int i = 0; i < 1 + 2 * InputParameters.songMelodyVariety * songLength; i++)
+            {
+                melodySeeds.Add(new double[] { rand.NextDouble(), rand.NextDouble() });
+            }
+
+            //generate parts
+            List<Part> parts = new List<Part>();
+            parts.Add(new Part(theory, rhythm, melody, 0.5, 0.5, 35, 24, 1, true, false));
+            parts.Add(new Part(theory, rhythm, melody, 0.1, 1, 20, 12, 3, true, false));
 
             //generate verses
 		    List<Verse> verses = new List<Verse>();
 		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVar * songLength; i++)
             {
                 System.Console.Write("Verse " + i); //remove later
-			    verses.Add(new Verse(theory, rand, rhythm, rhythmSeeds));
+			    verses.Add(new Verse(theory, rand, parts, rhythmSeeds, melodySeeds));
 		    }
 
             System.Console.Write("Final song:"); //remove later
@@ -63,35 +73,22 @@ namespace Automatone
             }
 
             //make note list
-            notes = new List<Note>();
+            notes = new List<List<Note>>();
             for (int i = 0; i < song.Count; i++)
             {
-                foreach (Note n in song.ElementAt<Verse>(i).Notes)
+                for (int j = 0; j < song.ElementAt<Verse>(i).Notes.Count; j++)
                 {
-                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + measureCount, n.GetStartBeat());
-                    notes.Add(n2);
-                }
-                measureCount += song.ElementAt<Verse>(i).MeasureCount;
-            }
-
-            //build grid
-            int gridSize = 0;
-            foreach(Verse verse in song)
-            {
-                gridSize += verse.Grid.GetLength(1);
-            }
-            grid = new CellState[theory.PIANO_SIZE, gridSize];
-            int gridStartPosition = 0;
-            foreach (Verse verse in song)
-            {
-                for(int i = 0; i < verse.Grid.GetLength(0); i++)
-                {
-                    for (int j = 0; j < verse.Grid.GetLength(1); j++)
+                    if (i == 0)
                     {
-                        grid[i, j + gridStartPosition] = verse.Grid[i, j];
+                        notes.Add(new List<Note>());
+                    }
+                    foreach (Note n in song.ElementAt<Verse>(i).Notes.ElementAt<List<Note>>(j))
+                    {
+                        Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + measureCount, n.GetStartBeat());
+                        notes.ElementAt<List<Note>>(j).Add(n2);
                     }
                 }
-                gridStartPosition += verse.Grid.GetLength(1);
+                measureCount += song.ElementAt<Verse>(i).MeasureCount;
             }
         }
     }

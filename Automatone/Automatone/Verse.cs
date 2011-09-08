@@ -15,12 +15,10 @@ namespace Automatone
         private int measureCount;
         public int MeasureCount { get { return measureCount; } }
 
-        private CellState[,] grid;
-        public CellState[,] Grid { get { return grid; } }
-        private List<Note> notes;
-        public List<Note> Notes { get { return notes; } }
+        private List<List<Note>> notes;
+        public List<List<Note>> Notes { get { return notes; } }
 
-        public Verse(MusicTheory theory, Random rand, Rhythm rhythm, List<double[]> rhythmSeeds)
+        public Verse(MusicTheory theory, Random rand, List<Part> parts, List<double[]> rhythmSeeds, List<double[]> melodySeeds)
         {
             //Calculate verse length
             verseLength = (int)(theory.VERSE_LENGTHINESS * InputParameters.meanVerseLength);
@@ -34,6 +32,12 @@ namespace Automatone
             for (int i = 0; i < 1 + 2 * InputParameters.verseRhythmVariety * verseLength; i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
+            }
+            //Select melodies
+            List<double[]> selectedMelodySeeds = new List<double[]>();
+            for (int i = 0; i < 1 + 2 * InputParameters.verseMelodyVariety * verseLength; i++)
+            {
+                selectedMelodySeeds.Add(melodySeeds.ElementAt<double[]>((int)(rand.NextDouble() * melodySeeds.Count)));
             }
 
             //Build cadence curve
@@ -75,7 +79,7 @@ namespace Automatone
 			    {
 				    if(r < MusicTheory.CADENCES[a][j])
 				    {
-                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, rhythm, selectedRhythmSeeds));
+                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, parts, selectedRhythmSeeds, selectedMelodySeeds));
                         addDefaultPhrase = false;
 					    break;
 				    }
@@ -86,40 +90,27 @@ namespace Automatone
 			    }
 			    if(addDefaultPhrase)
 			    {
-                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, rhythm, selectedRhythmSeeds));
+                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, selectedRhythmSeeds, selectedMelodySeeds));
 			    }
             }
 
             //make note lists
-            notes = new List<Note>();
+            notes = new List<List<Note>>();
             for (int i = 0; i < verse.Count; i++)
             {
-                foreach (Note n in verse.ElementAt<Phrase>(i).Notes)
+                for (int j = 0; j < verse.ElementAt<Phrase>(i).Notes.Count; j++ )
                 {
-                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + measureCount, n.GetStartBeat());
-                    notes.Add(n2);
-                }
-                measureCount += verse.ElementAt<Phrase>(i).MeasureCount;
-            }
-
-            //build grid
-            int gridSize = 0;
-            foreach (Phrase phrase in verse)
-            {
-                gridSize += phrase.Grid.GetLength(1);
-            }
-            grid = new CellState[theory.PIANO_SIZE, gridSize];
-            int gridStartPosition = 0;
-            foreach (Phrase phrase in verse)
-            {
-                for (int i = 0; i < phrase.Grid.GetLength(0); i++)
-                {
-                    for (int j = 0; j < phrase.Grid.GetLength(1); j++)
+                    if (i == 0)
                     {
-                        grid[i, j + gridStartPosition] = phrase.Grid[i, j];
+                        notes.Add(new List<Note>());
+                    }
+                    foreach (Note n in verse.ElementAt<Phrase>(i).Notes.ElementAt<List<Note>>(j))
+                    {
+                        Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + measureCount, n.GetStartBeat());
+                        notes.ElementAt<List<Note>>(j).Add(n2);
                     }
                 }
-                gridStartPosition += phrase.Grid.GetLength(1);
+                measureCount += verse.ElementAt<Phrase>(i).MeasureCount;
             }
         }
     }

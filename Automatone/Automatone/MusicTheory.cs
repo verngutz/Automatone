@@ -14,6 +14,9 @@ namespace Automatone
         //Verse Constants
         public abstract double CADENCE_SMOOTHNESS { get; }
         public abstract int VERSE_LENGTHINESS { get; }
+        
+        //Note Constants
+        public abstract double NOTE_LENGTHINESS { get; }
 
         //Cadences
         public enum CADENCE_NAMES { HALF, AUTHENTIC, PLAGAL, DECEPTIVE, SILENT };
@@ -27,5 +30,8 @@ namespace Automatone
 
         //Rhythm
         public abstract List<double> RHYTHM_CURVE_SAMPLE { get; }
+
+        //Melody
+        public abstract double[] MELODY_BIAS_SAMPLE { get; }
     }
 }

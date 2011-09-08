@@ -14,12 +14,10 @@ namespace Automatone
         private int measureCount;
         public int MeasureCount { get { return measureCount; } }
 
-        private CellState[,] grid;
-        public CellState[,] Grid { get { return grid; } }
-        private List<Note> notes;
-        public List<Note> Notes { get { return notes; } }
+        private List<List<Note>> notes;
+        public List<List<Note>> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, List<double[]> rhythmSeeds)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, List<double[]> rhythmSeeds, List<double[]> melodySeeds)
         {
             phrase = new List<Measure>();
 
@@ -36,47 +34,42 @@ namespace Automatone
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
             }
+            //Select melodies
+            List<double[]> selectedMelodySeeds = new List<double[]>();
+            for (int i = 0; i < 1 + 2 * InputParameters.phraseMelodyVariety * phraseLength; i++)
+            {
+                selectedMelodySeeds.Add(melodySeeds.ElementAt<double[]>((int)(rand.NextDouble() * melodySeeds.Count)));
+            }
 
             Harmony harm = new Harmony(theory, rand);
             harm.initializeHarmony(phraseLength * Automatone.SUBBEATS_PER_MEASURE);
             List<List<NoteName>> progression = harm.chordProgression;
+
+            List<NoteName> diatonic = new List<NoteName>();
 
             for (int i = 0; i < phraseLength; i++)
             {
                 int chordNumber = (i * progression.Count / phraseLength);
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
 
-                phrase.Add(new Measure(theory, rand, rhythm, rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)), chord));
+                phrase.Add(new Measure(theory, rand, parts, selectedRhythmSeeds, selectedMelodySeeds, chord, diatonic));
             }
 
-            notes = new List<Note>();
+            notes = new List<List<Note>>();
             for (int i = 0; i < phrase.Count; i++)
             {
-                foreach (Note n in phrase.ElementAt<Measure>(i).Notes)
+                for (int j = 0; j < phrase.ElementAt<Measure>(i).Notes.Count; j++ )
                 {
-                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + i, n.GetStartBeat());
-                    notes.Add(n2);
-                }
-            }
-
-            //Build grid
-            int gridSize = 0;
-            foreach (Measure m in phrase)
-            {
-                gridSize += m.Grid.GetLength(1);
-            }
-            grid = new CellState[theory.PIANO_SIZE, gridSize];
-            int gridStartPosition = 0;
-            foreach (Measure m in phrase)
-            {
-                for (int i = 0; i < m.Grid.GetLength(0); i++)
-                {
-                    for (int j = 0; j < m.Grid.GetLength(1); j++)
+                    if (i == 0)
                     {
-                        grid[i, j + gridStartPosition] = m.Grid[i, j];
+                        notes.Add(new List<Note>());
+                    }
+                    foreach (Note n in phrase.ElementAt<Measure>(i).Notes.ElementAt<List<Note>>(j))
+                    {
+                        Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + i, n.GetStartBeat());
+                        notes.ElementAt<List<Note>>(j).Add(n2);
                     }
                 }
-                gridStartPosition += m.Grid.GetLength(1);
             }
         }
     }

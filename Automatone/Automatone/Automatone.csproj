@@ -107,6 +107,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Part.cs" />
+    <Compile Include="Melody.cs" />
     <Compile Include="Measure.cs" />
     <Compile Include="Harmony.cs" />
     <Compile Include="CellState.cs" />

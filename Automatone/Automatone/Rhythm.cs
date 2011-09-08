@@ -7,8 +7,8 @@ namespace Automatone
 {
     public class Rhythm
     {
-        private List<double> rhythmCurve;
         private MusicTheory theory;
+        private List<double> rhythmCurve;
 
         public Rhythm(MusicTheory musicTheory)
         {
@@ -35,5 +35,7 @@ namespace Automatone
             }
             return curve;
         }
+
+
     }
 }

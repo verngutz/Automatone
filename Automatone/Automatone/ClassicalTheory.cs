@@ -18,29 +18,57 @@ namespace Automatone
         //Phrase Constants
         public override double PHRASE_LENGTHINESS { get { return 8; } }
 
+        //Note Constants
+        public override double NOTE_LENGTHINESS { get { return 0.5; } }
+
         //Rhythm
-        public override List<double> RHYTHM_CURVE_SAMPLE 
+        public override List<double> RHYTHM_CURVE_SAMPLE
         {
             get
             {
                 List<double> sample = new List<double>();
                 sample.Add(1);
-                sample.Add(0);
-                sample.Add(0);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
+                sample.Add(0.36);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
+                sample.Add(0.6);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
+                sample.Add(0.36);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
                 sample.Add(1);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(1);
-                sample.Add(0);
-                sample.Add(1);
-                sample.Add(.25);
-                sample.Add(.5);
-                sample.Add(.25);
-                sample.Add(1);
-                sample.Add(.25);
-                sample.Add(.5);
-                sample.Add(.25);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
+                sample.Add(0.36);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
+                sample.Add(0.6);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
+                sample.Add(0.36);
+                sample.Add(0.1296);
+                sample.Add(0.216);
+                sample.Add(0.1296);
                 return sample;
+            }
+        }
+        
+        //Melody
+        public override double[] MELODY_BIAS_SAMPLE
+        {
+            get
+            {
+                return new double[]{0.5,1};
             }
         }
 
