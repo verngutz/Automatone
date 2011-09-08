@@ -1,4 +1,4 @@
-﻿#define USESEED
+﻿//#define USESEED
 
 using System;
 using System.Diagnostics;
@@ -91,7 +91,7 @@ namespace Automatone
 #if USESEED
             String song = SongGenerator.GenerateSong(new Random(SEED), new ClassicalTheory(), out output);
 #else
-            String song = SongGenerator.GenerateSong(new Random(), new ClassicalTheory(), out automatone.SongCells);
+            String song = SongGenerator.GenerateSong(new Random(), new ClassicalTheory(), out output);
 #endif
             automatone.SongCells = output;
 

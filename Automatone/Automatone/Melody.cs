@@ -15,7 +15,7 @@ namespace Automatone
             melodyBias = new double[2];
             double[] melodyBiasSample = musicTheory.MELODY_BIAS_SAMPLE;
             melodyBias[0] = melodyBiasSample[0] + (InputParameters.chordalityObedience - 1) * (melodyBiasSample[0] - 0.5);
-            melodyBias[0] = melodyBiasSample[0] + (InputParameters.tonalityObedience - 1) * (melodyBiasSample[0] - 0.5);
+            melodyBias[1] = melodyBiasSample[1] + (InputParameters.tonalityObedience - 1) * (melodyBiasSample[1] - 0.5);
         }
 
         public double[] GetMelodyBias()

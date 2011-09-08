@@ -17,7 +17,7 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, List<double[]> rhythmSeeds, List<double[]> melodySeeds)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, List<double[]> rhythmSeeds, List<double[]> melodySeeds)
         {
             phrase = new List<Measure>();
 
@@ -41,18 +41,13 @@ namespace Automatone
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<double[]>((int)(rand.NextDouble() * melodySeeds.Count)));
             }
 
-            Harmony harm = new Harmony(theory, rand);
-            harm.initializeHarmony(phraseLength * Automatone.SUBBEATS_PER_MEASURE);
-            List<List<NoteName>> progression = harm.chordProgression;
+            List<List<NoteName>> progression = harmony.createChordProgression(phraseLength, c);
 
-            List<NoteName> diatonic = new List<NoteName>();
+            List<NoteName> diatonic = harmony.GetDiatonicScale();
 
             for (int i = 0; i < phraseLength; i++)
             {
-                int chordNumber = (i * progression.Count / phraseLength);
-                List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
-
-                phrase.Add(new Measure(theory, rand, parts, selectedRhythmSeeds, selectedMelodySeeds, chord, diatonic));
+                phrase.Add(new Measure(theory, rand, parts, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), diatonic));
             }
 
             notes = new List<List<Note>>();

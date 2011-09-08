@@ -35,7 +35,16 @@ namespace Automatone
         public static double rhythmObedience = 0.5;
         
         //Melody
-        public static double chordalityObedience = 0.9;
-        public static double tonalityObedience = 0.9;
+        public static double chordalityObedience = 1;
+        public static double tonalityObedience = 1;
+
+        //Harmony
+        /*public static double meanBeatharmonicCovariance = 0.9;
+        public static double beatHarmonicCovarianceOffsetDivisor = 10;
+        public static double randomModulationProbability = 0.01;
+        public static double perfectFifthModulationProbability = 0.20;
+        public static double perfectFourthModulationProbability = 0.15;
+        public static double relativeModeModulationProbability = 0.1;
+        public static double absoluteModeModulationProbability = 0.04;*/
     }
 }

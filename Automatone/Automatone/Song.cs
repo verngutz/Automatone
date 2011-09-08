@@ -38,17 +38,21 @@ namespace Automatone
                 melodySeeds.Add(new double[] { rand.NextDouble(), rand.NextDouble() });
             }
 
+            //create harmony
+            Harmony harmony = new Harmony(theory, rand, new NoteName(0), MusicTheory.SCALE_MODE.MAJOR);
+
             //generate parts
             List<Part> parts = new List<Part>();
-            parts.Add(new Part(theory, rhythm, melody, 0.5, 0.5, 35, 24, 1, true, false));
-            parts.Add(new Part(theory, rhythm, melody, 0.1, 1, 20, 12, 3, true, false));
+            parts.Add(new Part(theory, rhythm, melody, 0.5, 0.5, 0, 45, 12, 1, false, false));
+            parts.Add(new Part(theory, rhythm, melody, 0.1, 0.5, 0, 35, 12, 1, false, false));
+            parts.Add(new Part(theory, rhythm, melody, 0.2, 1, 0.5, 20, 12, 3, true, false));
 
             //generate verses
 		    List<Verse> verses = new List<Verse>();
 		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVar * songLength; i++)
             {
                 System.Console.Write("Verse " + i); //remove later
-			    verses.Add(new Verse(theory, rand, parts, rhythmSeeds, melodySeeds));
+			    verses.Add(new Verse(theory, rand, parts, harmony, rhythmSeeds, melodySeeds));
 		    }
 
             System.Console.Write("Final song:"); //remove later
