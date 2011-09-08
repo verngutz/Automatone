@@ -71,7 +71,17 @@ namespace Automatone
         }
 
         //Music Stuff
-        public const ushort TEMPO = 120;
+        private ushort tempo;
+        public ushort Tempo 
+        {
+            set 
+            {
+                tempo = value;
+                audioService.BeatsPerMinute = value;
+            }
+
+            get { return tempo; }
+        }
 
         public const int SUBBEATS_PER_MEASURE = 16;
         public static double getBeatResolution()
@@ -132,9 +142,6 @@ namespace Automatone
 
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
-
-            //Setup Tempo
-            audioService.BeatsPerMinute = TEMPO;
 
             //Setup Gui Screen
             Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -197,7 +204,7 @@ namespace Automatone
             sw.WriteLine("MFile 1 2 192");
             sw.WriteLine("MTrk");
             sw.WriteLine("0 TimeSig 4/4 24 8");
-            sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Automatone.TEMPO);
+            sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Tempo);
             sw.WriteLine("0 KeySig 0 major");
             sw.WriteLine("0 Meta TrkEnd");
             sw.WriteLine("TrkEnd");

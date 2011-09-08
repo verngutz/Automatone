@@ -83,7 +83,7 @@ namespace Automatone
                 
                 if (ScrollWithMidi)
                 {
-                    playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLWIDTH;
+                    playOffset -= automatone.Tempo * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLWIDTH;
                     gridOffset.X = Math.Min(playOffset + 100, 0);
                 }
                 else
@@ -194,17 +194,18 @@ namespace Automatone
                         Rectangle drawRectangle = new Rectangle((int)(j * CELLWIDTH + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT+ gridOffset.Y), CELLWIDTH, CELLHEIGHT);
                         if (boundingRectangle.Intersects(drawRectangle))
                         {
+                            Color drawColor = GetChromaticColor(i);
                             if (j * CELLWIDTH < -playOffset - CELLWIDTH)
                             {
-                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(i % 12 * 127 / 12, (i + 4) % 12 * 127 / 12, (i + 8) % 12 * 127 / 12, ScrollWithMidi ? 32 : 255));
+                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
                             }
                             else if (j * CELLWIDTH < -playOffset)
                             {
-                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(i % 12 * 255 / 12, (i + 4) % 12 * 255 / 12, (i + 8) % 12 * 255 / 12, 255));
+                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
                             }
                             else
                             {
-                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(i % 12 * 255 / 12, (i + 4) % 12 * 255 / 12, (i + 8) % 12 * 255 / 12, automatone.SongCells[i, j] == CellState.SILENT && ScrollWithMidi ? 64 : 255));
+                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, automatone.SongCells[i, j] == CellState.SILENT ? (ScrollWithMidi ? 64 : 128) : 255));
                             }
                         }
                     }
@@ -255,6 +256,39 @@ namespace Automatone
         public void setScrollLocation(int noteNumber)
         {
             playOffset = -1 * noteNumber * CELLWIDTH;
+        }
+
+        private Color GetChromaticColor(int pitch)
+        {
+            int chromaticIndex = pitch % 12;
+            switch(chromaticIndex)
+            {
+                case 0:
+                    return Color.MediumVioletRed;
+                case 1:
+                    return Color.Red;
+                case 2:
+                    return Color.OrangeRed;
+                case 3:
+                    return Color.Orange;
+                case 4:
+                    return Color.Yellow;
+                case 5:
+                    return Color.GreenYellow;
+                case 6:
+                    return Color.Green;
+                case 7:
+                    return Color.SeaGreen;
+                case 8:
+                    return Color.Blue;
+                case 9:
+                    return Color.Indigo;
+                case 10:
+                    return Color.Violet;
+                case 11:
+                    return Color.Silver;
+            }
+            return Color.White;
         }
     }
 }

@@ -91,6 +91,7 @@ namespace Automatone
             SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), out output);
 #endif
             automatone.SongCells = output;
+            automatone.Tempo = (ushort)(40 + (new Random()).NextDouble() * 120);
         }
 
         private void StopButtonChanged(object sender, EventArgs e)
