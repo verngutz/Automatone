@@ -9,7 +9,12 @@ namespace Automatone
     public class SongGenerator
     {
         private const byte START_OFFSET = 21;
-	    public static String GenerateSong(Random random, MusicTheory theory, out CellState[,] song)
+        public static void RewriteSong(Automatone automatone)
+        {
+            NoteThread thread = new NoteThread(Automatone.getBeatResolution(), automatone.SongCells);
+            automatone.Song = thread.ToString();
+        }
+	    public static void GenerateSong(Automatone automatone, Random random, MusicTheory theory, out CellState[,] song)
         {
             Song s = new Song(theory, random);
 		    NoteThread thread = new NoteThread(Automatone.getBeatResolution(), s.Notes);
@@ -29,7 +34,7 @@ namespace Automatone
                 }
             }
             song = grid;
-		    return thread.ToString();
+            automatone.Song = thread.ToString();
 	    }
 	
 	    private int verseToThread(CellState[,] songCells, int globalStartMeasure)
@@ -51,6 +56,29 @@ namespace Automatone
 
             private List<Note> notes;
 		    private double beatResolution;
+
+            public NoteThread(double beat_resolution, CellState[,] notes)
+            {
+                this.notes = new List<Note>();
+                for (int i = 0; i < notes.GetLength(0); i++)
+                {
+                    for (int j = 0; j < notes.GetLength(1); j++)
+                    {
+                        if (notes[i, j] == CellState.START)
+                        {
+                            double duration = Automatone.getBeatResolution();
+                            int k = j + 1;
+                            while (k < notes.GetLength(1) && notes[i, k] == CellState.HOLD)
+                            {
+                                duration += Automatone.getBeatResolution();
+                                k++;
+                            }
+                            this.notes.Add(new Note(new NoteName((byte)(i % 12)), (byte)(i / 12), duration, (int)(j / Automatone.SUBBEATS_PER_MEASURE), (j % Automatone.SUBBEATS_PER_MEASURE) / (double)Automatone.SUBBEATS_PER_MEASURE));
+                        }
+                    }
+                }
+                beatResolution = beat_resolution;
+            }
 
 		    public NoteThread(double beat_resolution, List<List<Note>> notes)
 		    {

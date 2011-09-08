@@ -1,4 +1,4 @@
-﻿//#define USESEED
+//#define USESEED
 
 using System;
 using System.Diagnostics;
@@ -12,14 +12,13 @@ using Microsoft.Xna.Framework.Input;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
 
+using Duet.Audio_System;
+
 namespace Automatone
 {
     public class MainScreen : WindowControl
     {
         private Automatone automatone;
-
-        private const int SEED = 40;
-        private const int TEMPO_DIVIDEND = 60000000;
 
         public MainScreen(Automatone parent) : base()
         {
@@ -29,40 +28,52 @@ namespace Automatone
 
         private ButtonControl randomizeButton;
         private OptionControl playPauseButton;
+        private ChoiceControl stopButton;
         
         private void InitializeComponent()
         {
-            Bounds = new UniRectangle(0, 0, Automatone.SCREEN_WIDTH, Automatone.CONTROLS_AND_GRID_DIVISION);
-            Title = "Automatone";
-
+            Bounds = new UniRectangle(0, 0, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT);
+            EnableDragging = false;
             // Construct children
             randomizeButton = new ButtonControl();
             playPauseButton = new OptionControl();
+            stopButton = new ChoiceControl();
 
             //
             // randomizeButton
             //
-            randomizeButton.Bounds = new UniRectangle(10, 30, 117, 45);
+            randomizeButton.Bounds = new UniRectangle(10, 30, 163, 48);
             randomizeButton.Text = "Randomize";
             randomizeButton.Pressed += new EventHandler(RandomizeButtonPressed);
 
             //
             // playPauseButton
             //
-            playPauseButton.Bounds = new UniRectangle(10, 75, 45, 42);
+            playPauseButton.Bounds = new UniRectangle(10, 75, 43, 43);
             playPauseButton.Changed += new EventHandler(PlayPauseButtonChanged);
+            playPauseButton.Selected = false;
+
+            //
+            // stopButton
+            //
+            stopButton.Bounds = new UniRectangle(55, 75, 43, 43);
+            stopButton.Changed += new EventHandler(StopButtonChanged);
+            stopButton.Selected = false;
 
             //
             // Add Children
             //
             Children.Add(randomizeButton);
             Children.Add(playPauseButton);
+            Children.Add(stopButton);
         }
 
         private void PlayPauseButtonChanged(object sender, EventArgs e)
         {
             if (playPauseButton.Selected)
             {
+                if (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                    automatone.RewriteSong();
                 automatone.Sequencer.PlayMidi();
             }
             else
@@ -75,41 +86,24 @@ namespace Automatone
 
         private void RandomizeButtonPressed(object sender, EventArgs e)
         {
-            automatone.Sequencer.StopMidi();
-            automatone.GridScreen.ScrollWithMidi = false;
-
-            StreamWriter sw = new StreamWriter("sample.mtx");
-            sw.WriteLine("MFile 1 2 192");
-            sw.WriteLine("MTrk");
-            sw.WriteLine("0 TimeSig 4/4 24 8");
-            sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Automatone.TEMPO);
-            sw.WriteLine("0 KeySig 0 major");
-            sw.WriteLine("0 Meta TrkEnd");
-            sw.WriteLine("TrkEnd");
+            StopButtonChanged(sender, e);
 
             CellState[,] output;
 #if USESEED
-            String song = SongGenerator.GenerateSong(new Random(SEED), new ClassicalTheory(), out output);
+            SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), out output);
 #else
-            String song = SongGenerator.GenerateSong(new Random(), new ClassicalTheory(), out output);
+            SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), out output);
 #endif
             automatone.SongCells = output;
+        }
 
-            sw.Write(song);
-            sw.Close();
-
-            if (File.Exists("sample.mid"))
-                File.Delete("sample.mid");
-
-            Process txt2midi = new Process();
-            System.Console.WriteLine(Environment.CurrentDirectory);
-            txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
-            txt2midi.StartInfo.FileName = "Mtx2Midi.exe";
-            txt2midi.StartInfo.Arguments = "sample.mtx";
-            txt2midi.StartInfo.UseShellExecute = true;
-            txt2midi.Start();
-            automatone.Sequencer.LoadMidi("sample.mid");
-            txt2midi.Kill();
+        private void StopButtonChanged(object sender, EventArgs e)
+        {
+            automatone.Sequencer.StopMidi();
+            automatone.GridScreen.Reset();
+            automatone.GridScreen.ScrollWithMidi = false;
+            playPauseButton.Selected = false;
+            stopButton.Selected = false;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Duet.Audio_System
 {
     public class Sequencer : IMidiDevice
     {
-        enum MidiPlayerState { PLAYING, PAUSED, STOPPED }
+        public enum MidiPlayerState { PLAYING, PAUSED, STOPPED }
 
         public override event MidiEventHandler NoteOn;
         public override event MidiEventHandler NoteOff;
@@ -26,6 +26,7 @@ namespace Duet.Audio_System
 
         private IAudioSystemService m_AudioSystem;
         private MidiPlayerState m_mps = MidiPlayerState.STOPPED;
+        public MidiPlayerState State { get { return m_mps; } }
 
         private ulong m_LoopStart = ulong.MaxValue, m_LoopEnd = ulong.MaxValue, m_MidiPos = 0;
         
