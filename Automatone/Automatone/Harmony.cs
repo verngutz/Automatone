@@ -7,12 +7,24 @@ namespace Automatone
 {
     public class Harmony
     {
-        private Random random;
+        private class Random2
+        {
+            public double NextDouble()
+            {
+                return 0.5;
+            }
+            public int Next(int i)
+            {
+                return i / 2;
+            }
+        }
+        private Random2 random;
         private MusicTheory theory;
+
 
 	    public Harmony (MusicTheory theory, Random random) 
         {
-            this.random = random;
+            this.random = new Random2();//random;
             this.theory = theory;
         }
 

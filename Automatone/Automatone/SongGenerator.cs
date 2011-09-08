@@ -9,29 +9,32 @@ namespace Automatone
     public class SongGenerator
     {
         private const byte START_OFFSET = 21;
-	    public static String GenerateSong(Random random, MusicTheory theory, out CellState[,] song)
+        public static void RewriteSong(Automatone automatone)
+        {
+            NoteThread thread = new NoteThread(Automatone.getBeatResolution(), automatone.SongCells);
+            automatone.Song = thread.ToString();
+        }
+	    public static void GenerateSong(Automatone automatone, Random random, MusicTheory theory, out CellState[,] song)
         {
             Song s = new Song(theory, random);
 		    NoteThread thread = new NoteThread(Automatone.getBeatResolution(), s.Notes);
-            song = s.Grid;
-            /*
-            for (int i = 0; i < song.GetLength(0); i++)
+            CellState[,] grid = new CellState[theory.PIANO_SIZE,s.MeasureCount * Automatone.SUBBEATS_PER_MEASURE];
+            foreach (List<Note> nts in s.Notes)
             {
-                for (int j = 0; j < song.GetLength(1); j++)
+                foreach (Note n in nts)
                 {
-                    if (song[i, j] == CellState.START)
+                    grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, Math.Min(n.GetStartMeasure() * Automatone.SUBBEATS_PER_MEASURE + (int)(n.GetStartBeat() * Automatone.SUBBEATS_PER_MEASURE), s.MeasureCount * Automatone.SUBBEATS_PER_MEASURE - 1)] = CellState.START;
+                    for (int i = 1; i < n.GetRemainingDuration() * Automatone.SUBBEATS_PER_MEASURE; i++)
                     {
-                        double startBeat = (j % Automatone.SUBBEATS_PER_MEASURE * Automatone.getBeatResolution());
-
-                        int integerDuration = 1;
-                        for (int x = j + 1; x < song.GetLength(1) && song[i, x] == CellState.HOLD; x++)
-                            integerDuration++;
-
-                        thread.AddNote(new Note(new NoteName((byte)((i + START_OFFSET) % 12)), (byte)((i + START_OFFSET) / 12), integerDuration * Automatone.getBeatResolution(), (int)(j * Automatone.getBeatResolution()), startBeat));
+                        if (grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, Math.Min(i + n.GetStartMeasure() * Automatone.SUBBEATS_PER_MEASURE + (int)(n.GetStartBeat() * Automatone.SUBBEATS_PER_MEASURE), s.MeasureCount * Automatone.SUBBEATS_PER_MEASURE - 1)] == CellState.SILENT)
+                        {
+                            grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, Math.Min(i + n.GetStartMeasure() * Automatone.SUBBEATS_PER_MEASURE + (int)(n.GetStartBeat() * Automatone.SUBBEATS_PER_MEASURE), s.MeasureCount * Automatone.SUBBEATS_PER_MEASURE - 1)] = CellState.HOLD;
+                        }
                     }
                 }
-            }*/
-		    return thread.ToString();
+            }
+            song = grid;
+            automatone.Song = thread.ToString();
 	    }
 	
 	    private int verseToThread(CellState[,] songCells, int globalStartMeasure)
@@ -54,15 +57,40 @@ namespace Automatone
             private List<Note> notes;
 		    private double beatResolution;
 
-		    public NoteThread(double beat_resolution, List<Note> notes)
+            public NoteThread(double beat_resolution, CellState[,] notes)
+            {
+                this.notes = new List<Note>();
+                for (int i = 0; i < notes.GetLength(0); i++)
+                {
+                    for (int j = 0; j < notes.GetLength(1); j++)
+                    {
+                        if (notes[i, j] == CellState.START)
+                        {
+                            double duration = Automatone.getBeatResolution();
+                            int k = j + 1;
+                            while (k < notes.GetLength(1) && notes[i, k] == CellState.HOLD)
+                            {
+                                duration += Automatone.getBeatResolution();
+                                k++;
+                            }
+                            this.notes.Add(new Note(new NoteName((byte)(i % 12)), (byte)(i / 12), duration, (int)(j / Automatone.SUBBEATS_PER_MEASURE), (j % Automatone.SUBBEATS_PER_MEASURE) / (double)Automatone.SUBBEATS_PER_MEASURE));
+                        }
+                    }
+                }
+                beatResolution = beat_resolution;
+            }
+
+		    public NoteThread(double beat_resolution, List<List<Note>> notes)
 		    {
-			    this.notes = notes;
+                this.notes = new List<Note>();
+                foreach (List<Note> nts in notes)
+                {
+                    foreach (Note n in nts)
+                    {
+                        this.notes.Add(n);
+                    }
+                }
 			    beatResolution = beat_resolution;
-		    }
-		
-		    public void AddNote(Note n)
-		    {
-			    notes.Add(n);
 		    }
 		
             private string ProgramChange(ulong time, byte channel, byte programNumber)
@@ -106,35 +134,35 @@ namespace Automatone
                 thread.Append(SetVolume(0, 1, 127));
                 thread.Append(SetPanning(0, 1, 64));
                 thread.Append(SetReverb(0, 1, 64));
-			    double timePassed = 0;
+                double timePassed = 0;
                 ulong midiTimePassed = 0;
-			    List<Note> activeNotes = new List<Note>();
-			    List<Note> expiredNotes = new List<Note>();
-			    while(notes.Count > 0 || activeNotes.Count > 0)
-			    {
-				    while(notes.Count > 0 && Math.Abs(notes.First<Note>().GetStartMeasure() + notes.First<Note>().GetStartBeat() - timePassed) <= EPSILON)
-				    {
-					    Note toActivate = notes.First<Note>();
+                List<Note> activeNotes = new List<Note>();
+                List<Note> expiredNotes = new List<Note>();
+                while (notes.Count > 0 || activeNotes.Count > 0)
+                {
+                    while (notes.Count > 0 && Math.Abs(notes.First<Note>().GetStartMeasure() + notes.First<Note>().GetStartBeat() - timePassed) <= EPSILON)
+                    {
+                        Note toActivate = notes.First<Note>();
                         notes.Remove(notes.First<Note>());
-					    activeNotes.Add(toActivate);
-					    thread.Append(TurnNoteOn(midiTimePassed, 1, toActivate.MidiNumber, 127));
-				    }
-				    timePassed += beatResolution;
+                        activeNotes.Add(toActivate);
+                        thread.Append(TurnNoteOn(midiTimePassed, 1, toActivate.MidiNumber, 127));
+                    }
+                    timePassed += beatResolution;
                     midiTimePassed += (ulong)(beatResolution * 768);
-				    foreach(Note n in activeNotes)
-				    {
-					    if(n.Update(beatResolution) <= EPSILON)
-					    {
-						    expiredNotes.Add(n);
+                    foreach (Note n in activeNotes)
+                    {
+                        if (n.Update(beatResolution) <= EPSILON)
+                        {
+                            expiredNotes.Add(n);
                             thread.Append(TurnNoteOff(midiTimePassed, 1, n.MidiNumber, 0));
-					    }
-				    }
-				    foreach(Note n in expiredNotes)
-				    {
-					    activeNotes.Remove(n);
-				    }
-				    expiredNotes.Clear();
-			    }
+                        }
+                    }
+                    foreach (Note n in expiredNotes)
+                    {
+                        activeNotes.Remove(n);
+                    }
+                    expiredNotes.Clear();
+                }
                 thread.Append(midiTimePassed);
                 thread.Append(META_END_TRACK);
                 thread.Append(END_TRACK);

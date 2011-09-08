@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 using Microsoft.Xna.Framework;
@@ -53,7 +56,19 @@ namespace Automatone
         public const byte Y_DIMENSION = 0;
 
         //Grid (Logical)
-        public CellState[,] SongCells { set; get; }
+        public String Song { set; get; }
+        private CellState[,] songCells;
+        public CellState[,] SongCells 
+        {
+            set
+            {
+                songCells = value;
+            }
+            get
+            {
+                return songCells;
+            }
+        }
 
         //Music Stuff
         public const ushort TEMPO = 120;
@@ -63,6 +78,9 @@ namespace Automatone
         {
             return 1.0 / SUBBEATS_PER_MEASURE;
         }
+
+        private const int SEED = 40;
+        private const int TEMPO_DIVIDEND = 60000000;
 
         public Automatone()
         {
@@ -169,6 +187,35 @@ namespace Automatone
             GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
+        }
+
+        public void RewriteSong()
+        {
+            SongGenerator.RewriteSong(this);
+
+            StreamWriter sw = new StreamWriter("sample.mtx");
+            sw.WriteLine("MFile 1 2 192");
+            sw.WriteLine("MTrk");
+            sw.WriteLine("0 TimeSig 4/4 24 8");
+            sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Automatone.TEMPO);
+            sw.WriteLine("0 KeySig 0 major");
+            sw.WriteLine("0 Meta TrkEnd");
+            sw.WriteLine("TrkEnd");
+            sw.Write(Song);
+            sw.Close();
+
+            if (File.Exists("sample.mid"))
+                File.Delete("sample.mid");
+
+            Process txt2midi = new Process();
+            System.Console.WriteLine(Environment.CurrentDirectory);
+            txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+            txt2midi.StartInfo.FileName = "Mtx2Midi.exe";
+            txt2midi.StartInfo.Arguments = "sample.mtx";
+            txt2midi.StartInfo.UseShellExecute = true;
+            txt2midi.Start();
+            Sequencer.LoadMidi("sample.mid");
+            txt2midi.Kill();
         }
     }
 }

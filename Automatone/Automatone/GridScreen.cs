@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Duet.Audio_System;
+
 namespace Automatone
 {
     public class GridScreen : DrawableGameComponent
@@ -18,7 +20,8 @@ namespace Automatone
         public Vector2 gridOffset;
         public float playOffset;
 
-        public const byte CELLSIZE = 20;
+        public const byte CELLHEIGHT = 15;
+        public const byte CELLWIDTH = 15;
 
         private static Texture2D silentCell;
         private static Texture2D startCell;
@@ -35,11 +38,17 @@ namespace Automatone
         private const float GRID_MOVE_ACCELERATION = .02F;
         private const float MAX_GRID_MOVE_SPEED = 10;
 
+        private MouseState oldMouseState;
+        private int? manualGridChangeStartXIndex;
+        private int? manualGridChangeEndXIndex;
+        private int? manualGridChangeYIndex;
+
         public GridScreen(Automatone parent)
             : base(parent)
         {
             automatone = parent;
             boundingRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION);
+            oldMouseState = Mouse.GetState();
         }
 
         public override void Initialize()
@@ -70,10 +79,11 @@ namespace Automatone
             if (automatone.SongCells != null)
             {
                 KeyboardState newKeyboardState = Keyboard.GetState();
+                MouseState newMouseState = Mouse.GetState();
                 
                 if (ScrollWithMidi)
                 {
-                    playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLSIZE;
+                    playOffset -= Automatone.TEMPO * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLWIDTH;
                     gridOffset.X = Math.Min(playOffset + 100, 0);
                 }
                 else
@@ -129,9 +139,45 @@ namespace Automatone
                     gridOffset.Y -= moveValY;
                 }
 
-                gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1)) * CELLSIZE), 0);
-                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - ((automatone.SongCells.GetLength(0)) * CELLSIZE), 0);
+                gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1)) * CELLWIDTH), 0);
+                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - ((automatone.SongCells.GetLength(0)) * CELLHEIGHT), Automatone.CONTROLS_AND_GRID_DIVISION);
 
+                if (boundingRectangle.Contains(new Point(newMouseState.X, newMouseState.Y)) && automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                {
+                    if (newMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+                    {
+                        manualGridChangeStartXIndex = ScreenToGridCoordinatesX(Mouse.GetState().X);
+                        manualGridChangeEndXIndex = ScreenToGridCoordinatesX(Mouse.GetState().X);
+                        manualGridChangeYIndex = ScreenToGridCoordinatesY(Mouse.GetState().Y);
+                    }
+                    else if (newMouseState.LeftButton == ButtonState.Released && oldMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        ManualGridChangeReset();
+                    }
+                    else if (newMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        manualGridChangeEndXIndex = ScreenToGridCoordinatesX(Mouse.GetState().X);
+                        for (int i = manualGridChangeStartXIndex.Value; i <= manualGridChangeEndXIndex; i++, manualGridChangeStartXIndex++)
+                        {
+                            if (automatone.SongCells[manualGridChangeYIndex.Value, i] == CellState.SILENT)
+                            {
+                                if (i == 0 || automatone.SongCells[manualGridChangeYIndex.Value, i - 1] == CellState.SILENT)
+                                {
+                                    automatone.SongCells[manualGridChangeYIndex.Value, i] = CellState.START;
+                                }
+                                else
+                                {
+                                    automatone.SongCells[manualGridChangeYIndex.Value, i] = CellState.HOLD;
+                                }
+                            }
+                            else
+                            {
+                                automatone.SongCells[manualGridChangeYIndex.Value, i] = CellState.SILENT;
+                            }
+                        }
+                    }
+                }
+                oldMouseState = newMouseState;
             }
             base.Update(gameTime);
         }
@@ -140,28 +186,25 @@ namespace Automatone
         {
             if (automatone.SongCells != null)
             {
-                automatone.SpriteBatch.Begin();
+                automatone.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
                 for (int i = 0; i < automatone.SongCells.GetLength(0); i++)
                 {
                     for (int j = 0; j < automatone.SongCells.GetLength(1); j++)
                     {
-                        if (!ScrollWithMidi || j % Automatone.SUBBEATS_PER_MEASURE == 0 ||automatone.SongCells[i, j] != CellState.SILENT)
+                        Rectangle drawRectangle = new Rectangle((int)(j * CELLWIDTH + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT+ gridOffset.Y), CELLWIDTH, CELLHEIGHT);
+                        if (boundingRectangle.Intersects(drawRectangle))
                         {
-                            Rectangle drawRectangle = new Rectangle((int)(j * CELLSIZE + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLSIZE + gridOffset.Y), CELLSIZE, CELLSIZE);
-                            if (boundingRectangle.Intersects(drawRectangle))
+                            if (j * CELLWIDTH < -playOffset - CELLWIDTH)
                             {
-                                if (j * CELLSIZE < -playOffset - CELLSIZE)
-                                {
-                                    automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, Color.Gray);
-                                }
-                                else if (j * CELLSIZE < -playOffset)
-                                {
-                                    automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, Color.White);
-                                }
-                                else
-                                {
-                                    automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, Color.LightGray);
-                                }
+                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(i % 12 * 127 / 12, (i + 4) % 12 * 127 / 12, (i + 8) % 12 * 127 / 12, ScrollWithMidi ? 32 : 255));
+                            }
+                            else if (j * CELLWIDTH < -playOffset)
+                            {
+                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(i % 12 * 255 / 12, (i + 4) % 12 * 255 / 12, (i + 8) % 12 * 255 / 12, 255));
+                            }
+                            else
+                            {
+                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(i % 12 * 255 / 12, (i + 4) % 12 * 255 / 12, (i + 8) % 12 * 255 / 12, automatone.SongCells[i, j] == CellState.SILENT && ScrollWithMidi ? 64 : 255));
                             }
                         }
                     }
@@ -187,13 +230,31 @@ namespace Automatone
 
         public void Reset()
         {
-            gridOffset = Vector2.Zero;
+            gridOffset = new Vector2(0, Automatone.CONTROLS_AND_GRID_DIVISION);
             playOffset = 0;
+            ManualGridChangeReset();
         }
 
+        private void ManualGridChangeReset()
+        {
+            manualGridChangeStartXIndex = null;
+            manualGridChangeEndXIndex = null;
+            manualGridChangeYIndex = null;
+        }
+
+        private int ScreenToGridCoordinatesX(int y)
+        {
+            return ((int)-gridOffset.X + y) / CELLWIDTH;
+        }
+
+        private int ScreenToGridCoordinatesY(int x)
+        {
+            return automatone.SongCells.GetLength(0) - 1 - ((int)-gridOffset.Y + x) / CELLHEIGHT;
+        }
+            
         public void setScrollLocation(int noteNumber)
         {
-            playOffset = -1 * noteNumber * CELLSIZE;
+            playOffset = -1 * noteNumber * CELLWIDTH;
         }
     }
 }
