@@ -12,6 +12,8 @@ namespace Automatone
 
         public Measure(MusicTheory theory, Random rand, Rhythm rhythm, double[] rhythmSeed, List<NoteName> chord)
         {
+            System.Console.WriteLine("\t\t" + (int)(rhythmSeed[0]*1000) + ":" + (int)(rhythmSeed[1]*1000)); //remove later
+
             int measureLength = Automatone.SUBBEATS_PER_MEASURE;
 
             double[] rhythmCurve = rhythm.GetRhythmCurve(measureLength);

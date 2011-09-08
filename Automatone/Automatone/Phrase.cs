@@ -12,7 +12,7 @@ namespace Automatone
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, double[] rhythmSeed)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, List<double[]> rhythmSeeds)
         {
             phrase = new List<Measure>();
 
@@ -20,20 +20,28 @@ namespace Automatone
             int phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
             phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * InputParameters.phraseLengthVariance));
 
+            System.Console.WriteLine(" length " + phraseLength); //remove later
+
+            //Select rhythms
+            List<double[]> selectedRhythmSeeds = new List<double[]>();
+            for (int i = 0; i < 1 + 2 * InputParameters.phraseRhythmVariety * phraseLength; i++)
+            {
+                selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
+            }
+
             Harmony harm = new Harmony(theory, rand);
             harm.initializeHarmony(phraseLength * Automatone.SUBBEATS_PER_MEASURE);
             List<List<NoteName>> progression = harm.chordProgression;
 
-            grid = new CellState[theory.PIANO_SIZE, phraseLength * Automatone.SUBBEATS_PER_MEASURE];
-
             for (int i = 0; i < phraseLength; i++)
             {
-                int chordNumber = (i / phraseLength) * progression.Count;
+                int chordNumber = (i * progression.Count / phraseLength);
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
 
-                phrase.Add(new Measure(theory, rand, rhythm, rhythmSeed, chord));
+                phrase.Add(new Measure(theory, rand, rhythm, rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)), chord));
             }
 
+            //Build grid
             int gridSize = 0;
             foreach (Measure m in phrase)
             {
