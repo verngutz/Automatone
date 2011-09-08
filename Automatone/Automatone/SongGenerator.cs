@@ -11,11 +11,11 @@ namespace Automatone
     {
         private const byte START_OFFSET = 21;
 	    public static String GenerateSong(Random random, MusicTheory theory, out CellState[,] song)
-	    {
-		    NoteThread thread = new NoteThread(Automatone.getBeatResolution());
+        {
             Song s = new Song(theory, random);
+		    NoteThread thread = new NoteThread(Automatone.getBeatResolution(), s.Notes);
             song = s.Grid;
-
+            /*
             for (int i = 0; i < song.GetLength(0); i++)
             {
                 for (int j = 0; j < song.GetLength(1); j++)
@@ -31,8 +31,7 @@ namespace Automatone
                         thread.AddNote(new Note(new NoteName((byte)((i + START_OFFSET) % 12)), (byte)((i + START_OFFSET) / 12), integerDuration * Automatone.getBeatResolution(), (int)(j * Automatone.getBeatResolution()), startBeat));
                     }
                 }
-            }
-
+            }*/
 		    return thread.ToString();
 	    }
 	
@@ -53,12 +52,12 @@ namespace Automatone
             private const string META_END_TRACK = " Meta TrkEnd\n";
             private const string END_TRACK = "TrkEnd\n";
 
-		    private List<Note> notes;
+            private List<Note> notes;
 		    private double beatResolution;
 
-		    public NoteThread(double beat_resolution)
+		    public NoteThread(double beat_resolution, List<Note> notes)
 		    {
-			    notes = new List<Note>();
+			    this.notes = notes;
 			    beatResolution = beat_resolution;
 		    }
 		

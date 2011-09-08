@@ -9,16 +9,24 @@ namespace Automatone
     {
         private List<Measure> phrase;
 
+        private int phraseLength;
+        public int PhraseLength { get { return phraseLength; } }
+        private int measureCount;
+        public int MeasureCount { get { return measureCount; } }
+
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
+        private List<Note> notes;
+        public List<Note> Notes { get { return notes; } }
 
         public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, Rhythm rhythm, List<double[]> rhythmSeeds)
         {
             phrase = new List<Measure>();
 
             //Calculate phrase length
-            int phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
+            phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
             phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * InputParameters.phraseLengthVariance));
+            measureCount = phraseLength;
 
             System.Console.WriteLine(" length " + phraseLength); //remove later
 
@@ -39,6 +47,16 @@ namespace Automatone
                 List<NoteName> chord = progression.ElementAt<List<NoteName>>(chordNumber);
 
                 phrase.Add(new Measure(theory, rand, rhythm, rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)), chord));
+            }
+
+            notes = new List<Note>();
+            for (int i = 0; i < phrase.Count; i++)
+            {
+                foreach (Note n in phrase.ElementAt<Measure>(i).Notes)
+                {
+                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + i, n.GetStartBeat());
+                    notes.Add(n2);
+                }
             }
 
             //Build grid

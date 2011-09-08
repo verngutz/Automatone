@@ -9,6 +9,8 @@ namespace Automatone
     {
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
+        private List<Note> notes;
+        public List<Note> Notes { get { return notes; } }
 
         public Measure(MusicTheory theory, Random rand, Rhythm rhythm, double[] rhythmSeed, List<NoteName> chord)
         {
@@ -22,6 +24,8 @@ namespace Automatone
             rhythmSeed.CopyTo(thisSeed, 0);
 
             grid = new CellState[theory.PIANO_SIZE, measureLength];
+            notes = new List<Note>();
+
             for (int i = 0; i < measureLength; i++)
             {
                 //get next seedvalue
@@ -40,6 +44,7 @@ namespace Automatone
                         while (!chord.Contains(new NoteName((byte)(pitch % 12))))
                             pitch = (int)(25 + rand.NextDouble() * 16);
                         grid[pitch, i] = CellState.START;
+                        notes.Add(new Note(new NoteName((byte)(pitch % 12)), (byte)(pitch / 12 + 1), 0.25, 0, Automatone.getBeatResolution() * i));
                         for (int k = 1; k < 4; k++)
                             grid[pitch, Math.Min(i + k, measureLength - 1)] = CellState.HOLD;
                     }
@@ -59,6 +64,7 @@ namespace Automatone
                         while (!chord.Contains(new NoteName((byte)(pitch % 12))))
                             pitch = (int)(10 + rand.NextDouble() * 12);
                         grid[pitch, i] = CellState.START;
+                        notes.Add(new Note(new NoteName((byte)(pitch % 12)), (byte)(pitch / 12 + 1), 0.25, 0, Automatone.getBeatResolution() * i));
                         for (int k = 1; k < 8; k++)
                             grid[pitch, Math.Min(i + k, measureLength - 1)] = CellState.HOLD;
                     }

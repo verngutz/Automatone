@@ -31,6 +31,21 @@ namespace Automatone
             this.startBeat = start_beat;
         }
 
+        public NoteName GetNoteName()
+        {
+            return noteName;
+        }
+
+        public byte GetOctave()
+        {
+            return octave;
+        }
+
+        public double GetRemainingDuration()
+        {
+            return remainingDuration;
+        }
+
         public int GetStartMeasure()
         {
             return startMeasure;

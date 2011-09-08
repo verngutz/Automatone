@@ -8,9 +8,13 @@ namespace Automatone
     public class Song
     {
         private List<Verse> song;
+        private int measureCount;
+        public int MeasureCount { get { return measureCount; } }
 
         private CellState[,] grid;
         public CellState[,] Grid { get { return grid; } }
+        private List<Note> notes;
+        public List<Note> Notes { get { return notes; } }
 
         public Song(MusicTheory theory, Random rand)
         {
@@ -19,6 +23,7 @@ namespace Automatone
             //Calculate verse length
             int songLength = (int)(InputParameters.songLength * theory.SONG_LENGTHINESS);
             songLength += (int)(songLength * ((rand.NextDouble() - 0.5) * InputParameters.songLengthVariance));
+            measureCount = 0;
 
             //generate rhythms
             Rhythm rhythm = new Rhythm(theory);
@@ -55,7 +60,19 @@ namespace Automatone
 			    song.Add(verses.ElementAt<Verse>(curr));
                 System.Console.Write(" " + curr); //remove later
                 prev = curr;
-		    }
+            }
+
+            //make note list
+            notes = new List<Note>();
+            for (int i = 0; i < song.Count; i++)
+            {
+                foreach (Note n in song.ElementAt<Verse>(i).Notes)
+                {
+                    Note n2 = new Note(n.GetNoteName(), n.GetOctave(), n.GetRemainingDuration(), n.GetStartMeasure() + measureCount, n.GetStartBeat());
+                    notes.Add(n2);
+                }
+                measureCount += song.ElementAt<Verse>(i).MeasureCount;
+            }
 
             //build grid
             int gridSize = 0;
