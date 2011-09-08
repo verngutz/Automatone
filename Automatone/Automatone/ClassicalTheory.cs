@@ -7,6 +7,11 @@ namespace Automatone
 {
     public class ClassicalTheory : MusicTheory
     {
+        //Pitch Range and Offset
+        public override int PIANO_SIZE { get { return 60; } }
+        public const int NOTENAME_OFFSET = 7;
+        public const int OCTAVE_OFFSET = 5;
+
         //Song Constants
         public override int SONG_LENGTHINESS { get { return 10; } }
         public override double CHORUS_EXISTENCE { get { return 1; } }
@@ -68,30 +73,8 @@ namespace Automatone
         {
             get
             {
-                return new double[]{0.5,1};
+                return new double[]{0.9,0.9};
             }
         }
-
-        //Pitch Range and Offset
-        public override int PIANO_SIZE { get { return 60; } }
-        public const int NOTENAME_OFFSET = 7;
-        public const int OCTAVE_OFFSET = 5;
-
-        //CHROMATIC SCALE
-        public static NoteName[] CHROMATIC_SCALE = 
-	    {
-		    NoteName.C,
-		    NoteName.C_SHARP,
-		    NoteName.D,
-		    NoteName.D_SHARP,
-		    NoteName.E,
-		    NoteName.F,
-		    NoteName.F_SHARP,
-		    NoteName.G,
-		    NoteName.G_SHARP,
-		    NoteName.A,
-		    NoteName.A_SHARP,
-		    NoteName.B
-	    };
     }
 }
