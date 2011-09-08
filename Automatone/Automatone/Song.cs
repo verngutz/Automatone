@@ -39,7 +39,7 @@ namespace Automatone
             }
 
             //create harmony
-            Harmony harmony = new Harmony(theory, rand, new NoteName(0), MusicTheory.SCALE_MODE.MAJOR);
+            Harmony harmony = new Harmony(theory, rand, new NoteName((byte)rand.Next(12)), (rand.NextDouble() > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.HARMONIC_MINOR));
 
             //generate parts
             List<Part> parts = new List<Part>();
