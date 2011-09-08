@@ -60,6 +60,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LzmaSharp">
+      <HintPath>..\..\LzmaSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -90,9 +93,61 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="NMock.StrongNamed">
+      <HintPath>..\..\NMock.StrongNamed.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Audio">
+      <HintPath>..\..\Nuclex.Audio.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Fonts">
+      <HintPath>..\..\Nuclex.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter">
+      <HintPath>..\..\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Game">
+      <HintPath>..\..\Nuclex.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Geometry">
+      <HintPath>..\..\Nuclex.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Graphics">
+      <HintPath>..\..\Nuclex.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Graphics.SpecialEffects">
+      <HintPath>..\..\Nuclex.Graphics.SpecialEffects.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Input">
+      <HintPath>..\..\Nuclex.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Math">
+      <HintPath>..\..\Nuclex.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Networking">
+      <HintPath>..\..\Nuclex.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Support">
+      <HintPath>..\..\Nuclex.Support.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Testing.Xna">
+      <HintPath>..\..\Nuclex.Testing.Xna.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.UserInterface">
+      <HintPath>..\..\Nuclex.UserInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Windows.Forms">
+      <HintPath>..\..\Nuclex.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SlimDX.DirectInput">
+      <HintPath>..\..\SlimDX.DirectInput.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -109,13 +164,13 @@
   <ItemGroup>
     <Compile Include="Part.cs" />
     <Compile Include="Melody.cs" />
+    <Compile Include="GridScreen.cs" />
     <Compile Include="Measure.cs" />
     <Compile Include="Harmony.cs" />
     <Compile Include="CellState.cs" />
     <Compile Include="ClassicalTheory.cs" />
     <Compile Include="InputParameters.cs" />
     <Compile Include="MainScreen.cs" />
-    <Compile Include="AutomatoneEvents.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="NoteName.cs" />
     <Compile Include="Phrase.cs" />
@@ -139,14 +194,6 @@
     <ProjectReference Include="..\..\Duet\Duet.csproj">
       <Project>{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}</Project>
       <Name>Duet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MoodSwingCoreComponents\MoodSwingCoreComponents.csproj">
-      <Project>{7D56E792-6966-4AAC-812B-2064A5C7810C}</Project>
-      <Name>MoodSwingCoreComponents</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MoodSwingGUI\MoodSwingGUI.csproj">
-      <Project>{1675A2EB-DFAC-4CC5-93FD-512CC1450A3C}</Project>
-      <Name>MoodSwingGUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutomatoneContent\AutomatoneContent.contentproj">
       <Name>AutomatoneContent %28Content%29</Name>

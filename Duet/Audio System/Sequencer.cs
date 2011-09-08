@@ -43,8 +43,7 @@ namespace Duet.Audio_System
         /// </summary>
         public void LoadMidi(string filename)
         {
-            if (!m_AudioSystem.Midi.LoadMidi(filename))
-                Console.WriteLine("Failed to load MIDI file!");
+            while (!m_AudioSystem.Midi.LoadMidi(filename)) ;
 
         }
 

@@ -1,20 +1,10 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
-using MoodSwingCoreComponents;
-using MoodSwingGUI;
+using Nuclex.UserInterface;
+using Nuclex.Input;
 
-using Duet;
 using Duet.Audio_System;
 
 namespace Automatone
@@ -28,19 +18,38 @@ namespace Automatone
         private ContentManager content;
 
         // Graphics Objects
-        public GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
         // Audio Objects
-        Synthesizer synthesizer;
-        public Sequencer sequencer;
+        private Synthesizer synthesizer;
+        private Sequencer sequencer;
+
+        public Sequencer Sequencer { get { return sequencer; } }
 
         // Services
         private IAudioSystemService audioService;
 
         //GUI
-        public MainScreen gameScreen;
+        private InputManager inputManager;
+        private GuiManager gui;
 
+        public const short SCREEN_WIDTH = 800;
+        public const short SCREEN_HEIGHT = 600;
+        public const short CONTROLS_AND_GRID_DIVISION = 150;
+
+        //Grid (Visual)
+        private GridScreen gridScreen;
+        public GridScreen GridScreen { get { return gridScreen; } }
+
+        public const byte X_DIMENSION = 1;
+        public const byte Y_DIMENSION = 0;
+
+        //Grid (Logical)
+        public CellState[,] SongCells { set; get; }
+
+        //Music Stuff
         public const ushort TEMPO = 120;
 
         public const int SUBBEATS_PER_MEASURE = 16;
@@ -55,6 +64,15 @@ namespace Automatone
 
             content = new ContentManager(Services);
             Content.RootDirectory = "Content";
+
+            inputManager = new InputManager(Services);
+            Components.Add(inputManager);
+
+            gui = new GuiManager(Services);
+            Components.Add(gui);
+
+            gridScreen = new GridScreen(this);
+            Components.Add(gridScreen);
 
             IsMouseVisible = true;
             Window.Title = "Automatone";
@@ -91,8 +109,13 @@ namespace Automatone
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
 
+            //Setup Tempo
             audioService.BeatsPerMinute = TEMPO;
 
+            //Setup Gui Screen
+            Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            gui.Screen = screen;
+            screen.Desktop.Children.Add(new MainScreen(this));
             base.Initialize();
         }
 
@@ -103,9 +126,8 @@ namespace Automatone
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            gameScreen = new MainScreen(null, spriteBatch, this, graphics);
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
+            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
         }
 
@@ -127,7 +149,6 @@ namespace Automatone
         {
             sequencer.Update(gameTime);
             synthesizer.Update(gameTime);
-            gameScreen.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -140,8 +161,6 @@ namespace Automatone
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-
-            gameScreen.Draw(gameTime);
 
             int frameRate = (int)(1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
             spriteBatch.DrawString(Content.Load<SpriteFont>("Temp"), "Frame Rate: " + frameRate + "fps", Vector2.Zero, Color.White);
