@@ -129,8 +129,8 @@ namespace Automatone
                     gridOffset.Y -= moveValY;
                 }
 
-                gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1) + 1) * CELLSIZE), 0);
-                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION - ((automatone.SongCells.GetLength(0) + 1) * CELLSIZE), 0);
+                gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1)) * CELLSIZE), 0);
+                gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - ((automatone.SongCells.GetLength(0)) * CELLSIZE), Automatone.CONTROLS_AND_GRID_DIVISION);
 
             }
             base.Update(gameTime);
