@@ -83,10 +83,10 @@ namespace Automatone
             get { return tempo; }
         }
 
-        public const int SUBBEATS_PER_MEASURE = 16;
+        public const int SUBBEATS_PER_WHOLE_NOTE = 16;
         public static double getBeatResolution()
         {
-            return 1.0 / SUBBEATS_PER_MEASURE;
+            return 1.0 / SUBBEATS_PER_WHOLE_NOTE;
         }
 
         private const int SEED = 40;
@@ -203,7 +203,8 @@ namespace Automatone
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
             sw.WriteLine("MTrk");
-            sw.WriteLine("0 TimeSig 4/4 24 8");
+            sw.WriteLine("0 TimeSig " + InputParameters.timeSignatureN + "/" + InputParameters.timeSignatureN + " 24 8");
+            //sw.WriteLine("0 TimeSig 4/4 24 8");
             sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Tempo);
             sw.WriteLine("0 KeySig 0 major");
             sw.WriteLine("0 Meta TrkEnd");

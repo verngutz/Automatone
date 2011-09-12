@@ -25,8 +25,8 @@ namespace Automatone
         public abstract double NOTE_LENGTHINESS { get; }
 
         //Cadences
-        public enum CADENCE_NAMES { HALF, AUTHENTIC, PLAGAL, DECEPTIVE, SILENT };
-        public static double[][] CADENCES = new double[][] { new double[] { 0, 1, 0.5, 0.01 }, new double[] { 0.1, 0.8, 0.2, 0.2 } };
+        public enum CADENCE_NAMES { HALF, PERFECT_AUTHENTIC, IMPERFECT_AUTHENTIC, PLAGAL, DECEPTIVE, SILENT };
+        public static double[][] CADENCES = new double[][] { new double[] { 0, 1, 0.8, 0.5, 0.01 }, new double[] { 0.8, 0.8, 0.6, 0.2, 0.2 } };
 
         //Rhythm
         public abstract List<double> RHYTHM_CURVE_SAMPLE { get; }

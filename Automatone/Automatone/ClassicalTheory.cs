@@ -48,22 +48,6 @@ namespace Automatone
                 sample.Add(0.1296);
                 sample.Add(0.216);
                 sample.Add(0.1296);
-                sample.Add(1);
-                sample.Add(0.1296);
-                sample.Add(0.216);
-                sample.Add(0.1296);
-                sample.Add(0.36);
-                sample.Add(0.1296);
-                sample.Add(0.216);
-                sample.Add(0.1296);
-                sample.Add(0.6);
-                sample.Add(0.1296);
-                sample.Add(0.216);
-                sample.Add(0.1296);
-                sample.Add(0.36);
-                sample.Add(0.1296);
-                sample.Add(0.216);
-                sample.Add(0.1296);
                 return sample;
             }
         }

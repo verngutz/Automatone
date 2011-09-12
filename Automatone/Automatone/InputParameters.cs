@@ -8,6 +8,8 @@ namespace Automatone
     public class InputParameters
     {
         //Song Parameters
+        public static double timeSignatureN = 4.0;
+        public static double timeSignatureD = 4.0;
         public static double songLength = 0.5;
         public static double structuralVar = 0.2;
         public static double songRhythmVariety = 0.5;
@@ -32,13 +34,14 @@ namespace Automatone
         public static double noteLengthVariance = 0.5;
 
         //Rhythm
-        public static double rhythmObedience = 0.5;
+        public static double rhythmObedience = 0.8;
         
         //Melody
         public static double chordalityObedience = 1;
         public static double tonalityObedience = 1;
 
         //Harmony
+        public static double seventhChordProbablility = 0.2;
         /*public static double meanBeatharmonicCovariance = 0.9;
         public static double beatHarmonicCovarianceOffsetDivisor = 10;
         public static double randomModulationProbability = 0.01;

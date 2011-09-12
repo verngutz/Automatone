@@ -37,10 +37,10 @@ namespace Automatone
             this.forceDiatonic = forceDiatonic;
         }
 
-        public List<Note> GenerateNotes(double[] rhythmSeed, double[] melodySeed, List<NoteName> chord, List<NoteName> diatonic)
+        public List<Note> GenerateNotes(double[] rhythmSeed, double[] melodySeed, List<NoteName> chord, List<NoteName> diatonic, int measureLength)
         {
             List<Note> notes = new List<Note>();
-            double[] rhythmCurve = rhythm.GetRhythmCurve(Automatone.SUBBEATS_PER_MEASURE);
+            double[] rhythmCurve = rhythm.GetRhythmCurve(measureLength);
             double[] melodyBias = melody.GetMelodyBias();
 
             this.rhythmSeed = new double[rhythmSeed.Length];
@@ -48,7 +48,22 @@ namespace Automatone
             this.melodySeed = new double[melodySeed.Length];
             melodySeed.CopyTo(this.melodySeed, 0);
 
-            for (int i = 0; i < Automatone.SUBBEATS_PER_MEASURE; i++)
+
+            int f = 1;
+            int mod = measureLength;
+            List<int> regulars = new List<int>();
+            regulars.Add(f);
+            for(int i = 2; i <= measureLength/2; i++){
+                while(mod % i == 0)
+                {
+                    mod /= i;
+                    f *= i;
+                    regulars.Add(f);
+                }
+            }
+            mod = regulars.ElementAt<int>((int)Math.Round(regularity*(regulars.Count-1)));
+
+            for (int i = 0; i < measureLength; i++)
             {
                 double noteLength = theory.NOTE_LENGTHINESS * InputParameters.meanNoteLength;
                 noteLength += noteLength * (noteLengthAdjustment - 0.5);
@@ -57,7 +72,7 @@ namespace Automatone
 
                 for (int j = 0; j < multiplicity; j++)
                 {
-                    if (i % (int)(Automatone.SUBBEATS_PER_MEASURE / Math.Pow(2, (int)((1 - regularity) * Automatone.SUBBEATS_PER_MEASURE / 4))) == 0 && 1 - Math.Pow(NextRhythmValue(), 2 * (1 - rhythmCrowdedness)) < rhythmCurve[i])
+                    if (i % Math.Max(mod,1) == 0 && 1 - Math.Pow(NextRhythmValue(), 2 * (1 - rhythmCrowdedness)) < rhythmCurve[i])
                     {
                         int pitch = (int)(lowerPitchLimit + NextMelodyValue() * pitchRange);
                         if (forceChord || NextMelodyValue() < melodyBias[0])
