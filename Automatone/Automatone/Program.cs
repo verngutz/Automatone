@@ -8,6 +8,8 @@ namespace Automatone
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        /// 
+        [STAThread]
         static void Main(string[] args)
         {
             using (Automatone game = new Automatone())
