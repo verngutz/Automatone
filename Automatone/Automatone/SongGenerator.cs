@@ -14,7 +14,7 @@ namespace Automatone
             NoteThread thread = new NoteThread(automatone.SongCells);
             automatone.Song = thread.ToString();
         }
-	    public static void GenerateSong(Automatone automatone, Random random, MusicTheory theory, out CellState[,] song)
+	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory)
         {
             Song s = new Song(theory, random);
 		    NoteThread thread = new NoteThread(s.Notes);
@@ -33,8 +33,8 @@ namespace Automatone
                     }
                 }
             }
-            song = grid;
             automatone.Song = thread.ToString();
+            return grid;
 	    }
 	
 	    private int verseToThread(CellState[,] songCells, int globalStartMeasure)

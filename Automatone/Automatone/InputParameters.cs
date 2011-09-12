@@ -15,6 +15,7 @@ namespace Automatone
         public static double songRhythmVariety = 0.5;
         public static double songMelodyVariety = 0.5;
         public static double songLengthVariance = 0.5;
+        public static double songSpeed = 0.5;
 
         //Verse Parameters
         public static double meanVerseLength = 0.5;
