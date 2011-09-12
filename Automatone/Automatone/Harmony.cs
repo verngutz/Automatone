@@ -67,8 +67,12 @@ namespace Automatone
                     intervals.Add(circle[random.Next(circle.Length)]);
                     intervals.Add(4);
                     break;
-                case MusicTheory.CADENCE_NAMES.AUTHENTIC:
-                    intervals.Add((random.NextDouble() > 0.8 ? 6 : 4));
+                case MusicTheory.CADENCE_NAMES.PERFECT_AUTHENTIC:
+                    intervals.Add(4);
+                    intervals.Add(0);
+                    break;
+                case MusicTheory.CADENCE_NAMES.IMPERFECT_AUTHENTIC:
+                    intervals.Add(6);
                     intervals.Add(0);
                     break;
                 case MusicTheory.CADENCE_NAMES.PLAGAL:
@@ -85,7 +89,7 @@ namespace Automatone
             }
             while (intervals.Count < phraseLength)
             {
-                intervals.Insert(0, circle[(circle.ToList<int>().IndexOf(intervals.First<int>()) + circle.Length - 1) % circle.Length]);
+                intervals.Insert(0, circle[(circle.ToList<int>().IndexOf(intervals.First<int>()) + circle.Length - (random.NextDouble() < 0.1 ? 0 : 1)) % circle.Length]);
             }
             while (intervals.Count > phraseLength)
             {
@@ -95,7 +99,7 @@ namespace Automatone
             List<List<NoteName>> progression = new List<List<NoteName>>();
             foreach (int i in intervals)
             {
-                progression.Add(createChord(diatonicScale.ElementAt<NoteName>(i), new int[] { 2, 4 }));
+                progression.Add(createChord(diatonicScale.ElementAt<NoteName>(i), (random.NextDouble() > InputParameters.seventhChordProbablility ? new int[] { 2, 4 } : new int[] { 2, 4, 6 })));
             }
 
             return progression;

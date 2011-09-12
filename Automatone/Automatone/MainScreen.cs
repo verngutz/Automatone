@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,6 +35,7 @@ namespace Automatone
         {
             Bounds = new UniRectangle(0, 0, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT);
             EnableDragging = false;
+
             // Construct children
             randomizeButton = new ButtonControl();
             playPauseButton = new OptionControl();
@@ -88,14 +90,28 @@ namespace Automatone
         {
             StopButtonChanged(sender, e);
 
-            CellState[,] output;
 #if USESEED
-            SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), out output);
+            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory());
 #else
-            SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), out output);
+            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory());
 #endif
-            automatone.SongCells = output;
-            automatone.Tempo = (ushort)(40 + (new Random()).NextDouble() * 120);
+            automatone.Tempo = (ushort)(40 + InputParameters.songSpeed * 120);
+
+            Stream myStream;
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if ((myStream = saveFileDialog1.OpenFile()) != null)
+                {
+                    // Code to write the stream goes here.
+                    myStream.Close();
+                }
+            }
         }
 
         private void StopButtonChanged(object sender, EventArgs e)

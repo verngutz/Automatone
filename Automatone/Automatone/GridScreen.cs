@@ -89,7 +89,7 @@ namespace Automatone
                 
                 if (ScrollWithMidi)
                 {
-                    playOffset -= automatone.Tempo * Automatone.SUBBEATS_PER_MEASURE / 14400.0f * CELLWIDTH;
+                    playOffset -= automatone.Tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / 14400.0f * CELLWIDTH;
                     gridOffset.X = Math.Min(playOffset + 100, 0);
                 }
                 else

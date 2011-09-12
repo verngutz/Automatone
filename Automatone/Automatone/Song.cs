@@ -44,8 +44,8 @@ namespace Automatone
             //generate parts
             List<Part> parts = new List<Part>();
             parts.Add(new Part(theory, rhythm, melody, 0.5, 0.5, 0, 45, 12, 1, false, false));
-            parts.Add(new Part(theory, rhythm, melody, 0.1, 0.5, 0, 35, 12, 1, false, false));
-            parts.Add(new Part(theory, rhythm, melody, 0.2, 1, 0.5, 20, 12, 3, true, false));
+            parts.Add(new Part(theory, rhythm, melody, 0.1, 0.5, 0.3, 33, 12, 1, false, false));
+            parts.Add(new Part(theory, rhythm, melody, 0.2, 1, 0.6, 20, 12, 3, true, false));
 
             //generate verses
 		    List<Verse> verses = new List<Verse>();
