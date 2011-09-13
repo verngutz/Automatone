@@ -13,14 +13,17 @@ namespace Automatone
         private NoteName key;
         private MusicTheory.SCALE_MODE mode;
 
+        private double seventhChordProbability;
+
         private List<NoteName> diatonicScale;
 
-	    public Harmony (MusicTheory theory, Random random, NoteName key, MusicTheory.SCALE_MODE mode) 
+	    public Harmony (MusicTheory theory, Random random, NoteName key, MusicTheory.SCALE_MODE mode, double seventhChordProbability) 
         {
             this.random = random;
             this.theory = theory;
             this.key = key;
             this.mode = mode;
+            this.seventhChordProbability = seventhChordProbability;
             diatonicScale = createDiatonicScale();
         }
 	
@@ -99,7 +102,7 @@ namespace Automatone
             List<List<NoteName>> progression = new List<List<NoteName>>();
             foreach (int i in intervals)
             {
-                progression.Add(createChord(diatonicScale.ElementAt<NoteName>(i), (random.NextDouble() > InputParameters.seventhChordProbablility ? new int[] { 2, 4 } : new int[] { 2, 4, 6 })));
+                progression.Add(createChord(diatonicScale.ElementAt<NoteName>(i), (random.NextDouble() > seventhChordProbability ? new int[] { 2, 4 } : new int[] { 2, 4, 6 })));
             }
 
             return progression;

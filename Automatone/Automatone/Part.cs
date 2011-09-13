@@ -10,6 +10,9 @@ namespace Automatone
         private MusicTheory theory;
         private Rhythm rhythm;
         private Melody melody;
+        private int measureLength;
+        private double meanNoteLength;
+        private double noteLengthVariance;
         private double rhythmCrowdedness;
         private double noteLengthAdjustment;
         private double regularity;
@@ -22,11 +25,14 @@ namespace Automatone
         private double[] rhythmSeed;
         private double[] melodySeed;
 
-        public Part(MusicTheory theory, Rhythm rhythm, Melody melody, double rhythmCrowdedness, double noteLengthAdjustment, double regularity, int lowerPitchLimit, int pitchRange, int multiplicity, bool forceChord, bool forceDiatonic)
+        public Part(MusicTheory theory, Rhythm rhythm, Melody melody, int measureLength, double meanNoteLength, double noteLengthVariance, double rhythmCrowdedness, double noteLengthAdjustment, double regularity, int lowerPitchLimit, int pitchRange, int multiplicity, bool forceChord, bool forceDiatonic)
         {
             this.theory = theory;
             this.rhythm = rhythm;
             this.melody = melody;
+            this.measureLength = measureLength;
+            this.meanNoteLength = meanNoteLength;
+            this.noteLengthVariance = noteLengthVariance;
             this.rhythmCrowdedness = rhythmCrowdedness;
             this.noteLengthAdjustment = noteLengthAdjustment;
             this.regularity = regularity;
@@ -37,7 +43,7 @@ namespace Automatone
             this.forceDiatonic = forceDiatonic;
         }
 
-        public List<Note> GenerateNotes(double[] rhythmSeed, double[] melodySeed, List<NoteName> chord, List<NoteName> diatonic, int measureLength)
+        public List<Note> GenerateNotes(double[] rhythmSeed, double[] melodySeed, List<NoteName> chord, List<NoteName> diatonic)
         {
             List<Note> notes = new List<Note>();
             double[] rhythmCurve = rhythm.GetRhythmCurve(measureLength);
@@ -65,9 +71,9 @@ namespace Automatone
 
             for (int i = 0; i < measureLength; i++)
             {
-                double noteLength = theory.NOTE_LENGTHINESS * InputParameters.meanNoteLength;
+                double noteLength = theory.NOTE_LENGTHINESS * meanNoteLength;
                 noteLength += noteLength * (noteLengthAdjustment - 0.5);
-                noteLength += noteLength * ((NextRhythmValue() - 0.5) * InputParameters.noteLengthVariance);
+                noteLength += noteLength * ((NextRhythmValue() - 0.5) * noteLengthVariance);
                 noteLength = Math.Pow(0.5, Math.Round(Math.Log(noteLength) / Math.Log(0.5)));
 
                 for (int j = 0; j < multiplicity; j++)

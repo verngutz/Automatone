@@ -11,29 +11,32 @@ namespace Automatone
         private const byte START_OFFSET = 21;
         public static void RewriteSong(Automatone automatone)
         {
-            NoteThread thread = new NoteThread(automatone.SongCells);
+            NoteThread thread = new NoteThread(automatone.SongCells, automatone.MeasureLength, automatone.TimeSignature);
             automatone.Song = thread.ToString();
         }
 	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory)
         {
             Song s = new Song(theory, random);
-		    NoteThread thread = new NoteThread(s.Notes);
-            CellState[,] grid = new CellState[theory.PIANO_SIZE,s.MeasureCount * (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0))];
+		    NoteThread thread = new NoteThread(s.Notes, s.TimeSignature);
+            int gridWidth = s.MeasureCount * s.MeasureLength;
+            CellState[,] grid = new CellState[theory.PIANO_SIZE,gridWidth];
             foreach (List<Note> nts in s.Notes)
             {
                 foreach (Note n in nts)
                 {
-                    grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE, s.MeasureCount * Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) - 1)] = CellState.START;
+                    grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE, gridWidth - 1)] = CellState.START;
                     for (int i = 1; i < n.GetRemainingDuration() * Automatone.SUBBEATS_PER_WHOLE_NOTE; i++)
                     {
-                        if (grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, s.MeasureCount * Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) - 1)] == CellState.SILENT)
+                        if (grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] == CellState.SILENT)
                         {
-                            grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, s.MeasureCount * Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) - 1)] = CellState.HOLD;
+                            grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] = CellState.HOLD;
                         }
                     }
                 }
             }
-            automatone.Song = thread.ToString();
+            automatone.MeasureLength = s.MeasureLength;
+            automatone.TimeSignature = s.TimeSignature;
+            //automatone.Song = thread.ToString(); //do we still need this?
             return grid;
 	    }
 	
@@ -56,10 +59,12 @@ namespace Automatone
 
             private List<Note> notes;
 
-            public NoteThread(CellState[,] notes)
+            private double timeSignature;
+
+            public NoteThread(CellState[,] notes, int measureLength, double timeSignature)
             {
-                int measureLength = (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0));
                 this.notes = new List<Note>();
+                this.timeSignature = timeSignature;
                 for (int i = 0; i < notes.GetLength(0); i++)
                 {
                     for (int j = 0; j < notes.GetLength(1); j++)
@@ -79,7 +84,7 @@ namespace Automatone
                 }
             }
 
-		    public NoteThread(List<List<Note>> notes)
+		    public NoteThread(List<List<Note>> notes, double timeSignature)
 		    {
                 this.notes = new List<Note>();
                 foreach (List<Note> nts in notes)
@@ -138,7 +143,7 @@ namespace Automatone
                 List<Note> expiredNotes = new List<Note>();
                 while (notes.Count > 0 || activeNotes.Count > 0)
                 {
-                    while (notes.Count > 0 && Math.Abs(notes.First<Note>().GetStartMeasure() * (Math.Round(InputParameters.timeSignatureN) / Math.Round(InputParameters.timeSignatureD / 4.0) / 4.0) + notes.First<Note>().GetStartBeat() - timePassed) <= EPSILON)
+                    while (notes.Count > 0 && Math.Abs(notes.First<Note>().GetStartMeasure() * timeSignature + notes.First<Note>().GetStartBeat() - timePassed) <= EPSILON)
                     {
                         Note toActivate = notes.First<Note>();
                         notes.Remove(notes.First<Note>());

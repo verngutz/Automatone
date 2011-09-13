@@ -17,26 +17,26 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, List<double[]> rhythmSeeds, List<double[]> melodySeeds)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, List<double[]> rhythmSeeds, List<double[]> melodySeeds, double meanPhraseLength, double phraseLengthVariance, double phraseRhythmVariance, double phraseMelodyVariance)
         {
             phrase = new List<Measure>();
 
             //Calculate phrase length
-            phraseLength = (int)(theory.PHRASE_LENGTHINESS * InputParameters.meanPhraseLength);
-            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * InputParameters.phraseLengthVariance));
+            phraseLength = (int)(theory.PHRASE_LENGTHINESS * meanPhraseLength);
+            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * phraseLengthVariance));
             measureCount = phraseLength;
 
             System.Console.WriteLine(" length " + phraseLength); //remove later
 
             //Select rhythms
             List<double[]> selectedRhythmSeeds = new List<double[]>();
-            for (int i = 0; i < 1 + 2 * InputParameters.phraseRhythmVariety * phraseLength; i++)
+            for (int i = 0; i < 1 + 2 * phraseRhythmVariance * phraseLength; i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
             }
             //Select melodies
             List<double[]> selectedMelodySeeds = new List<double[]>();
-            for (int i = 0; i < 1 + 2 * InputParameters.phraseMelodyVariety * phraseLength; i++)
+            for (int i = 0; i < 1 + 2 * phraseMelodyVariance * phraseLength; i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<double[]>((int)(rand.NextDouble() * melodySeeds.Count)));
             }

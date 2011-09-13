@@ -71,6 +71,10 @@ namespace Automatone
         }
 
         //Music Stuff
+        private double timeSignature;
+        public double TimeSignature { set { timeSignature = value; } get { return timeSignature; } }
+        private int measureLength;
+        public int MeasureLength { set { measureLength = value; } get { return measureLength; } }
         private ushort tempo;
         public ushort Tempo 
         {

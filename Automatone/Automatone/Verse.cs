@@ -18,24 +18,25 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Verse(MusicTheory theory, Random rand, List<Part> parts, Harmony harmony, List<double[]> rhythmSeeds, List<double[]> melodySeeds)
+        public Verse(MusicTheory theory, Random rand, List<Part> parts, Harmony harmony, List<double[]> rhythmSeeds, List<double[]> melodySeeds, double meanPhraseLength, double phraseLengthVariance, double phraseRhythmVariance, double phraseMelodyVariance, double meanVerseLength, double verseLengthVariance, double verseRhythmVariance, double verseMelodyVariance)
         {
             //Calculate verse length
-            verseLength = (int)(theory.VERSE_LENGTHINESS * InputParameters.meanVerseLength);
-            verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * InputParameters.verseLengthVariance));
+            verseLength = (int)(theory.VERSE_LENGTHINESS * meanVerseLength);
+            verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * verseLengthVariance));
             measureCount = 0;
 
             System.Console.WriteLine(" length " + verseLength); //remove later
 
             //Select rhythms
             List<double[]> selectedRhythmSeeds = new List<double[]>();
-            for (int i = 0; i < 1 + 2 * InputParameters.verseRhythmVariety * verseLength; i++)
+            for (int i = 0; i < 1 + 2 * verseRhythmVariance * verseLength; i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<double[]>((int)(rand.NextDouble() * rhythmSeeds.Count)));
             }
+
             //Select melodies
             List<double[]> selectedMelodySeeds = new List<double[]>();
-            for (int i = 0; i < 1 + 2 * InputParameters.verseMelodyVariety * verseLength; i++)
+            for (int i = 0; i < 1 + 2 * verseMelodyVariance * verseLength; i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<double[]>((int)(rand.NextDouble() * melodySeeds.Count)));
             }
@@ -79,7 +80,7 @@ namespace Automatone
 			    {
 				    if(r < MusicTheory.CADENCES[a][j])
 				    {
-                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, selectedRhythmSeeds, selectedMelodySeeds));
+                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, selectedRhythmSeeds, selectedMelodySeeds, meanPhraseLength, phraseLengthVariance, phraseRhythmVariance, phraseMelodyVariance));
                         addDefaultPhrase = false;
 					    break;
 				    }
@@ -90,7 +91,7 @@ namespace Automatone
 			    }
 			    if(addDefaultPhrase)
 			    {
-                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, selectedRhythmSeeds, selectedMelodySeeds));
+                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, selectedRhythmSeeds, selectedMelodySeeds, meanPhraseLength, phraseLengthVariance, phraseRhythmVariance, phraseMelodyVariance));
 			    }
             }
 

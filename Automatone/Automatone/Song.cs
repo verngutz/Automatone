@@ -11,6 +11,19 @@ namespace Automatone
         private int measureCount;
         public int MeasureCount { get { return measureCount; } }
 
+        private int timeSignatureN;
+        public int TimeSignatureN { get { return timeSignatureN; } }
+        private int timeSignatureD;
+        public int TimeSignatureD { get { return timeSignatureD; } }
+        private double timeSignature;
+        public double TimeSignature { get { return timeSignature; } }
+        private int measureLength;
+        public int MeasureLength { get { return measureLength; } }
+        private NoteName key;
+        public NoteName Key { get { return key; } }
+        private MusicTheory.SCALE_MODE mode;
+        public MusicTheory.SCALE_MODE Mode { get { return mode; } }
+
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
@@ -18,41 +31,54 @@ namespace Automatone
         {
             song = new List<Verse>();
 
+            //Music stuff
+            timeSignatureN = (int)Math.Round(InputParameters.timeSignatureN);
+            timeSignatureD = (int)Math.Pow(2, Math.Round(Math.Log(InputParameters.timeSignatureD) / Math.Log(2)));
+            while (timeSignatureN > timeSignatureD)
+            {
+                timeSignatureD *= 2; //temporary fix for time signature problem
+            }
+            timeSignature = (double)timeSignatureN / (double)timeSignatureD;
+            measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
+            key = new NoteName((byte)rand.Next(12));
+            mode = (rand.NextDouble() > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
+
             //Calculate verse length
             int songLength = (int)(InputParameters.songLength * theory.SONG_LENGTHINESS);
             songLength += (int)(songLength * ((rand.NextDouble() - 0.5) * InputParameters.songLengthVariance));
             measureCount = 0;
 
             //generate rhythms
-            Rhythm rhythm = new Rhythm(theory);
+            Rhythm rhythm = new Rhythm(theory, timeSignatureN, timeSignatureD, InputParameters.rhythmObedience);
             List<double[]> rhythmSeeds = new List<double[]>();
-            for (int i = 0; i < 1 + 2 * InputParameters.songRhythmVariety * songLength; i++)
+            for (int i = 0; i < 1 + 2 * InputParameters.songRhythmVariance * songLength; i++)
             {
                 rhythmSeeds.Add(new double[] { rand.NextDouble(), rand.NextDouble() });
             }
+
             //generate melodies
-            Melody melody = new Melody(theory);
+            Melody melody = new Melody(theory, InputParameters.chordalityObedience, InputParameters.tonalityObedience);
             List<double[]> melodySeeds = new List<double[]>();
-            for (int i = 0; i < 1 + 2 * InputParameters.songMelodyVariety * songLength; i++)
+            for (int i = 0; i < 1 + 2 * InputParameters.songMelodyVariance * songLength; i++)
             {
                 melodySeeds.Add(new double[] { rand.NextDouble(), rand.NextDouble() });
             }
 
-            //create harmony
-            Harmony harmony = new Harmony(theory, rand, new NoteName((byte)rand.Next(12)), (rand.NextDouble() > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.HARMONIC_MINOR));
+            //generate harmony
+            Harmony harmony = new Harmony(theory, rand, key, mode, InputParameters.seventhChordProbability);
 
             //generate parts
             List<Part> parts = new List<Part>();
-            parts.Add(new Part(theory, rhythm, melody, 0.5, 0.5, 0, 45, 12, 1, false, false));
-            parts.Add(new Part(theory, rhythm, melody, 0.1, 0.5, 0.3, 33, 12, 1, false, false));
-            parts.Add(new Part(theory, rhythm, melody, 0.2, 1, 0.6, 20, 12, 3, true, false));
+            parts.Add(new Part(theory, rhythm, melody, measureLength, InputParameters.meanNoteLength, InputParameters.noteLengthVariance, 0.5, 0.5, 0, 45, 12, 1, false, false));
+            parts.Add(new Part(theory, rhythm, melody, measureLength, InputParameters.meanNoteLength, InputParameters.noteLengthVariance, 0.1, 0.5, 0.3, 33, 12, 1, false, false));
+            parts.Add(new Part(theory, rhythm, melody, measureLength, InputParameters.meanNoteLength, InputParameters.noteLengthVariance, 0.2, 1, 0.6, 20, 12, 3, true, false));
 
             //generate verses
 		    List<Verse> verses = new List<Verse>();
-		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVar * songLength; i++)
+		    for(int i = 0; i < 1 + 2 * InputParameters.structuralVariance * songLength; i++)
             {
                 System.Console.Write("Verse " + i); //remove later
-			    verses.Add(new Verse(theory, rand, parts, harmony, rhythmSeeds, melodySeeds));
+			    verses.Add(new Verse(theory, rand, parts, harmony, rhythmSeeds, melodySeeds, InputParameters.meanPhraseLength, InputParameters.phraseLengthVariance, InputParameters.phraseRhythmVariance, InputParameters.phraseMelodyVariance, InputParameters.meanVerseLength, InputParameters.verseLengthVariance, InputParameters.verseRhythmVariance, InputParameters.verseMelodyVariance));
 		    }
 
             System.Console.Write("Final song:"); //remove later
