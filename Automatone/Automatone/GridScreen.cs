@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using Nuclex.Graphics.SpecialEffects.Particles;
+using Nuclex.Graphics.SpecialEffects.Particles.HighLevel;
 
 using Duet.Audio_System;
 
@@ -43,12 +43,18 @@ namespace Automatone
         private int? manualGridChangeEndXIndex;
         private int? manualGridChangeYIndex;
 
+        private ParticleSystem<NoteHitParticle> particleSystem;
+        private const int PARTICLE_SPAWN_DENSITY = 10;
+
         public GridScreen(Automatone parent)
             : base(parent)
         {
             automatone = parent;
             boundingRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION);
             oldMouseState = Mouse.GetState();
+
+            particleSystem = new ParticleSystem<NoteHitParticle>(1024);
+            particleSystem.Affectors.Add(new MovementAffector<NoteHitParticle>(new NoteHitParticleModifier()));
         }
 
         public override void Initialize()
@@ -68,9 +74,9 @@ namespace Automatone
 
         protected override void UnloadContent()
         {
-            silentCell.Dispose();
-            startCell.Dispose();
-            holdCell.Dispose();
+            if(silentCell != null) silentCell.Dispose();
+            if(startCell != null) startCell.Dispose();
+            if(holdCell != null) holdCell.Dispose();
             base.UnloadContent();
         }
 
@@ -178,6 +184,7 @@ namespace Automatone
                     }
                 }
                 oldMouseState = newMouseState;
+                ParticleSystemUpdate();
             }
             base.Update(gameTime);
         }
@@ -187,31 +194,38 @@ namespace Automatone
             if (automatone.SongCells != null)
             {
                 automatone.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-                for (int i = 0; i < automatone.SongCells.GetLength(0); i++)
+
+                int startI = Math.Max(0, ScreenToGridCoordinatesY(Automatone.SCREEN_HEIGHT));
+                int endI = ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION);
+
+                int startJ = ScreenToGridCoordinatesX(0);
+                int endJ = Math.Min(ScreenToGridCoordinatesX(Automatone.SCREEN_WIDTH), automatone.SongCells.GetLength(1) - 1);
+
+                for (int i = startI; i < endI; i++)
                 {
-                    for (int j = 0; j < automatone.SongCells.GetLength(1); j++)
+                    for (int j = startJ; j <= endJ; j++)
                     {
                         Rectangle drawRectangle = new Rectangle((int)(j * CELLWIDTH + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT+ gridOffset.Y), CELLWIDTH, CELLHEIGHT);
-                        if (boundingRectangle.Intersects(drawRectangle))
+                        Color drawColor = GetChromaticColor(i);
+                        if (j * CELLWIDTH < -playOffset - CELLWIDTH)
                         {
-                            Color drawColor = GetChromaticColor(i);
-                            if (j * CELLWIDTH < -playOffset - CELLWIDTH)
-                            {
-                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
-                            }
-                            else if (j * CELLWIDTH < -playOffset)
-                            {
-                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
-                            }
-                            else
-                            {
-                                automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, automatone.SongCells[i, j] == CellState.SILENT ? (ScrollWithMidi ? 64 : 128) : 255));
-                            }
+                            automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
+                        }
+                        else if (j * CELLWIDTH < -playOffset)
+                        {
+                            automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
+                        }
+                        else
+                        {
+                            automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, automatone.SongCells[i, j] == CellState.SILENT ? (ScrollWithMidi ? 64 : 128) : 255));
                         }
                     }
                 }
+
+                ParticleSystemDraw();
                 automatone.SpriteBatch.End();
             }
+
             base.Draw(gameTime);
         }
 
@@ -253,7 +267,7 @@ namespace Automatone
             return automatone.SongCells.GetLength(0) - 1 - ((int)-gridOffset.Y + x) / CELLHEIGHT;
         }
             
-        public void setScrollLocation(int noteNumber)
+        public void SetScrollLocation(int noteNumber)
         {
             playOffset = -1 * noteNumber * CELLWIDTH;
         }
@@ -289,6 +303,36 @@ namespace Automatone
                     return Color.Silver;
             }
             return Color.White;
+        }
+
+        private void ParticleSystemUpdate()
+        {
+            /**
+            int startI = ScreenToGridCoordinatesX(Automatone.CONTROLS_AND_GRID_DIVISION);
+            int endI = ScreenToGridCoordinatesX(Automatone.SCREEN_HEIGHT);
+
+            int j = ScreenToGridCoordinatesY((int)-playOffset);
+            for (int i = startI; i < endI; i++)
+            {
+                if (automatone.SongCells[i, j] != CellState.SILENT)
+                {
+                    Point particleSpawnPoint = new Point((int)(j * CELLWIDTH + gridOffset.X), (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT + gridOffset.Y));
+
+                }
+            }
+             * */
+
+            IAsyncResult asyncResult = particleSystem.BeginUpdate(1, 4, null, null);
+            particleSystem.EndUpdate(asyncResult);
+            particleSystem.Prune(NoteHitParticle.IsAlive);
+        }
+
+        private void ParticleSystemDraw()
+        {
+            foreach (NoteHitParticle particle in particleSystem.Particles.Array)
+            {
+                automatone.SpriteBatch.Draw(startCell, new Rectangle((int)particle.Position.X, (int)particle.Position.Y, 2, 2), particle.Color);
+            }
         }
     }
 }
