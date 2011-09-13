@@ -166,7 +166,6 @@ namespace Automatone
                     }
                     expiredNotes.Clear();
                 }
-                System.Console.WriteLine("trace");
                 thread.Append(midiTimePassed);
                 thread.Append(META_END_TRACK);
                 thread.Append(END_TRACK);
