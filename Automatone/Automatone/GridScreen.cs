@@ -155,6 +155,14 @@ namespace Automatone
                         manualGridChangeStartXIndex = ScreenToGridCoordinatesX(Mouse.GetState().X);
                         manualGridChangeEndXIndex = ScreenToGridCoordinatesX(Mouse.GetState().X);
                         manualGridChangeYIndex = ScreenToGridCoordinatesY(Mouse.GetState().Y);
+                        if (automatone.SongCells[manualGridChangeYIndex.Value, manualGridChangeStartXIndex.Value] == CellState.SILENT)
+                        {
+                            automatone.SongCells[manualGridChangeYIndex.Value, manualGridChangeStartXIndex.Value] = CellState.START;
+                        }
+                        else
+                        {
+                            automatone.SongCells[manualGridChangeYIndex.Value, manualGridChangeStartXIndex.Value] = CellState.SILENT;
+                        }
                     }
                     else if (newMouseState.LeftButton == ButtonState.Released && oldMouseState.LeftButton == ButtonState.Pressed)
                     {
@@ -163,22 +171,24 @@ namespace Automatone
                     else if (newMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Pressed)
                     {
                         manualGridChangeEndXIndex = ScreenToGridCoordinatesX(Mouse.GetState().X);
-                        for (int i = manualGridChangeStartXIndex.Value; i <= manualGridChangeEndXIndex; i++, manualGridChangeStartXIndex++)
+                        int k = manualGridChangeStartXIndex.Value + 1;
+                        while (automatone.SongCells[manualGridChangeYIndex.Value, k] == CellState.HOLD)
                         {
-                            if (automatone.SongCells[manualGridChangeYIndex.Value, i] == CellState.SILENT)
+                            automatone.SongCells[manualGridChangeYIndex.Value, k] = CellState.SILENT;
+                            k++;
+                        }
+                        for (int i = manualGridChangeStartXIndex.Value + 1; i <= manualGridChangeEndXIndex; i++)
+                        {
+                            if (automatone.SongCells[manualGridChangeYIndex.Value, manualGridChangeStartXIndex.Value] != CellState.SILENT)
                             {
-                                if (i == 0 || automatone.SongCells[manualGridChangeYIndex.Value, i - 1] == CellState.SILENT)
-                                {
-                                    automatone.SongCells[manualGridChangeYIndex.Value, i] = CellState.START;
-                                }
-                                else
+                                if (automatone.SongCells[manualGridChangeYIndex.Value, i] == CellState.SILENT)
                                 {
                                     automatone.SongCells[manualGridChangeYIndex.Value, i] = CellState.HOLD;
                                 }
-                            }
-                            else
-                            {
-                                automatone.SongCells[manualGridChangeYIndex.Value, i] = CellState.SILENT;
+                                else
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
