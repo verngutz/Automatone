@@ -71,6 +71,10 @@ namespace Automatone
         }
 
         //Music Stuff
+        private double timeSignatureN;
+        public double TimeSignatureN { set { timeSignatureN = value; } }
+        private double timeSignatureD;
+        public double TimeSignatureD { set { timeSignatureD = value; } }
         private double timeSignature;
         public double TimeSignature { set { timeSignature = value; } get { return timeSignature; } }
         private int measureLength;
@@ -207,9 +211,9 @@ namespace Automatone
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
             sw.WriteLine("MTrk");
-            sw.WriteLine("0 TimeSig " + InputParameters.timeSignatureN + "/" + InputParameters.timeSignatureD + " 24 8");
+            sw.WriteLine("0 TimeSig " + timeSignatureN + "/" + timeSignatureD + " 24 8");
             //sw.WriteLine("0 TimeSig 4/4 24 8");
-            sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Tempo);
+            sw.WriteLine("0 Tempo " + (TEMPO_DIVIDEND / Tempo));
             sw.WriteLine("0 KeySig 0 major");
             sw.WriteLine("0 Meta TrkEnd");
             sw.WriteLine("TrkEnd");

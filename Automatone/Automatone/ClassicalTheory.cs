@@ -13,6 +13,8 @@ namespace Automatone
         public const int OCTAVE_OFFSET = 5;
 
         //Song Constants
+        public override int MIN_TEMPO { get { return 40; } }
+        public override int MAX_TEMPO { get { return 160; } }
         public override int SONG_LENGTHINESS { get { return 10; } }
         public override double CHORUS_EXISTENCE { get { return 1; } }
 
@@ -21,7 +23,7 @@ namespace Automatone
         public override int VERSE_LENGTHINESS { get { return 8; } }
 
         //Phrase Constants
-        public override double PHRASE_LENGTHINESS { get { return 8; } }
+        public override int PHRASE_LENGTHINESS { get { return 8; } }
 
         //Note Constants
         public override double NOTE_LENGTHINESS { get { return 0.5; } }
@@ -31,7 +33,59 @@ namespace Automatone
         {
             get
             {
-                List<double> sample = new List<double>();
+                List<double> sample = new List<double>();/*
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0.8);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0.8);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0.8);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+
+                sample.Add(1);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0.8);
+                sample.Add(0);
+                sample.Add(0);
+                sample.Add(0);*/
+
                 sample.Add(1);
                 sample.Add(0.1296);
                 sample.Add(0.216);
@@ -57,8 +111,9 @@ namespace Automatone
         {
             get
             {
-                return new double[]{0.9,0.9};
+                return new double[]{0.7,0.9};
             }
         }
+        public override int PITCH_CONTIGUITY { get { return 12; } }
     }
 }

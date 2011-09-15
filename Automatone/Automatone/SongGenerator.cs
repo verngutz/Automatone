@@ -36,6 +36,9 @@ namespace Automatone
             }
             automatone.MeasureLength = s.MeasureLength;
             automatone.TimeSignature = s.TimeSignature;
+            automatone.TimeSignatureN = s.TimeSignatureN;
+            automatone.TimeSignatureD = s.TimeSignatureD;
+            automatone.Tempo = s.Tempo;
             //automatone.Song = thread.ToString(); //do we still need this?
             return grid;
 	    }

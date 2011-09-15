@@ -84,7 +84,7 @@ namespace Automatone
                     break;
                 case MusicTheory.CADENCE_NAMES.DECEPTIVE:
                     intervals.Add(4);
-                    intervals.Add(circle[random.Next(circle.Length-1)+1]);
+                    intervals.Add(circle[random.Next(1,circle.Length)]);
                     break;
                 default:
                     intervals.Add(0);
