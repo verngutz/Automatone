@@ -34,18 +34,14 @@ namespace Automatone
             //Music stuff
             timeSignatureN = (int)Math.Round(InputParameters.timeSignatureN);
             timeSignatureD = (int)Math.Pow(2, Math.Round(Math.Log(InputParameters.timeSignatureD) / Math.Log(2)));
-            while (timeSignatureN > timeSignatureD)
-            {
-                timeSignatureD *= 2; //temporary fix for time signature problem
-            }
             timeSignature = (double)timeSignatureN / (double)timeSignatureD;
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
             key = new NoteName((byte)rand.Next(12));
             mode = (rand.NextDouble() > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
 
-            //Calculate verse length
+            //Calculate song length
             int songLength = (int)(InputParameters.songLength * theory.SONG_LENGTHINESS);
-            songLength += (int)(songLength * ((rand.NextDouble() - 0.5) * InputParameters.songLengthVariance));
+            songLength += Math.Max((int)(songLength * ((rand.NextDouble() - 0.5) * InputParameters.songLengthVariance)), 1);
             measureCount = 0;
 
             //generate rhythms

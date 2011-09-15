@@ -22,7 +22,7 @@ namespace Automatone
         {
             //Calculate verse length
             verseLength = (int)(theory.VERSE_LENGTHINESS * meanVerseLength);
-            verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * verseLengthVariance));
+            verseLength += Math.Max((int)(verseLength * ((rand.NextDouble() - 0.5) * verseLengthVariance)), 1);
             measureCount = 0;
 
             System.Console.WriteLine(" length " + verseLength); //remove later

@@ -23,7 +23,7 @@ namespace Automatone
 
             //Calculate phrase length
             phraseLength = (int)(theory.PHRASE_LENGTHINESS * meanPhraseLength);
-            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * phraseLengthVariance));
+            phraseLength += Math.Max((int)(phraseLength * ((rand.NextDouble() - 0.5) * phraseLengthVariance)), 1);
             measureCount = phraseLength;
 
             System.Console.WriteLine(" length " + phraseLength); //remove later

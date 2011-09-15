@@ -207,7 +207,7 @@ namespace Automatone
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
             sw.WriteLine("MTrk");
-            sw.WriteLine("0 TimeSig " + InputParameters.timeSignatureN + "/" + InputParameters.timeSignatureN + " 24 8");
+            sw.WriteLine("0 TimeSig " + InputParameters.timeSignatureN + "/" + InputParameters.timeSignatureD + " 24 8");
             //sw.WriteLine("0 TimeSig 4/4 24 8");
             sw.WriteLine("0 Tempo " + TEMPO_DIVIDEND / Tempo);
             sw.WriteLine("0 KeySig 0 major");

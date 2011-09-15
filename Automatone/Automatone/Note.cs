@@ -64,7 +64,7 @@ namespace Automatone
 
         public int CompareTo(Note n)
         {
-            return (int)Math.Round((startMeasure + startBeat) * 100 - (n.startMeasure + n.startBeat) * 100);
+            return (startMeasure == n.startMeasure ? (int)Math.Round((startBeat - n.startBeat) * 100) : startMeasure - n.startMeasure);
         }
     }
 }

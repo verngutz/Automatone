@@ -8,8 +8,8 @@ namespace Automatone
     public class InputParameters
     {
         //Song Parameters
-        public static double timeSignatureN = 6.0;
-        public static double timeSignatureD = 8.0;
+        public static double timeSignatureN = 4.0;
+        public static double timeSignatureD = 4.0;
         public static double songLength = 0.5;
         public static double structuralVariance = 0.2;
         public static double songRhythmVariance = 0.5;
