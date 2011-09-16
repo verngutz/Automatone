@@ -95,8 +95,9 @@ namespace Automatone
 #else
             automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory());
 #endif
-            automatone.Tempo = (ushort)(40 + InputParameters.songSpeed * 120);
+            //automatone.Tempo = (ushort)(40 + InputParameters.songSpeed * 120);
 
+            /**
             Stream myStream;
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
@@ -112,6 +113,7 @@ namespace Automatone
                     myStream.Close();
                 }
             }
+             */
         }
 
         private void StopButtonChanged(object sender, EventArgs e)

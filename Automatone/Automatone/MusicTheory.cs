@@ -11,6 +11,8 @@ namespace Automatone
         public abstract int PIANO_SIZE { get; }
 
         //Song Constants
+        public abstract int MIN_TEMPO { get; }
+        public abstract int MAX_TEMPO { get; }
         public abstract int SONG_LENGTHINESS { get; }
         public abstract double CHORUS_EXISTENCE { get; }
 
@@ -19,7 +21,7 @@ namespace Automatone
         public abstract int VERSE_LENGTHINESS { get; }
 
         //Phrase Constants
-        public abstract double PHRASE_LENGTHINESS { get; }
+        public abstract int PHRASE_LENGTHINESS { get; }
 
         //Note Constants
         public abstract double NOTE_LENGTHINESS { get; }
@@ -33,6 +35,7 @@ namespace Automatone
 
         //Melody
         public abstract double[] MELODY_BIAS_SAMPLE { get; }
+        public abstract int PITCH_CONTIGUITY { get; }
 
         //Music
         public static Dictionary<NoteName, int> CHROMATIC_EQUIVALENTS = createChromaticEquivalents();

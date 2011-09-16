@@ -22,7 +22,7 @@ namespace Automatone
             get { return velocity; }
         }
 
-        private const int MAX_TIMER = 10000;
+        private const int MAX_TIMER = 3;
         private int timer;
         public int Timer 
         {
@@ -50,9 +50,9 @@ namespace Automatone
             if (particle.Timer-- < 0)
             {
                 particle.Timer = NewTime();
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         private static int NewTime()
