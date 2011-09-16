@@ -42,6 +42,7 @@ namespace Automatone
         //GUI
         private InputManager inputManager;
         private GuiManager gui;
+        public GuiManager Gui { get { return gui; } }
 
         public const short SCREEN_WIDTH = 800;
         public const short SCREEN_HEIGHT = 600;
@@ -160,8 +161,6 @@ namespace Automatone
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
-
-            gui.Visualizer = FlatGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
         }
 
         /// <summary>
@@ -222,7 +221,7 @@ namespace Automatone
             txt2midi.StartInfo.Arguments = "sample.mtx";
             txt2midi.StartInfo.UseShellExecute = true;
             txt2midi.Start();
-            Sequencer.LoadMidi("sample.mid");
+            while(!Sequencer.LoadMidi("sample.mid"));
             txt2midi.Kill();
         }
     }
