@@ -72,18 +72,25 @@ namespace Automatone
 
         private void PlayPauseButtonChanged(object sender, EventArgs e)
         {
-            if (playPauseButton.Selected)
+            if (automatone.SongCells != null)
             {
-                if (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
-                    automatone.RewriteSong();
-                automatone.Sequencer.PlayMidi();
+                if (playPauseButton.Selected)
+                {
+                    if (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                        automatone.RewriteSong();
+                    automatone.Sequencer.PlayMidi();
+                }
+                else
+                {
+                    automatone.Sequencer.PauseMidi();
+                }
+
+                automatone.GridScreen.ScrollWithMidi = playPauseButton.Selected;
             }
             else
             {
-                automatone.Sequencer.PauseMidi();
+                playPauseButton.Selected = false;
             }
-
-            automatone.GridScreen.ScrollWithMidi = playPauseButton.Selected;
         }
 
         private void RandomizeButtonPressed(object sender, EventArgs e)

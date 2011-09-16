@@ -169,6 +169,8 @@ namespace Automatone
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
+
+            gui.Visualizer = FlatGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
         }
 
         /// <summary>
@@ -227,7 +229,7 @@ namespace Automatone
             txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
             txt2midi.StartInfo.FileName = "Mtx2Midi.exe";
             txt2midi.StartInfo.Arguments = "sample.mtx";
-            txt2midi.StartInfo.UseShellExecute = true;
+            txt2midi.StartInfo.CreateNoWindow = true;
             txt2midi.Start();
             while(!Sequencer.LoadMidi("sample.mid"));
             txt2midi.Kill();
