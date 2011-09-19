@@ -1,17 +1,13 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
-
+using Duet.Audio_System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 using Nuclex.Input;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Visuals.Flat;
-
-using Duet.Audio_System;
 
 namespace Automatone
 {

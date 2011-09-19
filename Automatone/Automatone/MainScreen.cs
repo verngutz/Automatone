@@ -1,19 +1,9 @@
 //#define USESEED
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
+using Duet.Audio_System;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
-
-using Duet.Audio_System;
 
 namespace Automatone
 {

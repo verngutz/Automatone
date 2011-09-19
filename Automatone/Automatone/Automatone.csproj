@@ -76,89 +76,28 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LzmaSharp">
-      <HintPath>..\..\LzmaSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Video, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Avatar, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="NMock.StrongNamed">
-      <HintPath>..\..\NMock.StrongNamed.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Audio">
-      <HintPath>..\..\Nuclex.Audio.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Fonts">
-      <HintPath>..\..\Nuclex.Fonts.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter">
-      <HintPath>..\..\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Game">
-      <HintPath>..\..\Nuclex.Game.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Geometry">
-      <HintPath>..\..\Nuclex.Geometry.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Graphics">
-      <HintPath>..\..\Nuclex.Graphics.dll</HintPath>
-    </Reference>
     <Reference Include="Nuclex.Graphics.SpecialEffects">
       <HintPath>..\..\Nuclex.Graphics.SpecialEffects.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclex.Input">
+    <Reference Include="Nuclex.Input, Version=4.0.0.0, Culture=neutral, PublicKeyToken=96bb577564343f16, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Nuclex.Input.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Math">
-      <HintPath>..\..\Nuclex.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Networking">
-      <HintPath>..\..\Nuclex.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Support">
-      <HintPath>..\..\Nuclex.Support.dll</HintPath>
-    </Reference>
-    <Reference Include="Nuclex.Testing.Xna">
-      <HintPath>..\..\Nuclex.Testing.Xna.dll</HintPath>
     </Reference>
     <Reference Include="Nuclex.UserInterface">
       <HintPath>..\..\Nuclex.UserInterface.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclex.Windows.Forms">
-      <HintPath>..\..\Nuclex.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SlimDX.DirectInput">
-      <HintPath>..\..\SlimDX.DirectInput.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -212,6 +151,10 @@
     <ProjectReference Include="..\..\Duet\Duet.csproj">
       <Project>{026EFE41-3F3F-4DA8-BDF3-53A95CB1F9D1}</Project>
       <Name>Duet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NuclexUserInterfaceExtension\NuclexUserInterfaceExtension.csproj">
+      <Project>{A02B0523-61E2-4B58-AED3-813F1924A0EC}</Project>
+      <Name>NuclexUserInterfaceExtension</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutomatoneContent\AutomatoneContent.contentproj">
       <Name>AutomatoneContent %28Content%29</Name>
