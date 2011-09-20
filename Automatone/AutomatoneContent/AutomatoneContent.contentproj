@@ -384,8 +384,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Suave.skin.xml">
-      <Name>Suave.skin</Name>
+    <None Include="Automatone.skin.xml">
+      <Name>Automatone.skin</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

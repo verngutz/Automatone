@@ -2,8 +2,8 @@
 	
 	<skin
 	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	  xsi:noNamespaceSchemaLocation="../../skin.xsd"
-	  name="Suave"
+	  xsi:noNamespaceSchemaLocation="../../NuclexUserInterfaceExtension/Resources/skin.xsd"
+	  name="Automatone"
 	>
 	
 	  <!--
@@ -73,15 +73,67 @@
 	      Frame used for a pushbutton when it is highlighted
 	    -->
 	    <frame name="button.highlighted">
-        <region source="randomizeHover" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
 	    </frame>
 	
 	    <!--
 	      Frame used for a pushbutton when it is depressed
 	    -->
 	    <frame name="button.depressed">
-        <region source="randomizeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
 	    </frame>
+
+      <!--
+	      Frame used for a disabled pushbutton
+	    -->
+      <frame name="randomizebutton.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a pushbutton in its normal state
+	    -->
+      <frame name="randomizebutton.normal">
+        <region source="randomize" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
+      </frame>
+
+      <!--
+	      Frame used for a pushbutton when it is highlighted
+	    -->
+      <frame name="randomizebutton.highlighted">
+        <region source="randomizeHover" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
+      </frame>
+
+      <!--
+	      Frame used for a pushbutton when it is depressed
+	    -->
+      <frame name="randomizebutton.depressed">
+        <region source="randomizeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled pushbutton
+	    -->
+      <frame name="stopbutton.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a pushbutton in its normal state
+	    -->
+      <frame name="stopbutton.normal">
+        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
+      </frame>
+
+      <!--
+	      Frame used for a pushbutton when it is highlighted
+	    -->
+      <frame name="stopbutton.highlighted">
+        <region source="stopHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
+      </frame>
+
+      <!--
+	      Frame used for a pushbutton when it is depressed
+	    -->
+      <frame name="stopbutton.depressed">
+        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
+      </frame>
 	
 	    <!--
 	      Frame used for a disabled radio button that is toggled off
@@ -93,21 +145,18 @@
 	      Frame used for a normal radio button that is toggled off
 	    -->
 	    <frame name="radio.off.depressed">
-        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--
 	      Frame used for a highlighted radio button that is toggled off
 	    -->
 	    <frame name="radio.off.highlighted">
-        <region source="stopHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--
 	      Frame used for a depressed radio button that is toggled off
 	    -->
 	    <frame name="radio.off.normal">
-        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--

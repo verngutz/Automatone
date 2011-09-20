@@ -166,7 +166,7 @@ namespace Automatone
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
 
-            gui.Visualizer = MultiGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
+            gui.Visualizer = MultiGuiVisualizer.FromFile(Services, "Content\\Automatone.skin.xml");
         }
 
         /// <summary>

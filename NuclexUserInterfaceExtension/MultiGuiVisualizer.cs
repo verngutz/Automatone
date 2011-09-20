@@ -12,6 +12,7 @@ using Nuclex.UserInterface.Visuals.Flat;
 using Nuclex.UserInterface.Controls;
 using Nuclex.UserInterface.Visuals;
 using Nuclex.Support.Plugins;
+using Nuclex.UserInterface.Controls.Desktop;
 
 namespace NuclexUserInterfaceExtension
 {
@@ -176,6 +177,7 @@ namespace NuclexUserInterfaceExtension
             public ControlRendererEmployer()
             {
                 this.renderers = new Dictionary<Type, IControlRendererAdapter>();
+                renderers.Add(typeof(NamedButtonControl), new ControlRendererAdapter<NamedButtonControl>(new NamedButtonControlRenderer()));
             }
 
             /// <summary>Determines whether the type suites the employer's requirements</summary>
@@ -463,7 +465,7 @@ namespace NuclexUserInterfaceExtension
             // Such instances can be used to construct invisible containers, and are most
             // prominently embodied in the 'desktop' control that hosts the whole GUI.
             if (
-              (controlType == typeof(Control))
+              (controlType == typeof(Control) || (controlType.FullName.ToString().Equals("Nuclex.UserInterface.Controls.DesktopControl")))
             )
             {
                 return;
