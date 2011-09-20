@@ -42,10 +42,9 @@ namespace Duet.Audio_System
         /// <summary>
         /// Load a midi file from filename.
         /// </summary>
-        public void LoadMidi(string filename)
+        public bool LoadMidi(string filename)
         {
-            while (!m_AudioSystem.Midi.LoadMidi(filename)) ;
-
+            return m_AudioSystem.Midi.LoadMidi(filename);
         }
 
         /// <summary>

@@ -1,13 +1,9 @@
 ﻿using System;
-
+using Duet.Audio_System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using Nuclex.Graphics.SpecialEffects.Particles;
-using Nuclex.Graphics.SpecialEffects.Particles.HighLevel;
-
-using Duet.Audio_System;
 
 namespace Automatone
 {

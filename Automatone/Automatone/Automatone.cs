@@ -1,17 +1,13 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
-
+using Duet.Audio_System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 using Nuclex.Input;
 using Nuclex.UserInterface;
-using Nuclex.UserInterface.Visuals.Flat;
-
-using Duet.Audio_System;
+using NuclexUserInterfaceExtension;
 
 namespace Automatone
 {
@@ -42,6 +38,7 @@ namespace Automatone
         //GUI
         private InputManager inputManager;
         private GuiManager gui;
+        public GuiManager Gui { get { return gui; } }
 
         public const short SCREEN_WIDTH = 800;
         public const short SCREEN_HEIGHT = 600;
@@ -169,7 +166,7 @@ namespace Automatone
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
 
-            gui.Visualizer = FlatGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
+            gui.Visualizer = MultiGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
         }
 
         /// <summary>
@@ -228,10 +225,10 @@ namespace Automatone
             txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
             txt2midi.StartInfo.FileName = "Mtx2Midi.exe";
             txt2midi.StartInfo.Arguments = "sample.mtx";
-            txt2midi.StartInfo.UseShellExecute = true;
+            txt2midi.StartInfo.CreateNoWindow = true;
             txt2midi.Start();
-            Sequencer.LoadMidi("sample.mid");
-            //txt2midi.Kill(); //it now kills itself.
+            while(!Sequencer.LoadMidi("sample.mid"));
+            //txt2midi.Kill();//it now kills itself
         }
     }
 }

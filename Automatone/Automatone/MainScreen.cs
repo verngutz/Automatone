@@ -1,19 +1,9 @@
 //#define USESEED
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
+using Duet.Audio_System;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
-
-using Duet.Audio_System;
 
 namespace Automatone
 {
@@ -72,18 +62,25 @@ namespace Automatone
 
         private void PlayPauseButtonChanged(object sender, EventArgs e)
         {
-            if (playPauseButton.Selected)
+            if (automatone.SongCells != null)
             {
-                if (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
-                    automatone.RewriteSong();
-                automatone.Sequencer.PlayMidi();
+                if (playPauseButton.Selected)
+                {
+                    if (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                        automatone.RewriteSong();
+                    automatone.Sequencer.PlayMidi();
+                }
+                else
+                {
+                    automatone.Sequencer.PauseMidi();
+                }
+
+                automatone.GridScreen.ScrollWithMidi = playPauseButton.Selected;
             }
             else
             {
-                automatone.Sequencer.PauseMidi();
+                playPauseButton.Selected = false;
             }
-
-            automatone.GridScreen.ScrollWithMidi = playPauseButton.Selected;
         }
 
         private void RandomizeButtonPressed(object sender, EventArgs e)
