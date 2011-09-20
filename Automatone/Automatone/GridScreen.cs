@@ -376,6 +376,59 @@ namespace Automatone
         private void DrawPitchLabel()
         {
             automatone.SpriteBatch.Draw(pitchTimeLabelBackground, pitchLabelRectangle, Color.White);
+
+            SpriteFont font1 = automatone.Content.Load<SpriteFont>("Font");
+            if (automatone.SongCells != null)
+            {
+                int startI = Math.Max(0, ScreenToGridCoordinatesY(Automatone.SCREEN_HEIGHT));
+                int endI = ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION + PITCH_TIME_LABEL_THICKNESS);
+
+                for (int i = startI; i <= endI; i++)
+                {
+                    Vector2 loc = new Vector2(2, (int)((automatone.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT + gridOffset.Y));
+                    string letter = "";
+                    switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + 12) % 12)
+                    {
+                        case 0:
+                            letter = "C";
+                            break;
+                        case 1:
+                            letter = "C#";
+                            break;
+                        case 2:
+                            letter = "D";
+                            break;
+                        case 3:
+                            letter = "D#";
+                            break;
+                        case 4:
+                            letter = "E";
+                            break;
+                        case 5:
+                            letter = "F";
+                            break;
+                        case 6:
+                            letter = "F#";
+                            break;
+                        case 7:
+                            letter = "G";
+                            break;
+                        case 8:
+                            letter = "G#";
+                            break;
+                        case 9:
+                            letter = "A";
+                            break;
+                        case 10:
+                            letter = "A#";
+                            break;
+                        case 11:
+                            letter = "B";
+                            break;
+                    }
+                    automatone.SpriteBatch.DrawString(font1, letter, loc, Color.White);
+                }
+            }
         }
 
         private void DrawTimeLabel()
