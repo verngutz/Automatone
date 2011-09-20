@@ -70,9 +70,9 @@ namespace Automatone
 
             //generate parts
             List<Part> parts = new List<Part>();
-            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 2, measureLength, 0.5, 0.5, 0, 36, 1, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.2, 0.8, 0.5, 24, 1, 3, true, false));
+            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 36, 3, 1, false, false));
+            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 2, measureLength, 0.5, 0.5, 0, 36, 3, 1, false, false));
+            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.9, 0.5, 12, 2, 3, true, false));
             
             //generate verses
 		    List<Verse> verses = new List<Verse>();

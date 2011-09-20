@@ -149,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Automicon.ico" />
-    <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
     <Content Include="Mtx2Midi.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

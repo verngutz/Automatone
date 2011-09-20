@@ -97,6 +97,10 @@ namespace Automatone
         private const int SEED = 40;
         private const int TEMPO_DIVIDEND = 60000000;
 
+        //Pitch Range and Offset
+        public const int PIANO_SIZE = 61;
+        public const int LOWEST_NOTE_CHROMATIC_NUMBER = 6;
+
         public Automatone()
         {
             graphics = new GraphicsDeviceManager(this);

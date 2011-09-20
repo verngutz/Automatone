@@ -49,48 +49,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\ChipTune\ChipTune_C1.wav">
-      <Name>ChipTune_C1</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="audio\ChipTune\ChipTune_C2.wav">
-      <Name>ChipTune_C2</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="audio\ChipTune\ChipTune_C3.wav">
-      <Name>ChipTune_C3</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="audio\ChipTune\ChipTune_C4.wav">
-      <Name>ChipTune_C4</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="audio\ChipTune\ChipTune_C5.wav">
-      <Name>ChipTune_C5</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="audio\ChipTune\ChipTune_C6.wav">
-      <Name>ChipTune_C6</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="audio\GrandPiano\PianoA2_4x.wav">
       <Name>PianoA2_4x</Name>
       <Importer>WavImporter</Importer>
@@ -464,6 +422,13 @@
     </Compile>
     <Compile Include="stopHover.png">
       <Name>stopHover</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BlackPixel.png">
+      <Name>BlackPixel</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -19,17 +19,17 @@ namespace Automatone
             Song s = new Song(theory, inputParameters, random);
 		    NoteThread thread = new NoteThread(s.Notes, s.TimeSignature);
             int gridWidth = s.MeasureCount * s.MeasureLength;
-            CellState[,] grid = new CellState[theory.PIANO_SIZE,gridWidth];
+            CellState[,] grid = new CellState[Automatone.PIANO_SIZE,gridWidth];
             foreach (List<Note> nts in s.Notes)
             {
                 foreach (Note n in nts)
                 {
-                    grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE, gridWidth - 1)] = CellState.START;
+                    grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE, gridWidth - 1)] = CellState.START;
                     for (int i = 1; i < n.GetRemainingDuration() * Automatone.SUBBEATS_PER_WHOLE_NOTE; i++)
                     {
-                        if (grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] == CellState.SILENT)
+                        if (grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] == CellState.SILENT)
                         {
-                            grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] = CellState.HOLD;
+                            grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] = CellState.HOLD;
                         }
                     }
                 }
@@ -81,7 +81,7 @@ namespace Automatone
                                 duration += Automatone.getBeatResolution();
                                 k++;
                             }
-                            this.notes.Add(new Note(new NoteName((byte)(i % 12)), (byte)(i / 12), duration, (int)(j / measureLength), (j % measureLength) * Automatone.getBeatResolution()));
+                            this.notes.Add(new Note(new NoteName((byte)((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) % 12)), (byte)((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / 12), duration, (int)(j / measureLength), (j % measureLength) * Automatone.getBeatResolution()));
                         }
                     }
                 }

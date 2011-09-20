@@ -4,11 +4,6 @@ namespace Automatone
 {
     public class ClassicalTheory : MusicTheory
     {
-        //Pitch Range and Offset
-        public override int PIANO_SIZE { get { return 60; } }
-        public const int NOTENAME_OFFSET = 7;
-        public const int OCTAVE_OFFSET = 5;
-
         //Song Constants
         public override int MIN_TEMPO { get { return 40; } }
         public override int MAX_TEMPO { get { return 160; } }

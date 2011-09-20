@@ -128,7 +128,7 @@ namespace Automatone
             //Song Parameters
             input.songSpeed = 0.4;
             input.songSpeedVariance = 0.5;
-            input.timeSignatureN = 3.0;
+            input.timeSignatureN = 4.0;
             input.timeSignatureD = 4.0;
             input.meanSongLength = 0.5;
             input.structuralVariance = 0.2;

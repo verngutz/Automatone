@@ -4,9 +4,6 @@ namespace Automatone
 {
     public abstract class MusicTheory
     {
-        //Pitch Range and Offset
-        public abstract int PIANO_SIZE { get; }
-
         //Song Constants
         public abstract int MIN_TEMPO { get; }
         public abstract int MAX_TEMPO { get; }

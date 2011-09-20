@@ -16,8 +16,8 @@ namespace Automatone
         public Vector2 gridOffset;
         public float playOffset;
 
-        public const byte CELLHEIGHT = 15;
-        public const byte CELLWIDTH = 15;
+        public const byte CELLHEIGHT = 20;
+        public const byte CELLWIDTH = 20;
 
         private static Texture2D silentCell;
         private static Texture2D startCell;
@@ -44,6 +44,12 @@ namespace Automatone
         private const int PARTICLE_SPAWN_CYCLE = 50;
         private int currentCycle;
 
+        private const int PITCH_TIME_LABEL_THICKNESS = 25;
+
+        private static Texture2D pitchTimeLabelBackground;
+        private static Rectangle pitchLabelRectangle;
+        private static Rectangle timeLabelRectangle;
+
         public GridScreen(Automatone parent)
             : base(parent)
         {
@@ -54,6 +60,9 @@ namespace Automatone
             particleSystem = new ParticleSystem<NoteHitParticle>(8192);
             particleSystem.Affectors.Add(new MovementAffector<NoteHitParticle>(new NoteHitParticleModifier()));
             currentCycle = 0;
+
+            pitchLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, PITCH_TIME_LABEL_THICKNESS, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION);
+            timeLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, Automatone.SCREEN_WIDTH, PITCH_TIME_LABEL_THICKNESS);
         }
 
         public override void Initialize()
@@ -69,6 +78,7 @@ namespace Automatone
             silentCell = automatone.Content.Load<Texture2D>("darkbox");
             startCell = automatone.Content.Load<Texture2D>("lightbox");
             holdCell = automatone.Content.Load<Texture2D>("holdbox");
+            pitchTimeLabelBackground = automatone.Content.Load<Texture2D>("BlackPixel");
         }
 
         protected override void UnloadContent()
@@ -195,8 +205,8 @@ namespace Automatone
                             }
                         }
                     }
-                    gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1)) * CELLWIDTH), 0);
-                    gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - ((automatone.SongCells.GetLength(0)) * CELLHEIGHT), Automatone.CONTROLS_AND_GRID_DIVISION);
+                    gridOffset.X = MathHelper.Clamp(gridOffset.X, Automatone.SCREEN_WIDTH - ((automatone.SongCells.GetLength(1)) * CELLWIDTH), PITCH_TIME_LABEL_THICKNESS);
+                    gridOffset.Y = MathHelper.Clamp(gridOffset.Y, Automatone.SCREEN_HEIGHT - ((automatone.SongCells.GetLength(0)) * CELLHEIGHT), Automatone.CONTROLS_AND_GRID_DIVISION + PITCH_TIME_LABEL_THICKNESS);
                     
                     oldMouseState = newMouseState;
                     //ParticleSystemUpdate();
@@ -212,12 +222,12 @@ namespace Automatone
                 automatone.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 
                 int startI = Math.Max(0, ScreenToGridCoordinatesY(Automatone.SCREEN_HEIGHT));
-                int endI = ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION);
+                int endI = ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION + PITCH_TIME_LABEL_THICKNESS);
 
-                int startJ = ScreenToGridCoordinatesX(0);
+                int startJ = ScreenToGridCoordinatesX(PITCH_TIME_LABEL_THICKNESS);
                 int endJ = Math.Min(ScreenToGridCoordinatesX(Automatone.SCREEN_WIDTH), automatone.SongCells.GetLength(1) - 1);
 
-                for (int i = startI; i < endI; i++)
+                for (int i = startI; i <= endI; i++)
                 {
                     for (int j = startJ; j <= endJ; j++)
                     {
@@ -233,7 +243,7 @@ namespace Automatone
                         }
                         else
                         {
-                            automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, automatone.SongCells[i, j] == CellState.SILENT ? (ScrollWithMidi ? 64 : 128) : 255));
+                            automatone.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, automatone.SongCells[i, j] == CellState.SILENT ? (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED ? 128 : 64) : 255));
                         }
                     }
                 }
@@ -241,6 +251,11 @@ namespace Automatone
                 ParticleSystemDraw();
                 automatone.SpriteBatch.End();
             }
+
+            automatone.SpriteBatch.Begin();
+            DrawPitchLabel();
+            DrawTimeLabel();
+            automatone.SpriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -261,7 +276,7 @@ namespace Automatone
 
         public void Reset()
         {
-            gridOffset = new Vector2(0, Automatone.CONTROLS_AND_GRID_DIVISION);
+            gridOffset = new Vector2(PITCH_TIME_LABEL_THICKNESS, Automatone.CONTROLS_AND_GRID_DIVISION + PITCH_TIME_LABEL_THICKNESS);
             playOffset = 0;
             ManualGridChangeReset();
         }
@@ -356,6 +371,16 @@ namespace Automatone
             {
                 automatone.SpriteBatch.Draw(startCell, new Rectangle((int)particle.Position.X, (int)particle.Position.Y, 2, 2), particle.Color);
             }
+        }
+
+        private void DrawPitchLabel()
+        {
+            automatone.SpriteBatch.Draw(pitchTimeLabelBackground, pitchLabelRectangle, Color.White);
+        }
+
+        private void DrawTimeLabel()
+        {
+            automatone.SpriteBatch.Draw(pitchTimeLabelBackground, timeLabelRectangle, Color.White);
         }
     }
 }

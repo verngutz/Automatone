@@ -49,6 +49,7 @@ namespace Automatone
 
             Random randomRhythm = new Random((rhythmSeed * rhythmNumber) % int.MaxValue);
             Random randomMelody = new Random((melodySeed * melodyNumber) % int.MaxValue);
+            Random randomPitch = new Random((melodySeed * melodyNumber) % int.MaxValue);
 
             System.Console.WriteLine("\t\t\t" + rhythmSeed + ":" + melodySeed);
 
@@ -66,20 +67,21 @@ namespace Automatone
             }
             mod = regulars.ElementAt<int>((int)Math.Round(regularity*(regulars.Count-1)));
 
-            int pitch = randomMelody.Next(Math.Max(0,lowerPitchLimit), Math.Min(theory.PIANO_SIZE, octaveRange * 12 + lowerPitchLimit));
+            int pitch = randomPitch.Next(Math.Max(Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, lowerPitchLimit), Math.Min(Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, octaveRange * 12 + lowerPitchLimit));
 
             for (int i = 0; i < measureLength; i++)
             {
-                int change = (int)(randomMelody.Next((int)(2 * melody.GetPitchContiguity())) - melody.GetPitchContiguity());
-                        
+                int change = (int)(randomPitch.Next((int)(2 * melody.GetPitchContiguity())) - melody.GetPitchContiguity());
+
                 double noteLength = theory.NOTE_LENGTHINESS * inputParameters.meanNoteLength;
                 noteLength += noteLength * (noteLengthAdjustment - 0.5);
+                noteLength += noteLength * (regularity - 0.5) * 0.2;
                 noteLength += noteLength * ((randomRhythm.NextDouble() - 0.5) * inputParameters.noteLengthVariance);
                 noteLength = Math.Pow(0.5, Math.Round(Math.Log(noteLength) / Math.Log(0.5)));
 
-                for (int j = 0; j < multiplicity; j++)
+                if (1 - Math.Pow(randomRhythm.NextDouble(), 2 * (1 - regularity) * (1 - rhythmCrowdedness)) < rhythmCurve[i] && i % Math.Max(mod, 1) == 0)
                 {
-                    if (i % Math.Max(mod,1) == 0 && 1 - Math.Pow(randomRhythm.NextDouble(), 2 * (1 - rhythmCrowdedness)) < rhythmCurve[i])
+                    for (int j = 0; j < multiplicity; j++)
                     {
                         pitch += change;
                         if (forceChord || randomMelody.NextDouble() < melodyBias[0])
@@ -92,11 +94,11 @@ namespace Automatone
                             while (!diatonic.Contains(new NoteName((byte)(pitch % 12))))
                                 pitch = (change > 0 ? pitch + 1 : pitch - 1);
                         }
-                        while (pitch >= Math.Min(theory.PIANO_SIZE, lowerPitchLimit + octaveRange * 12))
+                        while (pitch >= Math.Min(Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, lowerPitchLimit + octaveRange * 12))
                         {
                             pitch -= 12;
                         }
-                        while (pitch < Math.Max(0, lowerPitchLimit))
+                        while (pitch < Math.Max(Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, lowerPitchLimit))
                         {
                             pitch += 12;
                         }
