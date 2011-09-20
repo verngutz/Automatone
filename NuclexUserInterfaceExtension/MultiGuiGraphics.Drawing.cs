@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
-using System.Xml.Linq;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,407 +17,219 @@ namespace NuclexUserInterfaceExtension {
 
   partial class MultiGuiGraphics {
 
-#region class RegionListBuilder
+    /// <summary>Needs to be called before the GUI drawing process begins</summary>
+    public void BeginDrawing() {
+      GraphicsDevice graphics = this.spriteBatch.GraphicsDevice;
 
-    /// <summary>Builds a region list from the regions in an frame XML node</summary>
-    private class RegionListBuilder {
+      Viewport viewport = graphics.Viewport;
+      graphics.ScissorRectangle = new Rectangle(
+        0, 0, viewport.Width, viewport.Height
+      );
 
-      /// <summary>Initializes a new frame region list builder</summary>
-      /// <param name="frameNode">Node of the frame whose regions will be processed</param>
-      private RegionListBuilder(XmlNode frameNode) {
-        this.regionNodes = frameNode.SelectNodes("region");
+      // On Windows Phone 7, if only the GUI is rendered (no other SpriteBatches)
+      // and the initial spriteBatch.Begin() includes the scissor rectangle,
+      // nothing will be drawn at all, so we don't use beginSpriteBatch() here
+      // and instead call SpriteBatch.Begin() ourselves. Care has to be taken
+      // if something ever gets added to the beginSpriteBatch() method.
+      this.spriteBatch.Begin();
+    }
+
+    /// <summary>Needs to be called when the GUI drawing process has ended</summary>
+    public void EndDrawing() {
+      endSpriteBatch();
+    }
+
+    /// <summary>Sets the clipping region for any future drawing commands</summary>
+    /// <param name="clipRegion">Clipping region that will be set</param>
+    /// <returns>
+    ///   An object that will unset the clipping region upon its destruction.
+    /// </returns>
+    /// <remarks>
+    ///   Clipping regions can be stacked, though this is not very typical for
+    ///   a game GUI and also not recommended practice due to performance constraints.
+    ///   Unless clipping is implemented in software, setting up a clip region
+    ///   on current hardware requires the drawing queue to be flushed, negatively
+    ///   impacting rendering performance (in technical terms, a clipping region
+    ///   change likely causes 2 more DrawPrimitive() calls from the painter).
+    /// </remarks>
+    public IDisposable SetClipRegion(RectangleF clipRegion) {
+
+      // Cache the integer values of the clipping region's boundaries
+      int clipX = (int)clipRegion.X;
+      int clipY = (int)clipRegion.Y;
+      int clipRight = clipX + (int)clipRegion.Width;
+      int clipBottom = clipY + (int)clipRegion.Height;
+
+      // Calculate the viewport's right and bottom coordinates
+      Viewport viewport = this.spriteBatch.GraphicsDevice.Viewport;
+      int viewportRight = viewport.X + viewport.Width;
+      int viewportBottom = viewport.Y + viewport.Height;
+
+      // Extract the part of the clipping region that lies within the viewport
+      Rectangle scissorRegion = new Rectangle(
+        Math.Max(clipX, viewport.X),
+        Math.Max(clipY, viewport.Y),
+        Math.Min(clipRight, viewportRight) - clipX,
+        Math.Min(clipBottom, viewportBottom) - clipY
+      );
+      scissorRegion.Width += clipX - scissorRegion.X;
+      scissorRegion.Height += clipY - scissorRegion.Y;
+
+      // If the clipping region was entirely outside of the viewport (meaning
+      // the calculated width and/or height are negative), use an empty scissor
+      // rectangle instead because XNA doesn't like scissor rectangles with
+      // negative coordinates.
+      if ((scissorRegion.Width <= 0) || (scissorRegion.Height <= 0)) {
+        scissorRegion = Rectangle.Empty;
       }
 
-      /// <summary>
-      ///   Builds a region list from the regions specified in the provided frame XML node
-      /// </summary>
-      /// <param name="frameNode">
-      ///   XML node for the frame whose regions wille be processed
-      /// </param>
-      /// <param name="bitmaps">
-      ///   Bitmap lookup table used to associate a region's bitmap id to the real bitmap
-      /// </param>
-      /// <returns>
-      ///   A list of the regions that have been extracted from the frame XML node
-      /// </returns>
-      public static Frame.Region[] Build(
-        XmlNode frameNode, IDictionary<string, Texture2D> bitmaps
-      ) {
-        RegionListBuilder builder = new RegionListBuilder(frameNode);
-        builder.retrieveBorderSizes();
-        return builder.createAndPlaceRegions(bitmaps);
-      }
-
-      /// <summary>Retrieves the sizes of the border regions in a frame</summary>
-      private void retrieveBorderSizes() {
-        for (int regionIndex = 0; regionIndex < this.regionNodes.Count; ++regionIndex) {
-
-          // Left and right border width determination
-          string hplacement = this.regionNodes[regionIndex].Attributes["hplacement"].Value;
-          string w = this.regionNodes[regionIndex].Attributes["w"].Value;
-          if (hplacement == "left") {
-            this.leftBorderWidth = Math.Max(this.leftBorderWidth, int.Parse(w));
-          } else if (hplacement == "right") {
-            this.rightBorderWidth = Math.Max(this.rightBorderWidth, int.Parse(w));
-          }
-
-          // Top and bottom border width determination
-          string vplacement = this.regionNodes[regionIndex].Attributes["vplacement"].Value;
-          string h = this.regionNodes[regionIndex].Attributes["h"].Value;
-          if (vplacement == "top") {
-            this.topBorderWidth = Math.Max(this.topBorderWidth, int.Parse(h));
-          } else if (vplacement == "bottom") {
-            this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(h));
-          }
-
-        }
-      }
-
-      /// <summary>
-      ///   Creates and places the regions needed to be drawn to render the frame
-      /// </summary>
-      /// <param name="bitmaps">
-      ///   Bitmap lookup table to associate a region's bitmap id to the real bitmap
-      /// </param>
-      /// <returns>The regions created for the frame</returns>
-      private Frame.Region[] createAndPlaceRegions(IDictionary<string, Texture2D> bitmaps) {
-        Frame.Region[] regions = new Frame.Region[this.regionNodes.Count];
-
-        // Fill all regions making up the current frame
-        for (int regionIndex = 0; regionIndex < this.regionNodes.Count; ++regionIndex) {
-
-          // Obtain all attributes of the region node
-          XmlAttribute idAttribute = this.regionNodes[regionIndex].Attributes["id"];
-          string id = (idAttribute == null) ? null : idAttribute.Value;
-          string source = this.regionNodes[regionIndex].Attributes["source"].Value;
-          string hplacement = this.regionNodes[regionIndex].Attributes["hplacement"].Value;
-          string vplacement = this.regionNodes[regionIndex].Attributes["vplacement"].Value;
-          string x = this.regionNodes[regionIndex].Attributes["x"].Value;
-          string y = this.regionNodes[regionIndex].Attributes["y"].Value;
-          string w = this.regionNodes[regionIndex].Attributes["w"].Value;
-          string h = this.regionNodes[regionIndex].Attributes["h"].Value;
-
-          // Assign the trivial attributes
-          regions[regionIndex].Id = id;
-          regions[regionIndex].Texture = bitmaps[source];
-          regions[regionIndex].SourceRegion.X = int.Parse(x);
-          regions[regionIndex].SourceRegion.Y = int.Parse(y);
-          regions[regionIndex].SourceRegion.Width = int.Parse(w);
-          regions[regionIndex].SourceRegion.Height = int.Parse(h);
-
-          // Process each region's placement and set up the unified coordinates
-          calculateRegionPlacement(
-            getHorizontalPlacementIndex(hplacement),
-            int.Parse(w),
-            this.leftBorderWidth,
-            this.rightBorderWidth,
-            ref regions[regionIndex].DestinationRegion.Location.X,
-            ref regions[regionIndex].DestinationRegion.Size.X
-          );
-          calculateRegionPlacement(
-            getVerticalPlacementIndex(vplacement),
-            int.Parse(h),
-            this.topBorderWidth,
-            this.bottomBorderWidth,
-            ref regions[regionIndex].DestinationRegion.Location.Y,
-            ref regions[regionIndex].DestinationRegion.Size.Y
-          );
-
-        }
-
-        return regions;
-      }
-
-      /// <summary>
-      ///   Calculates the unified coordinates a region needs to be placed at
-      /// </summary>
-      /// <param name="placementIndex">
-      ///   Placement index indicating where in a frame the region will be located
-      /// </param>
-      /// <param name="width">Width of the region in pixels</param>
-      /// <param name="lowBorderWidth">
-      ///   Width of the border on the lower end of the coordinate range
-      /// </param>
-      /// <param name="highBorderWidth">
-      ///   Width of the border on the higher end of the coordinate range
-      /// </param>
-      /// <param name="location">
-      ///   Receives the target location of the region in unified coordinates
-      /// </param>
-      /// <param name="size">
-      ///   Receives the size of the region in unified coordinates
-      /// </param>
-      private void calculateRegionPlacement(
-        int placementIndex, int width,
-        int lowBorderWidth, int highBorderWidth,
-        ref UniScalar location, ref UniScalar size
-      ) {
-        switch (placementIndex) {
-          case (-1): { // left or top
-            int gapWidth = lowBorderWidth - width;
-
-            location.Fraction = 0.0f;
-            location.Offset = (float)gapWidth;
-            size.Fraction = 0.0f;
-            size.Offset = (float)width;
-            break;
-          }
-          case (+1): { // right or bottom
-            location.Fraction = 1.0f;
-            location.Offset = -(float)highBorderWidth;
-            size.Fraction = 0.0f;
-            size.Offset = (float)width;
-            break;
-          }
-          case (0): { // stretch
-            location.Fraction = 0.0f;
-            location.Offset = (float)lowBorderWidth;
-            size.Fraction = 1.0f;
-            size.Offset = -(float)(highBorderWidth + lowBorderWidth);
-            break;
-          }
-        }
-      }
-
-      /// <summary>Converts a horizontal placement string into a placement index</summary>
-      /// <param name="placement">String containing the horizontal placement</param>
-      /// <returns>A placement index that is equivalent to the provided string</returns>
-      private int getHorizontalPlacementIndex(string placement) {
-        switch (placement) {
-          case "left": { return -1; }
-          case "right": { return +1; }
-          case "stretch":
-          default: { return 0; }
-        }
-      }
-
-      /// <summary>Converts a vertical placement string into a placement index</summary>
-      /// <param name="placement">String containing the vertical placement</param>
-      /// <returns>A placement index that is equivalent to the provided string</returns>
-      private int getVerticalPlacementIndex(string placement) {
-        switch (placement) {
-          case "top": { return -1; }
-          case "bottom": { return +1; }
-          case "stretch":
-          default: { return 0; }
-        }
-      }
-
-      /// <summary>List of the XML nodes for the regions in the current frame</summary>
-      private XmlNodeList regionNodes;
-      /// <summary>Width of the frame's left border regions</summary>
-      private int leftBorderWidth;
-      /// <summary>Width of the frame's top border regions</summary>
-      private int topBorderWidth;
-      /// <summary>Width of the frame's right border regions</summary>
-      private int rightBorderWidth;
-      /// <summary>Width of the frame's bottom border regions</summary>
-      private int bottomBorderWidth;
+      // All done, take over the new scissor rectangle
+      this.scissorManager.Assign(ref scissorRegion);
+      return this.scissorManager;
 
     }
 
-    #endregion // class RegionListBuilder
+    /// <summary>Draws a GUI element onto the drawing buffer</summary>
+    /// <param name="frameName">Class of the element to draw</param>
+    /// <param name="bounds">Region that will be covered by the drawn element</param>
+    /// <remarks>
+    ///   <para>
+    ///     GUI elements are the basic building blocks of a GUI: 
+    ///   </para>
+    /// </remarks>
+    public void DrawElement(string frameName, RectangleF bounds) {
+      Frame frame = lookupFrame(frameName);
 
-#region class TextListBuilder
+      // Draw all the regions defined for the element. Each region is a small bitmap
+      // that needs to be blit somewhere into the element to form the element's
+      // visual representation step by step.
+      for (int index = 0; index < frame.Regions.Length; ++index) {
+        Rectangle destinationRegion = calculateDestinationRectangle(
+          ref bounds, ref frame.Regions[index].DestinationRegion
+        );
 
-    /// <summary>Builds a text list from the regions in an frame XML node</summary>
-    private class TextListBuilder {
-
-      /// <summary>
-      ///   Builds a text list from the text placements specified in the provided node
-      /// </summary>
-      /// <param name="frameNode">
-      ///   XML node for the frame whose text placements wille be processed
-      /// </param>
-      /// <param name="fonts">
-      ///   Font lookup table used to associate a text's font id to the real font
-      /// </param>
-      /// <returns>
-      ///   A list of the texts that have been extracted from the frame XML node
-      /// </returns>
-      public static Frame.Text[] Build(
-        XmlNode frameNode, IDictionary<string, SpriteFont> fonts
-      ) {
-        XmlNodeList textNodes = frameNode.SelectNodes("text");
-
-        Frame.Text[] texts = new Frame.Text[textNodes.Count];
-
-        for (int index = 0; index < textNodes.Count; ++index) {
-          string font = textNodes[index].Attributes["font"].Value;
-          string horizontalPlacement = textNodes[index].Attributes["hplacement"].Value;
-          string verticalPlacement = textNodes[index].Attributes["vplacement"].Value;
-
-          XmlAttribute xOffsetAttribute = textNodes[index].Attributes["xoffset"];
-          int xOffset = (xOffsetAttribute == null) ? 0 : int.Parse(xOffsetAttribute.Value);
-
-          XmlAttribute yOffsetAttribute = textNodes[index].Attributes["yoffset"];
-          int yOffset = (yOffsetAttribute == null) ? 0 : int.Parse(yOffsetAttribute.Value);
-
-          XmlAttribute colorAttribute = textNodes[index].Attributes["color"];
-          Color color;
-          if (colorAttribute == null) {
-            color = Color.White;
-          } else {
-            color = colorFromString(colorAttribute.Value);
-          }
-
-          texts[index].Font = fonts[font];
-          texts[index].HorizontalPlacement = horizontalPlacementFromString(
-            horizontalPlacement
-          );
-          texts[index].VerticalPlacement = verticalPlacementFromString(
-            verticalPlacement
-          );
-          texts[index].Offset = new Point(xOffset, yOffset);
-          texts[index].Color = color;
-        }
-
-        return texts;
-      }
-
-      /// <summary>Converts a string into a horizontal placement enumeration value</summary>
-      /// <param name="placement">Placement string that will be converted</param>
-      /// <returns>The horizontal placement enumeration value matching the string</returns>
-      private static Frame.HorizontalTextAlignment horizontalPlacementFromString(
-        string placement
-      ) {
-        switch (placement) {
-          case "left": { return Frame.HorizontalTextAlignment.Left; }
-          case "right": { return Frame.HorizontalTextAlignment.Right; }
-          case "center":
-          default: { return Frame.HorizontalTextAlignment.Center; }
-        }
-      }
-
-      /// <summary>Converts a string into a vertical placement enumeration value</summary>
-      /// <param name="placement">Placement string that will be converted</param>
-      /// <returns>The vertical placement enumeration value matching the string</returns>
-      private static Frame.VerticalTextAlignment verticalPlacementFromString(
-        string placement
-      ) {
-        switch (placement) {
-          case "top": { return Frame.VerticalTextAlignment.Top; }
-          case "bottom": { return Frame.VerticalTextAlignment.Bottom; }
-          case "center":
-          default: { return Frame.VerticalTextAlignment.Center; }
-        }
-      }
-
-    }
-
-    #endregion // class TextListBuilder
-
-    /// <summary>Loads a skin from the specified path</summary>
-    /// <param name="skinStream">Stream containing the skin description</param>
-    private void loadSkin(Stream skinStream) {
-
-      // Load the schema
-      XmlSchema schema;
-      using (Stream schemaStream = getResourceStream("Resources.skin.xsd")) {
-        schema = XmlHelper.LoadSchema(schemaStream);
-      }
-
-      // Load the XML document and validate it against the schema
-        XmlDocument skinDocument = XmlHelper.LoadDocument(schema, skinStream);
-
-      // The XML document is validated, we don't have to worry about the structure
-      // of the thing anymore, only about the values it provides us with ;)
-      // Load everything contained in the skin and set up our data structures
-      // so we can efficiently render everything
-      loadResources(skinDocument);
-      loadFrames(skinDocument);
-
-    }
-
-    /// <summary>Loads the resources contained in a skin document</summary>
-    /// <param name="skinDocument">
-    ///   XML document containing a skin description whose resources will be loaded
-    /// </param>
-    private void loadResources(XmlDocument skinDocument) {
-
-      // Load the fonts specified in the skin
-      XmlNodeList fonts = skinDocument.SelectNodes("/skin/resources/font");
-      for (int index = 0; index < fonts.Count; ++index) {
-        string fontName = fonts[index].Attributes["name"].Value;
-        string contentPath = fonts[index].Attributes["contentPath"].Value;
-
-        SpriteFont spriteFont = this.contentManager.Load<SpriteFont>(contentPath);
-        this.fonts.Add(fontName, spriteFont);
-      }
-
-      // Load the bitmaps specified in the skin
-      XmlNodeList bitmaps = skinDocument.SelectNodes("/skin/resources/bitmap");
-      for (int index = 0; index < bitmaps.Count; ++index) {
-        string bitmapName = bitmaps[index].Attributes["name"].Value;
-        string contentPath = bitmaps[index].Attributes["contentPath"].Value;
-
-        Texture2D bitmap = this.contentManager.Load<Texture2D>(contentPath);
-        this.bitmaps.Add(bitmapName, bitmap);
-      }
-
-    }
-
-    /// <summary>Loads the frames contained in a skin document</summary>
-    /// <param name="skinDocument">
-    ///   XML document containing a skin description whose frames will be loaded
-    /// </param>
-    private void loadFrames(XmlDocument skinDocument) {
-
-      // Extract all frames from the skin
-      XmlNodeList frames = skinDocument.SelectNodes("/skin/frames/frame");
-      for (int frameIndex = 0; frameIndex < frames.Count; ++frameIndex) {
-
-        // Extract the frame's attributes
-        string name = frames[frameIndex].Attributes["name"].Value;
-
-        Frame.Region[] regions = RegionListBuilder.Build(frames[frameIndex], this.bitmaps);
-        Frame.Text[] texts = TextListBuilder.Build(frames[frameIndex], this.fonts);
-        this.frames.Add(name, new Frame(regions, texts));
-
+        this.spriteBatch.Draw(
+          frame.Regions[index].Texture,
+          destinationRegion,
+          frame.Regions[index].SourceRegion,
+          Color.White
+        );
       }
     }
 
-    /// <summary>Returns a stream for a resource embedded in this assembly</summary>
-    /// <param name="resourceName">Name of the resource for which to get a stream</param>
-    /// <returns>A stream for the specified embedded resource</returns>
-    private static Stream getResourceStream(string resourceName) {
-      Assembly self = Assembly.GetCallingAssembly();
-      string[] resources = self.GetManifestResourceNames();
-      return self.GetManifestResourceStream(typeof(GuiManager), resourceName);
+    /// <summary>Draws text into the drawing buffer for the specified element</summary>
+    /// <param name="frameName">Class of the element for which to draw text</param>
+    /// <param name="bounds">Region that will be covered by the drawn element</param>
+    /// <param name="text">Text that will be drawn</param>
+    public void DrawString(string frameName, RectangleF bounds, string text) {
+      Frame frame = lookupFrame(frameName);
+
+      // Draw the text in all anchor locations defined by the skin
+      for (int index = 0; index < frame.Texts.Length; ++index) {
+        this.spriteBatch.DrawString(
+          frame.Texts[index].Font,
+          text,
+          positionText(ref frame.Texts[index], bounds, text),
+          frame.Texts[index].Color
+        );
+      }
     }
 
-    /// <summary>Converts a string in the style "#rrggbb" into a Color value</summary>
-    /// <param name="color">String containing a hexadecimal color value</param>
-    /// <returns>The equivalent color as a Color value</returns>
-    private static Color colorFromString(string color) {
-      string trimmedColor = color.Trim();
+    /// <summary>Draws a caret for text input at the specified index</summary>
+    /// <param name="frameName">Class of the element for which to draw a caret</param>
+    /// <param name="bounds">Region that will be covered by the drawn element</param>
+    /// <param name="text">Text for which a caret will be drawn</param>
+    /// <param name="caretIndex">Index the caret will be drawn at</param>
+    public void DrawCaret(
+      string frameName, RectangleF bounds, string text, int caretIndex
+    ) {
+      Frame frame = lookupFrame(frameName);
 
-      int startIndex = 0;
-      if (trimmedColor[0] == '#') {
-        ++startIndex;
+      this.stringBuilder.Remove(0, this.stringBuilder.Length);
+      this.stringBuilder.Append(text, 0, caretIndex);
+
+      Vector2 caretPosition, textPosition;
+      for (int index = 0; index < frame.Texts.Length; ++index) {
+        textPosition = positionText(ref frame.Texts[index], bounds, text);
+
+        caretPosition = frame.Texts[index].Font.MeasureString(this.stringBuilder);
+        caretPosition.X -= CaretWidth;
+        caretPosition.Y = 0.0f;
+
+        this.spriteBatch.DrawString(
+          frame.Texts[index].Font,
+          "|",
+          textPosition + caretPosition,
+          frame.Texts[index].Color
+        );
       }
+    }
 
-      bool isValidColor =
-        ((trimmedColor.Length - startIndex) == 6) ||
-        ((trimmedColor.Length - startIndex) == 8);
+    /// <summary>Measures the extents of a string in the frame's area</summary>
+    /// <param name="frameName">Class of the element whose text will be measured</param>
+    /// <param name="bounds">Region that will be covered by the drawn element</param>
+    /// <param name="text">Text that will be measured</param>
+    /// <returns>
+    ///   The size and extents of the specified string within the frame
+    /// </returns>
+    public RectangleF MeasureString(string frameName, RectangleF bounds, string text) {
+      Frame frame = lookupFrame(frameName);
 
-      if (!isValidColor) {
-        throw new ArgumentException("Invalid color format '" + color + "'", "color");
-      }
-
-      int r = Convert.ToInt32(trimmedColor.Substring(startIndex + 0, 2), 16);
-      int g = Convert.ToInt32(trimmedColor.Substring(startIndex + 2, 2), 16);
-      int b = Convert.ToInt32(trimmedColor.Substring(startIndex + 4, 2), 16);
-      int a;
-      if ((trimmedColor.Length - startIndex) == 8) {
-        a = Convert.ToInt32(trimmedColor.Substring(startIndex + 6, 2), 16);
+      Vector2 size;
+      if (frame.Texts.Length > 0) {
+        size = frame.Texts[0].Font.MeasureString(text);
       } else {
-        a = 255;
+        size = Vector2.Zero;
       }
 
-      // No need to worry about overflows: two hexadecimal digits can
-      // by definition not grow larger than 255 ;-)        
-      return new Color((byte)r, (byte)g, (byte)b, (byte)a);
+      return new RectangleF(0.0f, 0.0f, size.X, size.Y);
+    }
+
+    /// <summary>
+    ///   Locates the closest gap between two letters to the provided position
+    /// </summary>
+    /// <param name="frameName">Class of the element in which to find the gap</param>
+    /// <param name="bounds">Region that will be covered by the drawn element</param>
+    /// <param name="text">Text in which the closest gap will be found</param>
+    /// <param name="position">Position of which to determien the closest gap</param>
+    /// <returns>The index of the gap the position is closest to</returns>
+    public int GetClosestOpening(
+      string frameName, RectangleF bounds, string text, Vector2 position
+    ) {
+      Frame frame = lookupFrame(frameName);
+
+      // TODO: Find the closest gap across multiple text anchors
+      //   Frames can repeat their text in several places. Though this is probably
+      //   not used very often (if at all), it should work here consistently.
+
+      int closestGap = -1;
+
+      for (int index = 0; index < frame.Texts.Length; ++index) {
+        Vector2 textPosition = positionText(ref frame.Texts[index], bounds, text);
+        position.X -= textPosition.X;
+        position.Y -= textPosition.Y;
+
+        float openingX = position.X;
+        int openingIndex = this.openingLocator.FindClosestOpening(
+          frame.Texts[index].Font, text, position.X + CaretWidth
+        );
+
+        closestGap = openingIndex;
+      }
+
+      return closestGap;
+    }
+
+    /// <summary>Starts drawing on the sprite batch</summary>
+    private void beginSpriteBatch() {
+      this.spriteBatch.Begin(
+        SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, this.rasterizerState
+      );
+    }
+
+    /// <summary>Stops drawing on the sprite batch</summary>
+    private void endSpriteBatch() {
+      this.spriteBatch.End();
     }
 
   }

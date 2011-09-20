@@ -11,7 +11,6 @@ using Nuclex.UserInterface;
 using Nuclex.UserInterface.Visuals.Flat;
 using Nuclex.UserInterface.Controls;
 using Nuclex.UserInterface.Visuals;
-using Nuclex.UserInterface.Controls;
 using Nuclex.Support.Plugins;
 
 namespace NuclexUserInterfaceExtension

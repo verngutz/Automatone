@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Nuclex.Input;
 using Nuclex.UserInterface;
-using Nuclex.UserInterface.Visuals.Flat;
+using NuclexUserInterfaceExtension;
 
 namespace Automatone
 {
@@ -166,7 +166,7 @@ namespace Automatone
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.ApplyChanges();
 
-            gui.Visualizer = FlatGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
+            gui.Visualizer = MultiGuiVisualizer.FromFile(Services, "Content\\Suave.skin.xml");
         }
 
         /// <summary>
