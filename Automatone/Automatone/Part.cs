@@ -7,13 +7,13 @@ namespace Automatone
 {
     public class Part
     {
-        private int partNumber;
         private MusicTheory theory;
+        private InputParameters inputParameters;
         private Rhythm rhythm;
+        private int rhythmNumber;
         private Melody melody;
+        private int melodyNumber;
         private int measureLength;
-        private double meanNoteLength;
-        private double noteLengthVariance;
         private double rhythmCrowdedness;
         private double noteLengthAdjustment;
         private double regularity;
@@ -23,20 +23,20 @@ namespace Automatone
         private bool forceChord;
         private bool forceDiatonic;
 
-        public Part(int partNumber, MusicTheory theory, Rhythm rhythm, Melody melody, int measureLength, double meanNoteLength, double noteLengthVariance, double rhythmCrowdedness, double noteLengthAdjustment, double regularity, int lowerPitchLimit, int octaveRange, int multiplicity, bool forceChord, bool forceDiatonic)
+        public Part(MusicTheory theory, InputParameters inputParameters, Rhythm rhythm, int rhythmNumber, Melody melody, int melodyNumber, int measureLength, double rhythmCrowdedness, double noteLengthAdjustment, double regularity, int lowerPitchLimit, int octaveRange, int multiplicity, bool forceChord, bool forceDiatonic)
         {
-            this.partNumber = partNumber;
             this.theory = theory;
+            this.inputParameters = inputParameters;
             this.rhythm = rhythm;
+            this.rhythmNumber = rhythmNumber;
             this.melody = melody;
+            this.melodyNumber = melodyNumber;
             this.measureLength = measureLength;
-            this.meanNoteLength = meanNoteLength;
-            this.noteLengthVariance = noteLengthVariance;
             this.rhythmCrowdedness = rhythmCrowdedness;
             this.noteLengthAdjustment = noteLengthAdjustment;
             this.regularity = regularity;
-            this.lowerPitchLimit = Math.Max(0,lowerPitchLimit);
-            this.octaveRange = Math.Min(octaveRange * 12, theory.PIANO_SIZE - lowerPitchLimit)/12;
+            this.lowerPitchLimit = lowerPitchLimit;
+            this.octaveRange = octaveRange;
             this.multiplicity = multiplicity;
             this.forceChord = forceChord;
             this.forceDiatonic = forceDiatonic;
@@ -48,8 +48,8 @@ namespace Automatone
             double[] rhythmCurve = rhythm.GetRhythmCurve(measureLength);
             double[] melodyBias = melody.GetMelodyBias();
 
-            Random randomRhythm = new Random((rhythmSeed * partNumber) % int.MaxValue);
-            Random randomMelody = new Random((melodySeed * partNumber) % int.MaxValue);
+            Random randomRhythm = new Random((rhythmSeed * rhythmNumber) % int.MaxValue);
+            Random randomMelody = new Random((melodySeed * melodyNumber) % int.MaxValue);
 
             System.Console.WriteLine("\t\t\t" + rhythmSeed + ":" + melodySeed);
 
@@ -67,20 +67,21 @@ namespace Automatone
             }
             mod = regulars.ElementAt<int>((int)Math.Round(regularity*(regulars.Count-1)));
 
-            int pitch = randomMelody.Next(lowerPitchLimit, octaveRange * 12 + lowerPitchLimit);
+            int pitch = randomMelody.Next(Math.Max(0,lowerPitchLimit), Math.Min(theory.PIANO_SIZE, octaveRange * 12 + lowerPitchLimit));
 
             for (int i = 0; i < measureLength; i++)
             {
-                double noteLength = theory.NOTE_LENGTHINESS * meanNoteLength;
+                int change = (int)(randomMelody.Next((int)(2 * melody.GetPitchContiguity())) - melody.GetPitchContiguity());
+                        
+                double noteLength = theory.NOTE_LENGTHINESS * inputParameters.meanNoteLength;
                 noteLength += noteLength * (noteLengthAdjustment - 0.5);
-                noteLength += noteLength * ((randomRhythm.NextDouble() - 0.5) * noteLengthVariance);
+                noteLength += noteLength * ((randomRhythm.NextDouble() - 0.5) * inputParameters.noteLengthVariance);
                 noteLength = Math.Pow(0.5, Math.Round(Math.Log(noteLength) / Math.Log(0.5)));
 
                 for (int j = 0; j < multiplicity; j++)
                 {
                     if (i % Math.Max(mod,1) == 0 && 1 - Math.Pow(randomRhythm.NextDouble(), 2 * (1 - rhythmCrowdedness)) < rhythmCurve[i])
                     {
-                        int change = (int)(randomMelody.Next((int)(2 * melody.GetPitchContiguity())) - melody.GetPitchContiguity());
                         pitch += change;
                         if (forceChord || randomMelody.NextDouble() < melodyBias[0])
                         {
@@ -92,11 +93,11 @@ namespace Automatone
                             while (!diatonic.Contains(new NoteName((byte)(pitch % 12))))
                                 pitch = (change > 0 ? pitch + 1 : pitch - 1);
                         }
-                        while (pitch >= lowerPitchLimit + octaveRange * 12)
+                        while (pitch >= Math.Min(theory.PIANO_SIZE, lowerPitchLimit + octaveRange * 12))
                         {
                             pitch -= 12;
                         }
-                        while (pitch < lowerPitchLimit)
+                        while (pitch < Math.Max(0, lowerPitchLimit))
                         {
                             pitch += 12;
                         }

@@ -803,7 +803,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#2_4x;
-        File = GrandPiano\PianoD#2_4x.wav;
+        File = GrandPiano\PianoDs2_4x.wav;
         Build Settings Last Modified Low = 1358489189;
         Build Settings Last Modified High = 29889876;
 
@@ -826,7 +826,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#3_4x 2;
-        File = GrandPiano\PianoD#3_4x.wav;
+        File = GrandPiano\PianoDs3_4x.wav;
         Build Settings Last Modified Low = 1358645439;
         Build Settings Last Modified High = 29889876;
 
@@ -849,7 +849,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#4_4x;
-        File = GrandPiano\PianoD#4_4x.wav;
+        File = GrandPiano\PianoDs4_4x.wav;
         Build Settings Last Modified Low = 1358801689;
         Build Settings Last Modified High = 29889876;
 
@@ -872,7 +872,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#5_4x;
-        File = GrandPiano\PianoD#5_4x.wav;
+        File = GrandPiano\PianoDs5_4x.wav;
         Build Settings Last Modified Low = 1358957939;
         Build Settings Last Modified High = 29889876;
 
@@ -895,7 +895,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#6_4x;
-        File = GrandPiano\PianoD#6_4x.wav;
+        File = GrandPiano\PianoDs6_4x.wav;
         Build Settings Last Modified Low = 1358957939;
         Build Settings Last Modified High = 29889876;
 
@@ -918,7 +918,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#23;
-        File = GrandPiano\PianoD#23.wav;
+        File = GrandPiano\PianoDs23.wav;
         Build Settings Last Modified Low = 1359114189;
         Build Settings Last Modified High = 29889876;
 
@@ -941,7 +941,7 @@ Wave Bank
     Wave
     {
         Name = PianoD#63;
-        File = GrandPiano\PianoD#63.wav;
+        File = GrandPiano\PianoDs63.wav;
         Build Settings Last Modified Low = 1359270439;
         Build Settings Last Modified High = 29889876;
 
@@ -1079,7 +1079,7 @@ Wave Bank
     Wave
     {
         Name = PianoF#2_4x;
-        File = GrandPiano\PianoF#2_4x.wav;
+        File = GrandPiano\PianoFs2_4x.wav;
         Build Settings Last Modified Low = 1360207939;
         Build Settings Last Modified High = 29889876;
 
@@ -1102,7 +1102,7 @@ Wave Bank
     Wave
     {
         Name = PianoF#3_4x;
-        File = GrandPiano\PianoF#3_4x.wav;
+        File = GrandPiano\PianoFs3_4x.wav;
         Build Settings Last Modified Low = 1360364189;
         Build Settings Last Modified High = 29889876;
 
@@ -1125,7 +1125,7 @@ Wave Bank
     Wave
     {
         Name = PianoF#4_4x;
-        File = GrandPiano\PianoF#4_4x.wav;
+        File = GrandPiano\PianoFs4_4x.wav;
         Build Settings Last Modified Low = 1360520439;
         Build Settings Last Modified High = 29889876;
 
@@ -1148,7 +1148,7 @@ Wave Bank
     Wave
     {
         Name = PianoF#5_4x;
-        File = GrandPiano\PianoF#5_4x.wav;
+        File = GrandPiano\PianoFs5_4x.wav;
         Build Settings Last Modified Low = 1360676689;
         Build Settings Last Modified High = 29889876;
 
@@ -1171,7 +1171,7 @@ Wave Bank
     Wave
     {
         Name = PianoF#6_4x;
-        File = GrandPiano\PianoF#6_4x.wav;
+        File = GrandPiano\PianoFs6_4x.wav;
         Build Settings Last Modified Low = 1360832939;
         Build Settings Last Modified High = 29889876;
 
@@ -1194,7 +1194,7 @@ Wave Bank
     Wave
     {
         Name = PianoF#63;
-        File = GrandPiano\PianoF#63.wav;
+        File = GrandPiano\PianoFs63.wav;
         Build Settings Last Modified Low = 1360989189;
         Build Settings Last Modified High = 29889876;
 

@@ -231,7 +231,7 @@ namespace Automatone
             txt2midi.StartInfo.UseShellExecute = true;
             txt2midi.Start();
             Sequencer.LoadMidi("sample.mid");
-            txt2midi.Kill();
+            //txt2midi.Kill(); //it now kills itself.
         }
     }
 }

@@ -17,13 +17,13 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, int verseLength, List<int> rhythmSeeds, List<int> melodySeeds, double meanPhraseLength, double phraseLengthVariance, double phraseRhythmVariance, double phraseMelodyVariance)
+        public Phrase(MusicTheory theory, InputParameters inputParameters, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, int verseLength, List<int> rhythmSeeds, List<int> melodySeeds)
         {
             phrase = new List<Measure>();
 
             //Calculate phrase length
-            phraseLength = (int)(theory.PHRASE_LENGTHINESS * meanPhraseLength);
-            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * phraseLengthVariance));
+            phraseLength = (int)(theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength);
+            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * inputParameters.phraseLengthVariance));
             phraseLength = Math.Max(1, phraseLength);
             measureCount = phraseLength;
 
@@ -31,13 +31,13 @@ namespace Automatone
 
             //Select rhythms
             List<int> selectedRhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + phraseRhythmVariance * (rhythmSeeds.Count / verseLength); i++)
+            for (int i = 0; i < 1 + inputParameters.phraseRhythmVariance * (rhythmSeeds.Count / verseLength); i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
             //Select melodies
             List<int> selectedMelodySeeds = new List<int>();
-            for (int i = 0; i < 1 + phraseMelodyVariance * (melodySeeds.Count / verseLength); i++)
+            for (int i = 0; i < 1 + inputParameters.phraseMelodyVariance * (melodySeeds.Count / verseLength); i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }
@@ -48,7 +48,7 @@ namespace Automatone
 
             for (int i = 0; i < phraseLength; i++)
             {
-                phrase.Add(new Measure(theory, rand, parts, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), diatonic));
+                phrase.Add(new Measure(theory, inputParameters, rand, parts, phraseLength, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), diatonic));
             }
 
             notes = new List<List<Note>>();

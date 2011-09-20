@@ -91,9 +91,9 @@ namespace Automatone
             StopButtonChanged(sender, e);
 
 #if USESEED
-            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory());
+            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), GetUserInput());
 #else
-            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory());
+            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), GetUserInput());
 #endif
             //automatone.Tempo = (ushort)(40 + InputParameters.songSpeed * 120);
 
@@ -123,6 +123,63 @@ namespace Automatone
             automatone.GridScreen.ScrollWithMidi = false;
             playPauseButton.Selected = false;
             stopButton.Selected = false;
+        }
+
+        private InputParameters GetUserInput()
+        {
+            InputParameters input = new InputParameters();
+
+            //Song Parameters
+            input.songSpeed = 0.4;
+            input.songSpeedVariance = 0.5;
+            input.timeSignatureN = 3.0;
+            input.timeSignatureD = 4.0;
+            input.meanSongLength = 0.5;
+            input.structuralVariance = 0.2;
+            input.songRhythmVariance = 0.5;
+            input.songMelodyVariance = 0.5;
+            input.songLengthVariance = 0.5;
+
+            //Verse Parameters
+            input.meanVerseLength = 0.5;
+            input.verseLengthVariance = 0.5;
+            input.verseRhythmVariance = 0.5;
+            input.verseMelodyVariance = 0.5;
+
+            //Phrase Parameters
+            input.meanPhraseLength = 0.5;
+            input.phraseLengthVariance = 0.5;
+            input.phraseRhythmVariance = 0.5;
+            input.phraseMelodyVariance = 0.5;
+            //input.phraseDistinctiveness = 0.5; //not yet using this?
+
+            //Measure Parameters
+            input.measureRhythmVariance = 0;
+            input.measureMelodyVariance = 0;
+
+            //Note Parameters
+            input.meanNoteLength = 0.5;
+            input.noteLengthVariance = 0.5;
+
+            //Rhythm
+            input.rhythmObedience = 0.8;
+        
+            //Melody
+            input.chordalityObedience = 0.9;
+            input.tonalityObedience = 0.9;
+            input.meanPitchContiguity = 0.5;
+
+            //Harmony
+            input.seventhChordProbability = 0.1;
+            /*input.meanBeatharmonicCovariance = 0.9;
+            input.beatHarmonicCovarianceOffsetDivisor = 10;
+            input.randomModulationProbability = 0.01;
+            input.perfectFifthModulationProbability = 0.20;
+            input.perfectFourthModulationProbability = 0.15;
+            input.relativeModeModulationProbability = 0.1;
+            input.absoluteModeModulationProbability = 0.04;*/
+
+            return input;
         }
     }
 }

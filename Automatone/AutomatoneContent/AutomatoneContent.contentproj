@@ -217,50 +217,50 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#2_4x.wav">
-      <Name>PianoD#2_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoDs2_4x.wav">
+      <Name>PianoDs2_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#23.wav">
-      <Name>PianoD#23</Name>
+    <Compile Include="audio\GrandPiano\PianoDs23.wav">
+      <Name>PianoDs23</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#3_4x.wav">
-      <Name>PianoD#3_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoDs3_4x.wav">
+      <Name>PianoDs3_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#4_4x.wav">
-      <Name>PianoD#4_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoDs4_4x.wav">
+      <Name>PianoDs4_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#5_4x.wav">
-      <Name>PianoD#5_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoDs5_4x.wav">
+      <Name>PianoDs5_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#6_4x.wav">
-      <Name>PianoD#6_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoDs6_4x.wav">
+      <Name>PianoDs6_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoD#63.wav">
-      <Name>PianoD#63</Name>
+    <Compile Include="audio\GrandPiano\PianoDs63.wav">
+      <Name>PianoDs63</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
@@ -287,43 +287,43 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoF#2_4x.wav">
-      <Name>PianoF#2_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoFs2_4x.wav">
+      <Name>PianoFs2_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoF#3_4x.wav">
-      <Name>PianoF#3_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoFs3_4x.wav">
+      <Name>PianoFs3_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoF#4_4x.wav">
-      <Name>PianoF#4_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoFs4_4x.wav">
+      <Name>PianoFs4_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoF#5_4x.wav">
-      <Name>PianoF#5_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoFs5_4x.wav">
+      <Name>PianoFs5_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoF#6_4x.wav">
-      <Name>PianoF#6_4x</Name>
+    <Compile Include="audio\GrandPiano\PianoFs6_4x.wav">
+      <Name>PianoFs6_4x</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\GrandPiano\PianoF#63.wav">
-      <Name>PianoF#63</Name>
+    <Compile Include="audio\GrandPiano\PianoFs63.wav">
+      <Name>PianoFs63</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>

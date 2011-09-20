@@ -8,49 +8,106 @@ namespace Automatone
     public class InputParameters
     {
         //Song Parameters
-        public static double songSpeed = 0.3;
-        public static double songSpeedVariance = 0.5;
-        public static double timeSignatureN = 4.0;
-        public static double timeSignatureD = 4.0;
-        public static double meanSongLength = 0.5;
-        public static double structuralVariance = 0.2;
-        public static double songRhythmVariance = 0.5;
-        public static double songMelodyVariance = 0.5;
-        public static double songLengthVariance = 0.5;
+        public double songSpeed;
+        public double songSpeedVariance;
+        public double timeSignatureN;
+        public double timeSignatureD;
+        public double meanSongLength;
+        public double structuralVariance;
+        public double songRhythmVariance;
+        public double songMelodyVariance;
+        public double songLengthVariance;
 
         //Verse Parameters
-        public static double meanVerseLength = 0.5;
-        public static double verseLengthVariance = 0.5;
-        public static double verseRhythmVariance = 0.5;
-        public static double verseMelodyVariance = 0.5;
+        public double meanVerseLength;
+        public double verseLengthVariance;
+        public double verseRhythmVariance;
+        public double verseMelodyVariance;
 
         //Phrase Parameters
-        public static double meanPhraseLength = 0.5;
-        public static double phraseLengthVariance = 0.5;
-        public static double phraseRhythmVariance = 0.5;
-        public static double phraseMelodyVariance = 0.5;
-        //public static double phraseDistinctiveness = 0.5; //not yet using this?
+        public double meanPhraseLength;
+        public double phraseLengthVariance;
+        public double phraseRhythmVariance;
+        public double phraseMelodyVariance;
+        //public double phraseDistinctiveness; //not yet using this?
+
+        //Measure Parameters
+        public double measureRhythmVariance;
+        public double measureMelodyVariance;
 
         //Note Parameters
-        public static double meanNoteLength = 0.5;
-        public static double noteLengthVariance = 0.5;
+        public double meanNoteLength;
+        public double noteLengthVariance;
 
         //Rhythm
-        public static double rhythmObedience = 0.8;
+        public double rhythmObedience;
         
         //Melody
-        public static double chordalityObedience = 0.9;
-        public static double tonalityObedience = 0.9;
-        public static double meanPitchContiguity = 0.5;
+        public double chordalityObedience;
+        public double tonalityObedience;
+        public double meanPitchContiguity;
 
         //Harmony
-        public static double seventhChordProbability = 0.1;
-        /*public static double meanBeatharmonicCovariance = 0.9;
-        public static double beatHarmonicCovarianceOffsetDivisor = 10;
-        public static double randomModulationProbability = 0.01;
-        public static double perfectFifthModulationProbability = 0.20;
-        public static double perfectFourthModulationProbability = 0.15;
-        public static double relativeModeModulationProbability = 0.1;
-        public static double absoluteModeModulationProbability = 0.04;*/
+        public double seventhChordProbability;
+        /*public double meanBeatharmonicCovariance;
+        public double beatHarmonicCovarianceOffsetDivisor;
+        public double randomModulationProbability;
+        public double perfectFifthModulationProbability;
+        public double perfectFourthModulationProbability;
+        public double relativeModeModulationProbability;
+        public double absoluteModeModulationProbability;*/
+
+        public InputParameters()//Set Default Values
+        {
+            //Song Parameters
+            songSpeed = 0.5;
+            songSpeedVariance = 0.5;
+            timeSignatureN = 4.0;
+            timeSignatureD = 4.0;
+            meanSongLength = 0.5;
+            structuralVariance = 0.5;
+            songRhythmVariance = 0.5;
+            songMelodyVariance = 0.5;
+            songLengthVariance = 0.5;
+
+            //Verse Parameters
+            meanVerseLength = 0.5;
+            verseLengthVariance = 0.5;
+            verseRhythmVariance = 0.5;
+            verseMelodyVariance = 0.5;
+
+            //Phrase Parameters
+            meanPhraseLength = 0.5;
+            phraseLengthVariance = 0.5;
+            phraseRhythmVariance = 0.5;
+            phraseMelodyVariance = 0.5;
+            //phraseDistinctiveness = 0.5; //not yet using this?
+
+            //Measure Parameters
+            measureRhythmVariance = 0.5;
+            measureMelodyVariance = 0.5;
+
+            //Note Parameters
+            meanNoteLength = 0.5;
+            noteLengthVariance = 0.5;
+
+            //Rhythm
+            rhythmObedience = 0.9;
+        
+            //Melody
+            chordalityObedience = 0.9;
+            tonalityObedience = 0.9;
+            meanPitchContiguity = 0.5;
+
+            //Harmony
+            seventhChordProbability = 0.1;
+            /*meanBeatharmonicCovariance = 0.9;
+            beatHarmonicCovarianceOffsetDivisor = 10;
+            randomModulationProbability = 0.01;
+            perfectFifthModulationProbability = 0.20;
+            perfectFourthModulationProbability = 0.15;
+            relativeModeModulationProbability = 0.1;
+            absoluteModeModulationProbability = 0.04;*/
+        }
     }
 }
