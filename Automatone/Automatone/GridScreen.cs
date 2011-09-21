@@ -11,7 +11,7 @@ namespace Automatone
     {
         private Automatone automatone;
 
-        private Rectangle boundingRectangle;
+        private Rectangle clickableArea;
 
         public Vector2 gridOffset;
         public float playOffset;
@@ -56,7 +56,7 @@ namespace Automatone
             : base(parent)
         {
             automatone = parent;
-            boundingRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION);
+            clickableArea = new Rectangle(PITCH_TIME_LABEL_THICKNESS, Automatone.CONTROLS_AND_GRID_DIVISION + PITCH_TIME_LABEL_THICKNESS, Automatone.SCREEN_WIDTH - PITCH_TIME_LABEL_THICKNESS, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION - PITCH_TIME_LABEL_THICKNESS);
             oldMouseState = Mouse.GetState();
             
             particleSystem = new ParticleSystem<NoteHitParticle>(8192);
@@ -163,7 +163,7 @@ namespace Automatone
                             gridOffset.Y -= moveValY;
                         }
                            
-                        if (boundingRectangle.Contains(new Point(newMouseState.X, newMouseState.Y)) && automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                        if (clickableArea.Contains(new Point(newMouseState.X, newMouseState.Y)) && automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
                         {
                             if (newMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
                             {

@@ -39,7 +39,7 @@ namespace Automatone
             timeSignature = (double)timeSignatureN / (double)timeSignatureD;
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
             key = new NoteName((byte)rand.Next(12));
-            mode = (rand.NextDouble() > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
+            mode = (rand.NextDouble() > 0 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
 
             //Calculate song length
             int songLength = (int)(inputParameters.meanSongLength * theory.SONG_LENGTHINESS);
@@ -70,8 +70,8 @@ namespace Automatone
 
             //generate parts
             List<Part> parts = new List<Part>();
-            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 36, 3, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 2, measureLength, 0.5, 0.5, 0, 36, 3, 1, false, false));
+            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, 1, false, false));
+            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.5, 0, 36, 2, 1, false, false));
             parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.9, 0.5, 12, 2, 3, true, false));
             
             //generate verses

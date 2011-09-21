@@ -161,8 +161,8 @@ namespace Automatone
             input.rhythmObedience = 0.8;
         
             //Melody
-            input.chordalityObedience = 0.9;
-            input.tonalityObedience = 0.9;
+            input.chordalityObedience = 0.95;
+            input.tonalityObedience = 0.95;
             input.meanPitchContiguity = 0.5;
 
             //Harmony

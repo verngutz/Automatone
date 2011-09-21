@@ -25,59 +25,7 @@ namespace Automatone
         {
             get
             {
-                List<double> sample = new List<double>();/*
-                sample.Add(1);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0.8);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-
-                sample.Add(1);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0.8);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-
-                sample.Add(1);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0.8);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-
-                sample.Add(1);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0.8);
-                sample.Add(0);
-                sample.Add(0);
-                sample.Add(0);*/
-
+                List<double> sample = new List<double>();
                 sample.Add(1);
                 sample.Add(0.1296);
                 sample.Add(0.216);
@@ -103,7 +51,7 @@ namespace Automatone
         {
             get
             {
-                return new double[]{0.7,0.9};
+                return new double[]{0.7,1};
             }
         }
         public override int PITCH_CONTIGUITY { get { return 12; } }

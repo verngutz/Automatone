@@ -54,7 +54,7 @@
 
         public override bool Equals(object obj)
         {
- 	        return obj is NoteName && ChromaticIndex == (obj as NoteName).ChromaticIndex;
+ 	        return ((obj is NoteName) && (ChromaticIndex == (obj as NoteName).ChromaticIndex));
         }
 
         public override int GetHashCode()
