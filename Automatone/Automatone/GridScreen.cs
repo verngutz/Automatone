@@ -50,6 +50,8 @@ namespace Automatone
         private static Rectangle pitchLabelRectangle;
         private static Rectangle timeLabelRectangle;
 
+        private SpriteFont labelFont;
+
         public GridScreen(Automatone parent)
             : base(parent)
         {
@@ -63,6 +65,7 @@ namespace Automatone
 
             pitchLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, PITCH_TIME_LABEL_THICKNESS, Automatone.SCREEN_HEIGHT - Automatone.CONTROLS_AND_GRID_DIVISION);
             timeLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, Automatone.SCREEN_WIDTH, PITCH_TIME_LABEL_THICKNESS);
+
         }
 
         public override void Initialize()
@@ -79,6 +82,7 @@ namespace Automatone
             startCell = automatone.Content.Load<Texture2D>("lightbox");
             holdCell = automatone.Content.Load<Texture2D>("holdbox");
             pitchTimeLabelBackground = automatone.Content.Load<Texture2D>("BlackPixel");
+            labelFont = automatone.Content.Load<SpriteFont>("Font");
         }
 
         protected override void UnloadContent()
@@ -377,7 +381,6 @@ namespace Automatone
         {
             automatone.SpriteBatch.Draw(pitchTimeLabelBackground, pitchLabelRectangle, Color.White);
 
-            SpriteFont font1 = automatone.Content.Load<SpriteFont>("Font");
             if (automatone.SongCells != null)
             {
                 int startI = Math.Max(0, ScreenToGridCoordinatesY(Automatone.SCREEN_HEIGHT));
@@ -426,7 +429,7 @@ namespace Automatone
                             letter = "B";
                             break;
                     }
-                    automatone.SpriteBatch.DrawString(font1, letter, loc, Color.White);
+                    automatone.SpriteBatch.DrawString(labelFont, letter, loc, Color.White);
                 }
             }
         }
@@ -434,6 +437,28 @@ namespace Automatone
         private void DrawTimeLabel()
         {
             automatone.SpriteBatch.Draw(pitchTimeLabelBackground, timeLabelRectangle, Color.White);
+
+            if (automatone.SongCells != null)
+            {
+                int startJ = ScreenToGridCoordinatesX(PITCH_TIME_LABEL_THICKNESS);
+                int endJ = Math.Min(ScreenToGridCoordinatesX(Automatone.SCREEN_WIDTH), automatone.SongCells.GetLength(1) - 1);
+
+                for (int j = startJ; j <= endJ; j++)
+                {
+                    Vector2 loc = new Vector2((int)(j * CELLWIDTH + gridOffset.X), 2 + Automatone.CONTROLS_AND_GRID_DIVISION);
+                    if (j % automatone.MeasureLength == 0)
+                    {
+                        automatone.SpriteBatch.DrawString(labelFont, "" + (j / automatone.MeasureLength + 1), loc, Color.White);
+                    }
+                    for (int k = 1; k < automatone.MeasureLength / automatone.TimeSignatureD; k++)
+                    {
+                        if (j % automatone.MeasureLength == k * Automatone.SUBBEATS_PER_WHOLE_NOTE / 4)
+                        {
+                            automatone.SpriteBatch.DrawString(labelFont, "" + (k + 1), loc, Color.Navy);
+                        }
+                    }
+                }
+            }
         }
     }
 }
