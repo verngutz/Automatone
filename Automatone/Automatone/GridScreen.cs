@@ -450,7 +450,7 @@ namespace Automatone
                     {
                         automatone.SpriteBatch.DrawString(labelFont, "" + (j / automatone.MeasureLength + 1), loc, Color.White);
                     }
-                    for (int k = 1; k < automatone.MeasureLength / automatone.TimeSignatureD; k++)
+                    for (int k = 1; k < automatone.MeasureLength / (Automatone.SUBBEATS_PER_WHOLE_NOTE / 4); k++)
                     {
                         if (j % automatone.MeasureLength == k * Automatone.SUBBEATS_PER_WHOLE_NOTE / 4)
                         {

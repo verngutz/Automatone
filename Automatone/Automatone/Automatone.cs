@@ -71,7 +71,7 @@ namespace Automatone
         private double timeSignatureN;
         public double TimeSignatureN { set { timeSignatureN = value; } }
         private double timeSignatureD;
-        public double TimeSignatureD { set { timeSignatureD = value; } get { return timeSignatureD; } }
+        public double TimeSignatureD { set { timeSignatureD = value; } }
         private double timeSignature;
         public double TimeSignature { set { timeSignature = value; } get { return timeSignature; } }
         private int measureLength;
