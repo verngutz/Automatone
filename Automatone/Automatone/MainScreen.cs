@@ -129,7 +129,7 @@ namespace Automatone
             input.songSpeedVariance = 0.5;
             input.timeSignatureN = 4.0;
             input.timeSignatureD = 4.0;
-            input.meanSongLength = 1;
+            input.meanSongLength = 0.5;
             input.structuralVariance = 0.2;
             input.songRhythmVariance = 0.5;
             input.songMelodyVariance = 0.5;

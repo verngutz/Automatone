@@ -92,9 +92,9 @@ namespace Automatone
                 int curr = verseArrangement.Count;
                 while (curr > 0 && rand.NextDouble() < theory.CHORUS_EXISTENCE)
                 {
-                    choice = rand.Next(verses.Count);
                     if ((verseArrangement.ElementAt<int>(curr - 1) == 0 && verseArrangement.Last<int>() == 0 && choice == 0) || (verseArrangement.ElementAt<int>(curr - 1) != 0 && verseArrangement.Last<int>() != 0 && choice != 0))
                     {
+                        choice = rand.Next(verses.Count);
                         curr--;
                     }
                     else
