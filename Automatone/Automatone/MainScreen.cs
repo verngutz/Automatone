@@ -92,7 +92,6 @@ namespace Automatone
 #else
             automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), GetUserInput());
 #endif
-            //automatone.Tempo = (ushort)(40 + InputParameters.songSpeed * 120);
 
             /**
             Stream myStream;
@@ -130,7 +129,7 @@ namespace Automatone
             input.songSpeedVariance = 0.5;
             input.timeSignatureN = 4.0;
             input.timeSignatureD = 4.0;
-            input.meanSongLength = 0.5;
+            input.meanSongLength = 1;
             input.structuralVariance = 0.2;
             input.songRhythmVariance = 0.5;
             input.songMelodyVariance = 0.5;

@@ -51,7 +51,7 @@ namespace Automatone
             Random randomMelody = new Random((melodySeed * melodyNumber) % int.MaxValue);
             Random randomPitch = new Random((melodySeed * melodyNumber) % int.MaxValue);
 
-            System.Console.WriteLine("\t\t\t" + rhythmSeed + ":" + melodySeed);
+            System.Console.WriteLine("\t\t\t" + rhythmSeed + ":" + melodySeed); // remove later
 
             int f = 1;
             int mod = measureLength;

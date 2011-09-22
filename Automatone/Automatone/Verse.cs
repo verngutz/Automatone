@@ -25,16 +25,15 @@ namespace Automatone
 
             System.Console.WriteLine(" length " + verseLength); //remove later
 
-            //Select rhythms
+            //Select seeds
+            int lengthiness = (int)(verseLength * theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * parts.Count);
             List<int> selectedRhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.verseRhythmVariance * (rhythmSeeds.Count / songLength); i++)
+            for (int i = 0; i < 1 + inputParameters.verseRhythmVariance * lengthiness; i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
-
-            //Select melodies
             List<int> selectedMelodySeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.verseMelodyVariance * (melodySeeds.Count / songLength); i++)
+            for (int i = 0; i < 1 + inputParameters.verseMelodyVariance * lengthiness; i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }
@@ -62,13 +61,13 @@ namespace Automatone
 		    for(int i = 0; i < verseLength; i++)
 		    {
                 System.Console.Write("\tPhrase " + i); //remove later
-			    int a = 0;
+			    int aboveCurve = 0;
 			    if(rand.NextDouble() > cadenceFractalCurve[i])
 			    {
-				    a = 1;
+				    aboveCurve = 1;
 			    }
 			    double sum = 0;
-			    foreach(double j in MusicTheory.CADENCES[a])
+			    foreach(double j in MusicTheory.CADENCES[aboveCurve])
 			    {
 				    sum += j;
 			    }
@@ -76,7 +75,7 @@ namespace Automatone
                 bool addDefaultPhrase = true;
 			    for(int j = 0; j < 4; j++)
 			    {
-				    if(r < MusicTheory.CADENCES[a][j])
+				    if(r < MusicTheory.CADENCES[aboveCurve][j])
 				    {
                         verse.Add(new Phrase(theory, inputParameters, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
                         addDefaultPhrase = false;
@@ -84,7 +83,7 @@ namespace Automatone
 				    }
 				    else
 				    {
-					    r -= MusicTheory.CADENCES[a][j];
+					    r -= MusicTheory.CADENCES[aboveCurve][j];
 				    }
 			    }
 			    if(addDefaultPhrase)
