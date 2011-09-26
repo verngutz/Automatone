@@ -122,7 +122,7 @@ namespace Automatone
 
         private InputParameters GetUserInput()
         {
-            InputParameters input = new InputParameters();
+            InputParameters input = InputParameters.Instantiate();
 
             //Song Parameters
             input.songSpeed = 0.4;
@@ -151,6 +151,19 @@ namespace Automatone
             //Measure Parameters
             input.measureRhythmVariance = 0;
             input.measureMelodyVariance = 0;
+            
+            //Part Parameters
+            input.homophony = 0.5;
+            input.polyphony = 0.5;
+            input.beatDefinition = 0.5;
+            //Per-part Parameters
+            input.meanPartRhythmCrowdedness = 0.5;
+            input.partRhythmCrowdednessVariance = 0.5;
+            input.partNoteLengthVariance = 0.5;
+            input.meanPartOctaveRange = 0.5;
+            input.partOctaveRangeVariance = 0.5;
+            input.forceChordChance = 0;
+            input.forceDiatonicChance = 0;
 
             //Note Parameters
             input.meanNoteLength = 0.5;

@@ -39,7 +39,7 @@ namespace Automatone
             timeSignature = (double)timeSignatureN / (double)timeSignatureD;
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
             key = new NoteName((byte)rand.Next(12));
-            mode = (rand.NextDouble() > 0 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
+            mode = (rand.NextDouble() > 0.4 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
 
             //Calculate song length
             int songLength = (int)(inputParameters.meanSongLength * theory.SONG_LENGTHINESS);
@@ -57,9 +57,26 @@ namespace Automatone
 
             //generate parts
             List<Part> parts = new List<Part>();
-            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.5, 0, 36, 2, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.9, 0.5, 12, 2, 3, true, false));
+
+            //Random part creation
+            int partCount = 1 + (int)(inputParameters.polyphony * theory.PART_COUNT);
+            int rhythmNumber = rand.Next(1, partCount);
+            int melodyNumber = rand.Next(1, partCount);
+            for (int i = 0; i < 1 + inputParameters.polyphony * theory.PART_COUNT; i++)
+            {
+                rhythmNumber = (rand.NextDouble() < inputParameters.homophony ? rhythmNumber : rand.Next(1, partCount));
+                melodyNumber = (rand.NextDouble() < inputParameters.homophony ? melodyNumber : rand.Next(1, partCount));
+                parts.Add(new Part(theory, rand, inputParameters, rhythm, rhythmNumber, melody, melodyNumber, measureLength));
+            }
+
+            //Manual part creation
+            /*
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, false, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.5, 0, 36, 2, false, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.9, 0.5, 12, 2, true, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 2, melody, 2, measureLength, 0.5, 0.9, 0.5, 12, 2, true, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 3, melody, 3, measureLength, 0.5, 0.9, 0.5, 12, 2, true, false));
+            */
 
             //generate seeds
             int lengthiness = (int)(songLength * theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength * theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * parts.Count);

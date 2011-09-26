@@ -17,6 +17,10 @@ namespace Automatone
         //Phrase Constants
         public abstract int PHRASE_LENGTHINESS { get; }
 
+        //Part Constants
+        public abstract int PART_COUNT { get; }
+        public abstract int PART_OCTAVE_RANGE { get; }
+
         //Note Constants
         public abstract double NOTE_LENGTHINESS { get; }
 

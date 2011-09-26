@@ -17,6 +17,10 @@ namespace Automatone
         //Phrase Constants
         public override int PHRASE_LENGTHINESS { get { return 8; } }
 
+        //Part Constants
+        public override int PART_COUNT { get { return 8; } }
+        public override int PART_OCTAVE_RANGE { get { return 4; } }
+
         //Note Constants
         public override double NOTE_LENGTHINESS { get { return 0.5; } }
 
