@@ -68,19 +68,15 @@ namespace Automatone
             Random randomMelody = new Random(melodySeeds.ElementAt<int>(melodyNumber % melodySeeds.Count));
             Random randomPitch = new Random(melodySeeds.ElementAt<int>(melodyNumber % melodySeeds.Count));
 
-            int f = 1;
-            int mod = measureLength;
-            List<int> regulars = new List<int>();
-            regulars.Add(f);
-            for(int i = 2; i <= measureLength/2; i++){
-                while(mod % i == 0)
+            List<double> regulars = new List<double>();
+            foreach (double val in rhythmCurve)
+            {
+                if (!regulars.Contains(val))
                 {
-                    mod /= i;
-                    f *= i;
-                    regulars.Add(f);
+                    regulars.Add(val);
                 }
             }
-            mod = regulars.ElementAt<int>((int)Math.Round(regularity*(regulars.Count-1)));
+            regulars.Sort();
 
             int pitch = randomPitch.Next(Math.Max(Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, lowerPitchLimit), Math.Min(Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, octaveRange * 12 + lowerPitchLimit));
 
@@ -119,8 +115,7 @@ namespace Automatone
                 {
                     pitch += 12;
                 }
-
-                if (1 - Math.Pow(randomRhythm.NextDouble(), 2 * (1 - regularity) * (1 - rhythmCrowdedness)) < rhythmCurve[i] && i % Math.Max(mod, 1) == 0)
+                if (1 - Math.Pow(randomRhythm.NextDouble(), 2 * (1 - regularity) * (1 - rhythmCrowdedness)) < rhythmCurve[i] && rhythmCurve[i] >= regulars.ElementAt<double>((int)Math.Round(regularity * (regulars.Count - 1))))
                 {
                     notes.Add(new Note(new NoteName((byte)(pitch % 12)), (byte)(pitch / 12), currNoteLength, 0, Automatone.getBeatResolution() * i));
                 }
