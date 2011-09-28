@@ -146,15 +146,14 @@ namespace Automatone
             input.phraseLengthVariance = 0.5;
             input.phraseRhythmVariance = 0.5;
             input.phraseMelodyVariance = 0.5;
-            //input.phraseDistinctiveness = 0.5; //not yet using this?
 
             //Measure Parameters
-            input.measureRhythmVariance = 0;
-            input.measureMelodyVariance = 0;
+            input.measureRhythmVariance = 0.5;
+            input.measureMelodyVariance = 0.5;
             
             //Part Parameters
-            input.homophony = 0.5;
-            input.polyphony = 0.5;
+            input.homophony = 1;
+            input.polyphony = 0.4;
             input.beatDefinition = 0.5;
             //Per-part Parameters
             input.meanPartRhythmCrowdedness = 0.5;
@@ -175,17 +174,10 @@ namespace Automatone
             //Melody
             input.chordalityObedience = 0.95;
             input.tonalityObedience = 0.95;
-            input.meanPitchContiguity = 0.5;
+            input.meanPitchContiguity = 0.2;
 
             //Harmony
             input.seventhChordProbability = 0.1;
-            /*input.meanBeatharmonicCovariance = 0.9;
-            input.beatHarmonicCovarianceOffsetDivisor = 10;
-            input.randomModulationProbability = 0.01;
-            input.perfectFifthModulationProbability = 0.20;
-            input.perfectFourthModulationProbability = 0.15;
-            input.relativeModeModulationProbability = 0.1;
-            input.absoluteModeModulationProbability = 0.04;*/
 
             return input;
         }

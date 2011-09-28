@@ -58,17 +58,15 @@ namespace Automatone
             this.forceDiatonic = forceDiatonic;
         }
 
-        public List<Note> GenerateNotes(int rhythmSeed, int melodySeed, List<NoteName> chord, List<NoteName> diatonic)
+        public List<Note> GenerateNotes(List<int> rhythmSeeds, List<int> melodySeeds, List<NoteName> chord, List<NoteName> diatonic)
         {
             List<Note> notes = new List<Note>();
             double[] rhythmCurve = rhythm.GetRhythmCurve(measureLength);
             double[] melodyBias = melody.GetMelodyBias();
 
-            Random randomRhythm = new Random((rhythmSeed * rhythmNumber) % int.MaxValue);
-            Random randomMelody = new Random((melodySeed * melodyNumber) % int.MaxValue);
-            Random randomPitch = new Random((melodySeed * melodyNumber) % int.MaxValue);
-
-            System.Console.WriteLine("\t\t\t" + rhythmSeed + ":" + melodySeed); // remove later
+            Random randomRhythm = new Random(rhythmSeeds.ElementAt<int>(rhythmNumber % rhythmSeeds.Count));
+            Random randomMelody = new Random(melodySeeds.ElementAt<int>(melodyNumber % melodySeeds.Count));
+            Random randomPitch = new Random(melodySeeds.ElementAt<int>(melodyNumber % melodySeeds.Count));
 
             int f = 1;
             int mod = measureLength;
