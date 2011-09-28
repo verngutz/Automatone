@@ -28,15 +28,15 @@ namespace Automatone
 
             System.Console.WriteLine(" length " + phraseLength); //remove later
 
-            //Select rhythms
+            //Select seeds
+            int lengthiness = (int)(phraseLength * parts.Count);
             List<int> selectedRhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.phraseRhythmVariance * (rhythmSeeds.Count / verseLength); i++)
+            for (int i = 0; i < 1 + inputParameters.phraseRhythmVariance * lengthiness; i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
-            //Select melodies
             List<int> selectedMelodySeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.phraseMelodyVariance * (melodySeeds.Count / verseLength); i++)
+            for (int i = 0; i < 1 + inputParameters.phraseMelodyVariance * lengthiness; i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }

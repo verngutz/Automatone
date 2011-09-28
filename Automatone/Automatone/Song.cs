@@ -39,40 +39,57 @@ namespace Automatone
             timeSignature = (double)timeSignatureN / (double)timeSignatureD;
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
             key = new NoteName((byte)rand.Next(12));
-            mode = (rand.NextDouble() > 0 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
+            mode = (rand.NextDouble() > 0.4 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
 
             //Calculate song length
             int songLength = (int)(inputParameters.meanSongLength * theory.SONG_LENGTHINESS);
             songLength += (int)(songLength * ((rand.NextDouble() - 0.5) * inputParameters.songLengthVariance));
             songLength = Math.Max(1, songLength);
 
-            //for rhythm and melody variance
-            int lengthiness = (int)(songLength * theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength * theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * 3);
-
-            //generate rhythms
+            //generate rhythm
             Rhythm rhythm = new Rhythm(theory, timeSignatureN, timeSignatureD, inputParameters.rhythmObedience);
-            List<int> rhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.songRhythmVariance * lengthiness; i++)
-            {
-                rhythmSeeds.Add(rand.Next());
-            }
 
-            //generate melodies
+            //generate melody
             Melody melody = new Melody(theory, inputParameters.chordalityObedience, inputParameters.tonalityObedience, inputParameters.meanPitchContiguity);
-            List<int> melodySeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.songMelodyVariance * lengthiness; i++)
-            {
-                melodySeeds.Add(rand.Next());
-            }
-
+            
             //generate harmony
             Harmony harmony = new Harmony(theory, rand, key, mode, inputParameters.seventhChordProbability);
 
             //generate parts
             List<Part> parts = new List<Part>();
-            parts.Add(new Part(theory, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.5, 0, 36, 2, 1, false, false));
-            parts.Add(new Part(theory, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.9, 0.5, 12, 2, 3, true, false));
+
+            //Random part creation
+            int partCount = 1 + (int)(inputParameters.polyphony * theory.PART_COUNT);
+            int rhythmNumber = rand.Next(1, partCount);
+            int melodyNumber = rand.Next(1, partCount);
+            for (int i = 0; i < 1 + inputParameters.polyphony * theory.PART_COUNT; i++)
+            {
+                rhythmNumber = (rand.NextDouble() < inputParameters.homophony ? rhythmNumber : rand.Next(1, partCount));
+                melodyNumber = (rand.NextDouble() < inputParameters.homophony ? melodyNumber : rand.Next(1, partCount));
+                parts.Add(new Part(theory, rand, inputParameters, rhythm, rhythmNumber, melody, melodyNumber, measureLength));
+            }
+
+            //Manual part creation
+            /*
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, false, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.5, 0, 36, 2, false, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.9, 0.5, 12, 2, true, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 2, melody, 2, measureLength, 0.5, 0.9, 0.5, 12, 2, true, false));
+            parts.Add(new Part(theory, rand, inputParameters, rhythm, 3, melody, 3, measureLength, 0.5, 0.9, 0.5, 12, 2, true, false));
+            */
+
+            //generate seeds
+            int lengthiness = (int)(songLength * theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength * theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * parts.Count);
+            List<int> rhythmSeeds = new List<int>();
+            for (int i = 0; i < 1 + inputParameters.songRhythmVariance * lengthiness; i++)
+            {
+                rhythmSeeds.Add(rand.Next());
+            }
+            List<int> melodySeeds = new List<int>();
+            for (int i = 0; i < 1 + inputParameters.songMelodyVariance * lengthiness; i++)
+            {
+                melodySeeds.Add(rand.Next());
+            }
             
             //generate verses
 		    List<Verse> verses = new List<Verse>();
@@ -85,22 +102,29 @@ namespace Automatone
             System.Console.Write("Final song:"); //remove later
 		
             //select verses to include in song
-		    double chorusProb = rand.NextDouble();
-            int? prev = null;
-		    for(int i = 0; i < songLength; i++)
-		    {
-			    int curr = (int)(rand.NextDouble() * verses.Count);
-                while (chorusProb < theory.CHORUS_EXISTENCE * songLength)
-			    {
-				    if (prev != null && ((prev == 0  && curr == 0) || prev != 0 && curr != 0))
-				    {
-                        curr = (int)(rand.NextDouble() * verses.Count);
-				    }
-                    chorusProb += chorusProb;
-			    }
-			    song.Add(verses.ElementAt<Verse>(curr));
-                System.Console.Write(" " + curr); //remove later
-                prev = curr;
+            List<int> verseArrangement = new List<int>();
+            for (int i = 0; i < songLength; i++)
+            {
+                int choice = rand.Next(verses.Count);
+                int curr = verseArrangement.Count;
+                while (curr > 0 && rand.NextDouble() < theory.CHORUS_EXISTENCE)
+                {
+                    if ((verseArrangement.ElementAt<int>(curr - 1) == 0 && verseArrangement.Last<int>() == 0 && choice == 0) || (verseArrangement.ElementAt<int>(curr - 1) != 0 && verseArrangement.Last<int>() != 0 && choice != 0))
+                    {
+                        choice = rand.Next(verses.Count);
+                        curr--;
+                    }
+                    else
+                    {
+                        curr = 0;
+                    }
+                }
+                verseArrangement.Add(choice);
+            }
+            foreach (int choice in verseArrangement)
+            {
+                song.Add(verses.ElementAt<Verse>(choice));
+                System.Console.Write(" " + choice); //remove later
             }
 
             //make note list

@@ -123,7 +123,7 @@ namespace Automatone
 
         private InputParameters GetUserInput()
         {
-            InputParameters input = new InputParameters();
+            InputParameters input = InputParameters.Instantiate();
 
             //Song Parameters
             input.songSpeed = 0.4;
