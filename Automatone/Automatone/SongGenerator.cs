@@ -9,15 +9,15 @@ namespace Automatone
     public class SongGenerator
     {
         private const byte START_OFFSET = 21;
-        public static void RewriteSong(Automatone automatone)
+        public static String WriteSong(Automatone automatone)
         {
-            NoteThread thread = new NoteThread(automatone.SongCells, automatone.MeasureLength, automatone.TimeSignature);
-            automatone.Song = thread.ToString();
+            NoteThread thread = new NoteThread(automatone.SongCells, automatone.MeasureLength, automatone.TimeSignatureN / automatone.TimeSignatureD);
+            return thread.ToString();
         }
 	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory, InputParameters inputParameters)
         {
             Song s = new Song(theory, inputParameters, random);
-		    NoteThread thread = new NoteThread(s.Notes, s.TimeSignature);
+		    NoteThread thread = new NoteThread(s.Notes, s.TimeSignatureN / s.TimeSignatureD);
             int gridWidth = s.MeasureCount * s.MeasureLength;
             CellState[,] grid = new CellState[Automatone.PIANO_SIZE,gridWidth];
             foreach (List<Note> nts in s.Notes)
@@ -35,19 +35,11 @@ namespace Automatone
                 }
             }
             automatone.MeasureLength = s.MeasureLength;
-            automatone.TimeSignature = s.TimeSignature;
             automatone.TimeSignatureN = s.TimeSignatureN;
             automatone.TimeSignatureD = s.TimeSignatureD;
             automatone.Tempo = s.Tempo;
             //automatone.Song = thread.ToString(); //do we still need this?
             return grid;
-	    }
-	
-	    private int verseToThread(CellState[,] songCells, int globalStartMeasure)
-	    {
-		    int globalEndMeasure = globalStartMeasure;
-		    
-		    return globalEndMeasure;
 	    }
 
 	    private class NoteThread

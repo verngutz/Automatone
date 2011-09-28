@@ -8,14 +8,14 @@ namespace Automatone
         private MusicTheory theory;
         private List<double> rhythmCurve;
 
-        public Rhythm(MusicTheory theory, int timeSignatureN, int timeSignatureD, double rhythmObedience)
+        public Rhythm(MusicTheory theory, double timeSignatureN, double timeSignatureD, double rhythmObedience)
         {
             rhythmCurve = new List<double>();
             List<double> rhythmCurveSample = new List<double>(theory.RHYTHM_CURVE_SAMPLE);
 
             int l = rhythmCurveSample.Count;
             int r = (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * 2 / (double)timeSignatureD);
-            int lim = (timeSignatureN > 1 ? r : r * timeSignatureN / 2);
+            int lim = (int)(timeSignatureN > 1 ? r : r * timeSignatureN / 2);
 
             for (int i = 0; i < lim; i++)
             {

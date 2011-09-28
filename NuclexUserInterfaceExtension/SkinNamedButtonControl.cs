@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Nuclex.UserInterface.Controls.Desktop
 {
-    public class NamedButtonControl : ButtonControl
+    public class SkinNamedButtonControl : ButtonControl
     {
+        public String SkinName { set; get; }
     }
 }
