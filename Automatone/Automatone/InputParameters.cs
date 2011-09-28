@@ -27,7 +27,7 @@ namespace Automatone
         public double phraseLengthVariance = 0.5;
         public double phraseRhythmVariance = 0.5;
         public double phraseMelodyVariance = 0.5;
-        //public double phraseDistinctiveness; //not yet using this?
+        //public double phraseDistinctiveness = 0.5; //not yet using this?
 
         //Measure Parameters
         public double measureRhythmVariance = 0.5;

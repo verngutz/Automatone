@@ -15,21 +15,20 @@ namespace Automatone
 
             //Select seeds
             List<int> selectedRhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.measureRhythmVariance * parts.Count; i++)
+            for (int i = 0; i < 1 + inputParameters.measureRhythmVariance * (parts.Count); i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
             List<int> selectedMelodySeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.measureMelodyVariance * parts.Count; i++)
+            for (int i = 0; i < 1 + inputParameters.measureMelodyVariance * (parts.Count); i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }
 
             foreach (Part prt in parts)
             {
-                notes.Add(prt.GenerateNotes(selectedRhythmSeeds.ElementAt<int>(rand.Next(selectedRhythmSeeds.Count)), selectedMelodySeeds.ElementAt<int>(rand.Next(selectedMelodySeeds.Count)), chord, diatonic));
+                notes.Add(prt.GenerateNotes(selectedRhythmSeeds, selectedMelodySeeds, chord, diatonic));
             }
-            System.Console.WriteLine("\t\t\t----------"); //remove later
         }
     }
 }

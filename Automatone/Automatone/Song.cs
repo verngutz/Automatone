@@ -77,18 +77,26 @@ namespace Automatone
             */
 
             //generate seeds
-            int lengthiness = (int)(songLength * theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength * theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * parts.Count);
+            double rhythmSeedLength = 1 + inputParameters.measureRhythmVariance * (parts.Count);
+            rhythmSeedLength += inputParameters.phraseRhythmVariance * (theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * rhythmSeedLength);
+            rhythmSeedLength += inputParameters.verseRhythmVariance * (theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength * rhythmSeedLength);
+            rhythmSeedLength += inputParameters.songRhythmVariance * (songLength * rhythmSeedLength);
             List<int> rhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.songRhythmVariance * lengthiness; i++)
+            for (int i = 0; i < rhythmSeedLength; i++)
             {
                 rhythmSeeds.Add(rand.Next());
             }
+
+            double melodySeedLength = 1 + inputParameters.measureMelodyVariance * (parts.Count);
+            melodySeedLength += inputParameters.phraseMelodyVariance * (theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * melodySeedLength);
+            melodySeedLength += inputParameters.verseMelodyVariance * (theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength * melodySeedLength);
+            melodySeedLength += inputParameters.songMelodyVariance * (songLength * melodySeedLength);
             List<int> melodySeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.songMelodyVariance * lengthiness; i++)
+            for (int i = 0; i < melodySeedLength; i++)
             {
                 melodySeeds.Add(rand.Next());
             }
-            
+
             //generate verses
 		    List<Verse> verses = new List<Verse>();
 		    for(int i = 0; i < 1 + 2 * inputParameters.structuralVariance * songLength; i++)
