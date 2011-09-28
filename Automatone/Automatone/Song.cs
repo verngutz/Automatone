@@ -12,12 +12,10 @@ namespace Automatone
 
         private ushort tempo;
         public ushort Tempo { get { return tempo; } }
-        private int timeSignatureN;
-        public int TimeSignatureN { get { return timeSignatureN; } }
-        private int timeSignatureD;
-        public int TimeSignatureD { get { return timeSignatureD; } }
-        private double timeSignature;
-        public double TimeSignature { get { return timeSignature; } }
+        private double timeSignatureN;
+        public double TimeSignatureN { get { return timeSignatureN; } }
+        private double timeSignatureD;
+        public double TimeSignatureD { get { return timeSignatureD; } }
         private int measureLength;
         public int MeasureLength { get { return measureLength; } }
         private NoteName key;
@@ -34,9 +32,9 @@ namespace Automatone
 
             //Music stuff
             tempo = (ushort)(theory.MIN_TEMPO + ((inputParameters.songSpeed + (inputParameters.songSpeed * ((rand.NextDouble() - 0.5) * inputParameters.songSpeedVariance))) * (theory.MAX_TEMPO - theory.MIN_TEMPO)));
-            timeSignatureN = (int)Math.Round(inputParameters.timeSignatureN);
-            timeSignatureD = (int)Math.Pow(2, Math.Round(Math.Log(inputParameters.timeSignatureD) / Math.Log(2)));
-            timeSignature = (double)timeSignatureN / (double)timeSignatureD;
+            timeSignatureN = Math.Round(inputParameters.timeSignatureN);
+            timeSignatureD = Math.Pow(2, Math.Round(Math.Log(inputParameters.timeSignatureD) / Math.Log(2)));
+            double timeSignature = timeSignatureN / timeSignatureD;
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
             key = new NoteName((byte)rand.Next(12));
             mode = (rand.NextDouble() > 0.4 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);

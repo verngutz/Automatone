@@ -177,7 +177,7 @@ namespace NuclexUserInterfaceExtension
             public ControlRendererEmployer()
             {
                 this.renderers = new Dictionary<Type, IControlRendererAdapter>();
-                renderers.Add(typeof(NamedButtonControl), new ControlRendererAdapter<NamedButtonControl>(new NamedButtonControlRenderer()));
+                renderers.Add(typeof(SkinNamedButtonControl), new ControlRendererAdapter<SkinNamedButtonControl>(new SkinNamedButtonControlRenderer()));
             }
 
             /// <summary>Determines whether the type suites the employer's requirements</summary>

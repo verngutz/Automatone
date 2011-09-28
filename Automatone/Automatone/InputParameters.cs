@@ -1,5 +1,8 @@
-﻿namespace Automatone
+﻿using System;
+
+namespace Automatone
 {
+    [Serializable]
     public class InputParameters
     {
         //Song Parameters
@@ -69,13 +72,21 @@
 
         private static InputParameters instance = null;
 
-        public static InputParameters Instantiate()
+        public static InputParameters Instance
         {
-            if (instance == null)
+            get
             {
-                instance = new InputParameters();
+                if (instance == null)
+                {
+                    instance = new InputParameters();
+                }
+                return instance;
             }
-            return instance;
+        }
+
+        public static void LoadInstance(InputParameters instance)
+        {
+            InputParameters.instance = instance;
         }
     }
 }

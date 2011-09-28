@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization;
 using Duet.Audio_System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -69,11 +70,9 @@ namespace Automatone
 
         //Music Stuff
         private double timeSignatureN;
-        public double TimeSignatureN { set { timeSignatureN = value; } }
+        public double TimeSignatureN { set { timeSignatureN = value; } get { return timeSignatureN; } }
         private double timeSignatureD;
-        public double TimeSignatureD { set { timeSignatureD = value; } }
-        private double timeSignature;
-        public double TimeSignature { set { timeSignature = value; } get { return timeSignature; } }
+        public double TimeSignatureD { set { timeSignatureD = value; } get { return timeSignatureD; } }
         private int measureLength;
         public int MeasureLength { set { measureLength = value; } get { return measureLength; } }
         private ushort tempo;
@@ -207,7 +206,7 @@ namespace Automatone
 
         public void RewriteSong()
         {
-            SongGenerator.RewriteSong(this);
+            Song = SongGenerator.WriteSong(this);
 
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");

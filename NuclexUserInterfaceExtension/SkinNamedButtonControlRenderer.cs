@@ -9,8 +9,8 @@ namespace Nuclex.UserInterface.Visuals.Flat
 {
 
     /// <summary>Renders button controls in a traditional flat style</summary>
-    public class NamedButtonControlRenderer :
-      IFlatControlRenderer<NamedButtonControl>
+    public class SkinNamedButtonControlRenderer :
+      IFlatControlRenderer<SkinNamedButtonControl>
     {
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Nuclex.UserInterface.Visuals.Flat
         ///   Graphics interface that will be used to draw the control
         /// </param>
         public void Render(
-          NamedButtonControl control, IFlatGuiGraphics graphics
+          SkinNamedButtonControl control, IFlatGuiGraphics graphics
         )
         {
             RectangleF controlBounds = control.GetAbsoluteBounds();
@@ -45,12 +45,12 @@ namespace Nuclex.UserInterface.Visuals.Flat
             }
 
             // Draw the button's frame
-            graphics.DrawElement(control.Name + states[stateIndex], controlBounds);
+            graphics.DrawElement(control.SkinName + states[stateIndex], controlBounds);
 
             // If there's text assigned to the button, draw it into the button
             if (!string.IsNullOrEmpty(control.Text))
             {
-                graphics.DrawString(control.Name + states[stateIndex], controlBounds, control.Text);
+                graphics.DrawString(control.SkinName + states[stateIndex], controlBounds, control.Text);
             }
         }
 
