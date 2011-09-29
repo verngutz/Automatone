@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Windows.Forms;
 using Duet.Audio_System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -30,8 +31,8 @@ namespace Automatone
         // Audio Objects
         private Synthesizer synthesizer;
         private Sequencer sequencer;
-
         public Sequencer Sequencer { get { return sequencer; } }
+        private Sequencer.MidiPlayerState previousSequencerState;
 
         // Services
         private IAudioSystemService audioService;
@@ -40,9 +41,8 @@ namespace Automatone
         private InputManager inputManager;
         private GuiManager gui;
         public GuiManager Gui { get { return gui; } }
+        private MainScreen mainScreen;
 
-        public const short SCREEN_WIDTH = 800;
-        public const short SCREEN_HEIGHT = 600;
         public const short CONTROLS_AND_GRID_DIVISION = 150;
 
         //Grid (Visual)
@@ -118,6 +118,9 @@ namespace Automatone
 
             IsMouseVisible = true;
             Window.Title = "Automatone";
+
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += delegate { gridScreen.SetPitchTimeLabelRectangles(); };
         }
 
         /// <summary>
@@ -147,6 +150,7 @@ namespace Automatone
 
             //Construct Sequencer
             sequencer = new Sequencer(this);
+            previousSequencerState = Sequencer.MidiPlayerState.STOPPED;
 
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
@@ -154,7 +158,8 @@ namespace Automatone
             //Setup Gui Screen
             Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             gui.Screen = screen;
-            screen.Desktop.Children.Add(new MainScreen(this));
+            mainScreen = new MainScreen(this);
+            screen.Desktop.Children.Add(mainScreen);
             base.Initialize();
         }
 
@@ -165,8 +170,8 @@ namespace Automatone
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
-            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
 
             gui.Visualizer = MultiGuiVisualizer.FromFile(Services, "Content\\Automatone.skin.xml");
@@ -190,6 +195,11 @@ namespace Automatone
         {
             sequencer.Update(gameTime);
             synthesizer.Update(gameTime);
+            if (previousSequencerState == Sequencer.MidiPlayerState.PLAYING && sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+            {
+                StopSongPlaying();
+            }
+            previousSequencerState = sequencer.State;
             base.Update(gameTime);
         }
 
@@ -232,6 +242,13 @@ namespace Automatone
             txt2midi.Start();
             while(!Sequencer.LoadMidi("sample.mid"));
             //txt2midi.Kill();//it now kills itself
+        }
+
+        public void StopSongPlaying()
+        {
+            Sequencer.StopMidi();
+            GridScreen.ResetScrolling();
+            mainScreen.ResetPlayButton();
         }
     }
 }

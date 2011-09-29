@@ -25,10 +25,11 @@ namespace Automatone
         private SkinNamedButtonControl stopButton;
         private SkinNamedButtonControl saveButton;
         private SkinNamedButtonControl loadButton;
+        private SkinNamedButtonControl newButton;
         
         private void InitializeComponent()
         {
-            Bounds = new UniRectangle(0, 0, Automatone.SCREEN_WIDTH, Automatone.SCREEN_HEIGHT);
+            Bounds = new UniRectangle(0, 0, automatone.Window.ClientBounds.Width, automatone.Window.ClientBounds.Height);
             EnableDragging = false;
 
             // Construct children
@@ -37,6 +38,7 @@ namespace Automatone
             stopButton = new SkinNamedButtonControl();
             saveButton = new SkinNamedButtonControl();
             loadButton = new SkinNamedButtonControl();
+            newButton = new SkinNamedButtonControl();
 
             //
             // randomizeButton
@@ -49,14 +51,14 @@ namespace Automatone
             // playPauseButton
             //
             playPauseButton.Bounds = new UniRectangle(10, 55, 43, 43);
-            playPauseButton.Changed += new EventHandler(PlayPauseButtonChanged);
+            playPauseButton.Changed += new EventHandler(PlayPauseButtonToggled);
             playPauseButton.Selected = false;
 
             //
             // stopButton
             //
             stopButton.Bounds = new UniRectangle(55, 55, 43, 43);
-            stopButton.Pressed += new EventHandler(stopButtonPressed);
+            stopButton.Pressed += new EventHandler(StopButtonPressed);
             stopButton.SkinName = "stop";
 
             //
@@ -74,6 +76,13 @@ namespace Automatone
             loadButton.SkinName = "stop";
 
             //
+            // newButton
+            //
+            newButton.Bounds = new UniRectangle(10, 100, 43, 43);
+            newButton.Pressed += new EventHandler(NewButtonPressed);
+            newButton.SkinName = "stop";
+
+            //
             // Add Children
             //
             Children.Add(randomizeButton);
@@ -81,10 +90,28 @@ namespace Automatone
             Children.Add(stopButton);
             Children.Add(saveButton);
             Children.Add(loadButton);
+            Children.Add(newButton);
+        }
+
+        public void ResetPlayButton()
+        {
+            playPauseButton.Selected = false;
+        }
+
+        private void NewButtonPressed(object sender, EventArgs e)
+        {
+            automatone.StopSongPlaying();
+            automatone.Tempo = 120;
+            automatone.TimeSignatureN = 4;
+            automatone.TimeSignatureD = 4;
+            double timeSignature = automatone.TimeSignatureN / automatone.TimeSignatureD;
+            automatone.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
+            automatone.SongCells = new CellState[Automatone.PIANO_SIZE, 45];
         }
 
         private void LoadButtonPressed(object sender, EventArgs e)
         {
+            automatone.StopSongPlaying();
             Stream loadStream;
             OpenFileDialog projectLoadDialog = new OpenFileDialog();
 
@@ -137,7 +164,7 @@ namespace Automatone
             }
         }
 
-        private void PlayPauseButtonChanged(object sender, EventArgs e)
+        private void PlayPauseButtonToggled(object sender, EventArgs e)
         {
             if (automatone.SongCells != null)
             {
@@ -162,7 +189,7 @@ namespace Automatone
 
         private void RandomizeButtonPressed(object sender, EventArgs e)
         {
-            stopButtonPressed(sender, e);
+            automatone.StopSongPlaying();
 
 #if USESEED
             automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), GetUserInput());
@@ -171,12 +198,9 @@ namespace Automatone
 #endif      
         }
 
-        private void stopButtonPressed(object sender, EventArgs e)
+        private void StopButtonPressed(object sender, EventArgs e)
         {
-            automatone.Sequencer.StopMidi();
-            automatone.GridScreen.Reset();
-            automatone.GridScreen.ScrollWithMidi = false;
-            playPauseButton.Selected = false;
+            automatone.StopSongPlaying();
         }
 
         private InputParameters GetUserInput()
