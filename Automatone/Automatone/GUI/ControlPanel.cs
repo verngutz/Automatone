@@ -210,7 +210,7 @@ namespace Automatone.GUI
             //Song Parameters
             input.songSpeed = 0.4;
             input.songSpeedVariance = 0.5;
-            input.timeSignatureN = 4.0;
+            input.timeSignatureN = 3.0;
             input.timeSignatureD = 4.0;
             input.meanSongLength = 0.5;
             input.structuralVariance = 0.2;
@@ -257,7 +257,7 @@ namespace Automatone.GUI
             //Melody
             input.chordalityObedience = 0.95;
             input.tonalityObedience = 0.95;
-            input.meanPitchContiguity = 0.2;
+            input.meanPitchContiguity = 0.5;
 
             //Harmony
             input.seventhChordProbability = 0.1;
