@@ -1,20 +1,21 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Windows.Forms;
+
 using Duet.Audio_System;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+
 using Nuclex.Input;
 using Nuclex.UserInterface;
 using NuclexUserInterfaceExtension;
 
+using Automatone.GUI;
+
 namespace Automatone
 {
-    using Screen = Nuclex.UserInterface.Screen;
-
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -41,13 +42,13 @@ namespace Automatone
         private InputManager inputManager;
         private GuiManager gui;
         public GuiManager Gui { get { return gui; } }
-        private MainScreen mainScreen;
+        private ControlPanel controlPanel;
 
         public const short CONTROLS_AND_GRID_DIVISION = 150;
 
         //Grid (Visual)
-        private GridScreen gridScreen;
-        public GridScreen GridScreen { get { return gridScreen; } }
+        private GridPanel gridPanel;
+        public GridPanel GridScreen { get { return gridPanel; } }
         public const byte GRID_PADDING = 10;
 
         public const byte X_DIMENSION = 1;
@@ -113,14 +114,14 @@ namespace Automatone
             gui = new GuiManager(Services);
             Components.Add(gui);
 
-            gridScreen = new GridScreen(this);
-            Components.Add(gridScreen);
+            gridPanel = new GridPanel(this);
+            Components.Add(gridPanel);
 
             IsMouseVisible = true;
             Window.Title = "Automatone";
-
+            
             Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += delegate { gridScreen.SetPitchTimeLabelRectangles(); };
+            Window.ClientSizeChanged += delegate { gridPanel.RespondToWindowResize(); };
         }
 
         /// <summary>
@@ -158,8 +159,8 @@ namespace Automatone
             //Setup Gui Screen
             Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             gui.Screen = screen;
-            mainScreen = new MainScreen(this);
-            screen.Desktop.Children.Add(mainScreen);
+            controlPanel = new ControlPanel(this);
+            screen.Desktop.Children.Add(controlPanel);
             base.Initialize();
         }
 
@@ -248,7 +249,7 @@ namespace Automatone
         {
             Sequencer.StopMidi();
             GridScreen.ResetScrolling();
-            mainScreen.ResetPlayButton();
+            controlPanel.ResetPlayButton();
         }
     }
 }

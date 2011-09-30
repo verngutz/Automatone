@@ -8,13 +8,13 @@ using Duet.Audio_System;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
 
-namespace Automatone
+namespace Automatone.GUI
 {
-    public class MainScreen : WindowControl
+    public class ControlPanel : WindowControl
     {
         private Automatone automatone;
 
-        public MainScreen(Automatone parent) : base()
+        public ControlPanel(Automatone parent) : base()
         {
             automatone = parent;
             InitializeComponent();

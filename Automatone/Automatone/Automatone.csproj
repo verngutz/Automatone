@@ -17,7 +17,7 @@
     <XnaCrossPlatformGroupID>441c56b5-e852-4a3d-844d-4744f39c2e9f</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Automicon.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <Thumbnail>Authumbnail.png</Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>C:\Users\Vernon\Desktop\</PublishUrl>
     <Install>true</Install>
@@ -124,17 +124,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NoteHitParticle.cs" />
-    <Compile Include="NoteHitParticleModifier.cs" />
+    <Compile Include="GUI\NoteHitParticle.cs" />
+    <Compile Include="GUI\NoteHitParticleModifier.cs" />
     <Compile Include="Part.cs" />
     <Compile Include="Melody.cs" />
-    <Compile Include="GridScreen.cs" />
+    <Compile Include="GUI\GridPanel.cs" />
     <Compile Include="Measure.cs" />
     <Compile Include="Harmony.cs" />
     <Compile Include="CellState.cs" />
     <Compile Include="ClassicalTheory.cs" />
     <Compile Include="InputParameters.cs" />
-    <Compile Include="MainScreen.cs" />
+    <Compile Include="GUI\ControlPanel.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="NoteName.cs" />
     <Compile Include="Phrase.cs" />
@@ -149,7 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Automicon.ico" />
-    <Content Include="GameThumbnail.png" />
+    <Content Include="Authumbnail.png" />
     <Content Include="Mtx2Midi.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -2,7 +2,7 @@
 
 using Microsoft.Xna.Framework;
 
-namespace Automatone
+namespace Automatone.GUI
 {
     public struct NoteHitParticle
     {

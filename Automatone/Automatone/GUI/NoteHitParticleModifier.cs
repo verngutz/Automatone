@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 using Nuclex.Graphics.SpecialEffects.Particles;
 
-namespace Automatone
+namespace Automatone.GUI
 {
     public class NoteHitParticleModifier : IParticleModifier<NoteHitParticle>
     {
