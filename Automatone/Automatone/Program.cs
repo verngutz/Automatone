@@ -12,10 +12,7 @@ namespace Automatone
         [STAThread]
         static void Main(string[] args)
         {
-            using (Automatone game = new Automatone())
-            {
-                game.Run();
-            }
+            Automatone.Instance.Run();
         }
     }
 #endif

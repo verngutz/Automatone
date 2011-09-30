@@ -11,7 +11,7 @@ namespace Automatone
         private const byte START_OFFSET = 21;
         public static String WriteSong(Automatone automatone)
         {
-            NoteThread thread = new NoteThread(automatone.SongCells, automatone.MeasureLength, automatone.TimeSignatureN / automatone.TimeSignatureD);
+            NoteThread thread = new NoteThread(automatone.GridPanel.SongCells, automatone.MeasureLength, automatone.TimeSignatureN / automatone.TimeSignatureD);
             return thread.ToString();
         }
 	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory, InputParameters inputParameters)

@@ -48,7 +48,7 @@ namespace Automatone
 
         //Grid (Visual)
         private GridPanel gridPanel;
-        public GridPanel GridScreen { get { return gridPanel; } }
+        public GridPanel GridPanel { get { return gridPanel; } }
         public const byte GRID_PADDING = 10;
 
         public const byte X_DIMENSION = 1;
@@ -56,18 +56,7 @@ namespace Automatone
 
         //Grid (Logical)
         public String Song { set; get; }
-        private CellState[,] songCells;
-        public CellState[,] SongCells 
-        {
-            set
-            {
-                songCells = value;
-            }
-            get
-            {
-                return songCells;
-            }
-        }
+        
 
         //Music Stuff
         private double timeSignatureN;
@@ -101,27 +90,27 @@ namespace Automatone
         public const int PIANO_SIZE = 61;
         public const int LOWEST_NOTE_CHROMATIC_NUMBER = 6;
 
-        public Automatone()
+        private static Automatone instance;
+        public static Automatone Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new Automatone();
+                return instance;
+            }
+        }
+
+        private Automatone()
         {
             graphics = new GraphicsDeviceManager(this);
 
             content = new ContentManager(Services);
             Content.RootDirectory = "Content";
 
-            inputManager = new InputManager(Services);
-            Components.Add(inputManager);
-
-            gui = new GuiManager(Services);
-            Components.Add(gui);
-
-            gridPanel = new GridPanel(this);
-            Components.Add(gridPanel);
-
             IsMouseVisible = true;
             Window.Title = "Automatone";
-            
             Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += delegate { gridPanel.RespondToWindowResize(); };
         }
 
         /// <summary>
@@ -132,6 +121,29 @@ namespace Automatone
         /// </summary>
         protected override void Initialize()
         {
+            // Set Preferred Resolution
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.ApplyChanges();
+
+            // Initialize Input Handler
+            inputManager = new InputManager(Services);
+            Components.Add(inputManager);
+
+            // Initialize GUI
+            gui = new GuiManager(Services);
+            Components.Add(gui);
+            Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            gui.Screen = screen;
+
+            // Create control panel
+            controlPanel = new ControlPanel(this);
+            screen.Desktop.Children.Add(controlPanel);
+
+            // Create grid panel
+            gridPanel = GridPanel.Instance;
+            Components.Add(gridPanel);
+
             // Start up core DUET services
             Duet.Global.Initialize(this);
 
@@ -155,12 +167,7 @@ namespace Automatone
 
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
-
-            //Setup Gui Screen
-            Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            gui.Screen = screen;
-            controlPanel = new ControlPanel(this);
-            screen.Desktop.Children.Add(controlPanel);
+            
             base.Initialize();
         }
 
@@ -171,10 +178,6 @@ namespace Automatone
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
-            graphics.ApplyChanges();
-
             gui.Visualizer = MultiGuiVisualizer.FromFile(Services, "Content\\Automatone.skin.xml");
         }
 
@@ -248,7 +251,7 @@ namespace Automatone
         public void StopSongPlaying()
         {
             Sequencer.StopMidi();
-            GridScreen.ResetScrolling();
+            GridPanel.ResetScrolling();
             controlPanel.ResetPlayButton();
         }
     }

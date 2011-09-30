@@ -106,7 +106,7 @@ namespace Automatone.GUI
             automatone.TimeSignatureD = 4;
             double timeSignature = automatone.TimeSignatureN / automatone.TimeSignatureD;
             automatone.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
-            automatone.SongCells = new CellState[Automatone.PIANO_SIZE, 45];
+            automatone.GridPanel.SongCells = new CellState[Automatone.PIANO_SIZE, 45];
         }
 
         private void LoadButtonPressed(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace Automatone.GUI
                     InputParameters.LoadInstance((InputParameters)formatter.Deserialize(loadStream));
                     automatone.MeasureLength = (int)formatter.Deserialize(loadStream);
                     automatone.Song = (string)formatter.Deserialize(loadStream);
-                    automatone.SongCells = (CellState[,])formatter.Deserialize(loadStream);
+                    automatone.GridPanel.SongCells = (CellState[,])formatter.Deserialize(loadStream);
                     automatone.Tempo = (ushort)formatter.Deserialize(loadStream);
                     automatone.TimeSignatureD = (double)formatter.Deserialize(loadStream);
                     automatone.TimeSignatureN = (double)formatter.Deserialize(loadStream);
@@ -137,7 +137,7 @@ namespace Automatone.GUI
 
         private void SaveButtonPressed(object sender, EventArgs e)
         {
-            if (automatone.SongCells != null)
+            if (automatone.Song != null)
             {
                 Stream saveStream;
                 SaveFileDialog projectSaveDialog = new SaveFileDialog();
@@ -154,7 +154,7 @@ namespace Automatone.GUI
                         formatter.Serialize(saveStream, automatone.MeasureLength);
                         automatone.RewriteSong();
                         formatter.Serialize(saveStream, automatone.Song);
-                        formatter.Serialize(saveStream, automatone.SongCells);
+                        formatter.Serialize(saveStream, automatone.GridPanel.SongCells);
                         formatter.Serialize(saveStream, automatone.Tempo);
                         formatter.Serialize(saveStream, automatone.TimeSignatureD);
                         formatter.Serialize(saveStream, automatone.TimeSignatureN);
@@ -166,7 +166,7 @@ namespace Automatone.GUI
 
         private void PlayPauseButtonToggled(object sender, EventArgs e)
         {
-            if (automatone.SongCells != null)
+            if (automatone.GridPanel.SongCells != null)
             {
                 if (playPauseButton.Selected)
                 {
@@ -179,7 +179,7 @@ namespace Automatone.GUI
                     automatone.Sequencer.PauseMidi();
                 }
 
-                automatone.GridScreen.ScrollWithMidi = playPauseButton.Selected;
+                automatone.GridPanel.ScrollWithMidi = playPauseButton.Selected;
             }
             else
             {
@@ -194,7 +194,7 @@ namespace Automatone.GUI
 #if USESEED
             automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), GetUserInput());
 #else
-            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), GetUserInput());
+            automatone.GridPanel.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), GetUserInput());
 #endif      
         }
 
