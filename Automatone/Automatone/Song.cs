@@ -57,7 +57,6 @@ namespace Automatone
             List<Part> parts = new List<Part>();
 
             //Random part creation
-            /*
             int partCount = 1 + (int)(inputParameters.polyphony * theory.PART_COUNT);
             int rhythmNumber = rand.Next(1, partCount);
             int melodyNumber = rand.Next(1, partCount);
@@ -67,16 +66,15 @@ namespace Automatone
                 melodyNumber = (rand.NextDouble() < inputParameters.homophony ? melodyNumber : rand.Next(1, partCount));
                 parts.Add(new Part(theory, rand, inputParameters, rhythm, rhythmNumber, melody, melodyNumber, measureLength));
             }
-            */
 
             //Manual part creation
-            
+            /*
             parts.Add(new Part(theory, rand, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.5, 0, 48, 2, false, false));
             parts.Add(new Part(theory, rand, inputParameters, rhythm, 2, melody, 1, measureLength, 0.5, 0.5, 0, 36, 2, false, false));
             parts.Add(new Part(theory, rand, inputParameters, rhythm, 1, melody, 1, measureLength, 0.5, 0.9, 1, 12, 2, true, false));
             parts.Add(new Part(theory, rand, inputParameters, rhythm, 2, melody, 2, measureLength, 0.5, 0.9, 1, 12, 2, true, false));
             parts.Add(new Part(theory, rand, inputParameters, rhythm, 3, melody, 3, measureLength, 0.5, 0.9, 1, 12, 2, true, false));
-            
+            */
 
             //generate seeds
             double rhythmSeedLength = 1 + inputParameters.measureRhythmVariance * (parts.Count);
