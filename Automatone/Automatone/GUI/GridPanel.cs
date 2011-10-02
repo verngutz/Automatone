@@ -16,17 +16,9 @@ namespace Automatone.GUI
 
         public bool ScrollWithMidi { set; get; }
 
-        //
-        // Mouse State
-        //
         private MouseState oldMouseState;
         private MouseState newMouseState;
 
-        
-
-        //
-        // Cells (Logical)
-        //
         private CellState[,] songCells;
         public CellState[,] SongCells
         {
@@ -41,28 +33,8 @@ namespace Automatone.GUI
             }
         }
 
-        //
-        // Cells (Graphical)
-        //
-        private const byte CELLHEIGHT = 20;
-        private const byte CELLWIDTH = 20;
-        private static Texture2D silentCell;
-        private static Texture2D startCell;
-        private static Texture2D holdCell;
         private Cells cells;
-
-        //
-        // Labels
-        //
-        private const int TIME_LABEL_THICKNESS = 25;
-        private const int PITCH_LABEL_THICKNESS = 25;
-        private static Texture2D pitchTimeLabelBackground;
-        private SpriteFont labelFont;
         private Labels labels;
-
-        //
-        // Navigators
-        //
         private Navigators navigators;
 
         private static GridPanel instance;
@@ -109,19 +81,14 @@ namespace Automatone.GUI
         protected override void LoadContent()
         {
             base.LoadContent();
-            silentCell = parent.Content.Load<Texture2D>("darkbox");
-            startCell = parent.Content.Load<Texture2D>("lightbox");
-            holdCell = parent.Content.Load<Texture2D>("holdbox");
-            pitchTimeLabelBackground = parent.Content.Load<Texture2D>("BlackPixel");
-            labelFont = parent.Content.Load<SpriteFont>("Font");
+            cells.LoadContent();
+            labels.LoadContent();
         }
 
         protected override void UnloadContent()
         {
-            if (silentCell != null) silentCell.Dispose();
-            if (startCell != null) startCell.Dispose();
-            if (holdCell != null) holdCell.Dispose();
-            if(pitchTimeLabelBackground != null) pitchTimeLabelBackground.Dispose();
+            cells.Dispose();
+            labels.Dispose();
             base.UnloadContent();
         }
 
@@ -131,8 +98,8 @@ namespace Automatone.GUI
 
             if (SongCells != null)
             {
-                cells.Update();
-                navigators.Update();
+                cells.Update(gameTime);
+                navigators.Update(gameTime);
             }
 
             oldMouseState = newMouseState;
@@ -143,8 +110,8 @@ namespace Automatone.GUI
         {
             if (SongCells != null)
             {
-                cells.Draw();
-                labels.Draw();
+                cells.Draw(gameTime);
+                labels.Draw(gameTime);
             }
 
             base.Draw(gameTime);
@@ -185,12 +152,12 @@ namespace Automatone.GUI
 
         public int ScreenToGridCoordinatesX(int y)
         {
-            return ((int)-navigators.GridDrawOffsetX + y) / CELLWIDTH;
+            return ((int)-navigators.GridDrawOffsetX + y) / Cells.CELLWIDTH;
         }
 
         public int ScreenToGridCoordinatesY(int x)
         {
-            return SongCells.GetLength(0) - 1 - ((int)-navigators.GridDrawOffsetY + x) / CELLHEIGHT;
+            return SongCells.GetLength(0) - 1 - ((int)-navigators.GridDrawOffsetY + x) / Cells.CELLHEIGHT;
         }
 
         /// <summary>
@@ -202,6 +169,12 @@ namespace Automatone.GUI
         private class Cells
         {
             private GridPanel parent;
+
+            public const byte CELLHEIGHT = 20;
+            public const byte CELLWIDTH = 20;
+            private static Texture2D silentCell;
+            private static Texture2D startCell;
+            private static Texture2D holdCell;
 
             private Rectangle clickableArea;
             private int? gridInputStartXIndex;
@@ -218,14 +191,28 @@ namespace Automatone.GUI
             {
                 clickableArea = new Rectangle
                 (
-                    PITCH_LABEL_THICKNESS,
-                    Automatone.CONTROLS_AND_GRID_DIVISION + TIME_LABEL_THICKNESS,
-                    parent.parent.Window.ClientBounds.Width - PITCH_LABEL_THICKNESS,
-                    parent.parent.Window.ClientBounds.Height - Automatone.CONTROLS_AND_GRID_DIVISION - TIME_LABEL_THICKNESS
+                    Labels.PITCH_LABEL_THICKNESS,
+                    Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS,
+                    parent.parent.Window.ClientBounds.Width - Labels.PITCH_LABEL_THICKNESS,
+                    parent.parent.Window.ClientBounds.Height - Automatone.CONTROLS_AND_GRID_DIVISION - Labels.TIME_LABEL_THICKNESS
                 );
             }
 
-            public void Update()
+            public void LoadContent()
+            {
+                silentCell = parent.parent.Content.Load<Texture2D>("darkbox");
+                startCell = parent.parent.Content.Load<Texture2D>("lightbox");
+                holdCell = parent.parent.Content.Load<Texture2D>("holdbox");
+            }
+
+            public void Dispose()
+            {
+                if (silentCell != null) silentCell.Dispose();
+                if (startCell != null) startCell.Dispose();
+                if (holdCell != null) holdCell.Dispose();
+            }
+
+            public void Update(GameTime gameTime)
             {
                 if (parent.parent.IsActive
                     && parent.parent.Sequencer.State == Sequencer.MidiPlayerState.STOPPED
@@ -280,7 +267,7 @@ namespace Automatone.GUI
                 }
             }
 
-            public void Draw()
+            public void Draw(GameTime gameTime)
             {
                 parent.parent.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
                 for (int i = parent.navigators.VerticalClippingStartIndex; i <= parent.navigators.VerticalClippingEndIndex; i++)
@@ -332,6 +319,11 @@ namespace Automatone.GUI
         {
             private GridPanel parent;
 
+            public const int TIME_LABEL_THICKNESS = 25;
+            public const int PITCH_LABEL_THICKNESS = 25;
+            private Texture2D pitchTimeLabelBackground;
+            private SpriteFont labelFont;
+
             private Rectangle pitchLabelRectangle;
             private Rectangle timeLabelRectangle;
 
@@ -347,7 +339,19 @@ namespace Automatone.GUI
                 timeLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, parent.parent.Window.ClientBounds.Width, TIME_LABEL_THICKNESS);
             }
 
-            public void Draw()
+            public void LoadContent()
+            {
+                pitchTimeLabelBackground = parent.parent.Content.Load<Texture2D>("BlackPixel");
+                labelFont = parent.parent.Content.Load<SpriteFont>("Font");
+            }
+
+            public void Dispose()
+            {
+                if (pitchTimeLabelBackground != null) 
+                    pitchTimeLabelBackground.Dispose();
+            }
+
+            public void Draw(GameTime gameTime)
             {
                 parent.parent.SpriteBatch.Begin();
                 DrawPitchLabel();
@@ -361,7 +365,7 @@ namespace Automatone.GUI
 
                 for (int i = parent.navigators.VerticalClippingStartIndex; i <= parent.navigators.VerticalClippingEndIndex; i++)
                 {
-                    Vector2 loc = new Vector2(2, (int)((parent.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT + parent.navigators.GridDrawOffsetY));
+                    Vector2 loc = new Vector2(2, (int)((parent.SongCells.GetLength(0) - 1 - i) * Cells.CELLHEIGHT + parent.navigators.GridDrawOffsetY));
                     string letter = "";
                     switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + 12) % 12)
                     {
@@ -402,7 +406,7 @@ namespace Automatone.GUI
                             letter = "B";
                             break;
                     }
-                    parent.parent.SpriteBatch.DrawString(parent.labelFont, letter, loc, Color.White);
+                    parent.parent.SpriteBatch.DrawString(labelFont, letter, loc, Color.White);
                 }
             }
 
@@ -412,16 +416,16 @@ namespace Automatone.GUI
 
                 for (int j = parent.navigators.HorizontalClippingStartIndex; j <= parent.navigators.HorizontalClippingEndIndex; j++)
                 {
-                    Vector2 loc = new Vector2((int)(j * CELLWIDTH + parent.navigators.GridDrawOffsetX), 2 + Automatone.CONTROLS_AND_GRID_DIVISION);
+                    Vector2 loc = new Vector2((int)(j * Cells.CELLWIDTH + parent.navigators.GridDrawOffsetX), 2 + Automatone.CONTROLS_AND_GRID_DIVISION);
                     if (j % parent.parent.MeasureLength == 0)
                     {
-                        parent.parent.SpriteBatch.DrawString(parent.labelFont, "" + (j / parent.parent.MeasureLength + 1), loc, Color.White);
+                        parent.parent.SpriteBatch.DrawString(labelFont, "" + (j / parent.parent.MeasureLength + 1), loc, Color.White);
                     }
                     for (int k = 1; k < parent.parent.MeasureLength / (Automatone.SUBBEATS_PER_WHOLE_NOTE / 4); k++)
                     {
                         if (j % parent.parent.MeasureLength == k * Automatone.SUBBEATS_PER_WHOLE_NOTE / 4)
                         {
-                            parent.parent.SpriteBatch.DrawString(parent.labelFont, "|", loc, Color.Navy);
+                            parent.parent.SpriteBatch.DrawString(labelFont, "|", loc, Color.Navy);
                         }
                     }
                 }
@@ -460,11 +464,11 @@ namespace Automatone.GUI
                     {
                         if (parent.SongCells[i, j] != CellState.SILENT)
                         {
-                            Vector2 particleSpawnPoint = new Vector2((int)(j * CELLWIDTH + parent.navigators.GridDrawOffsetX), (int)((parent.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT + parent.navigators.GridDrawOffsetY));
+                            Vector2 particleSpawnPoint = new Vector2((int)(j * Cells.CELLWIDTH + parent.navigators.GridDrawOffsetX), (int)((parent.SongCells.GetLength(0) - 1 - i) * Cells.CELLHEIGHT + parent.navigators.GridDrawOffsetY));
                             for (float k = 0; k < PARTICLE_SPAWN_DENSITY; k++)
                             {
                                 if (particleSystem.Particles.Count < particleSystem.Capacity)
-                                    particleSystem.AddParticle(new NoteHitParticle(new Vector3(particleSpawnPoint + new Vector2(0, k / PARTICLE_SPAWN_DENSITY * CELLHEIGHT), 0), new Vector3(1, 0, 0), parent.GetChromaticColor(i)));
+                                    particleSystem.AddParticle(new NoteHitParticle(new Vector3(particleSpawnPoint + new Vector2(0, k / PARTICLE_SPAWN_DENSITY * Cells.CELLHEIGHT), 0), new Vector3(1, 0, 0), parent.GetChromaticColor(i)));
                             }
                         }
                     }
@@ -480,7 +484,7 @@ namespace Automatone.GUI
             {
                 foreach (NoteHitParticle particle in particleSystem.Particles.Array)
                 {
-                    parent.parent.SpriteBatch.Draw(startCell, new Rectangle((int)particle.Position.X, (int)particle.Position.Y, 2, 2), particle.Color);
+                    //parent.parent.SpriteBatch.Draw(startCell, new Rectangle((int)particle.Position.X, (int)particle.Position.Y, 2, 2), particle.Color);
                 }
             }
         }
@@ -510,6 +514,7 @@ namespace Automatone.GUI
             private const float INIT_GRID_MOVE_SPEED = 1;
             private const float GRID_MOVE_ACCELERATION = .02F;
             private const float MAX_GRID_MOVE_SPEED = 10;
+            private const float MAX_GRID_MOMENTUM = 5;
 
             private int verticalClippingStartIndex;
             private int verticalClippingEndIndex;
@@ -537,19 +542,19 @@ namespace Automatone.GUI
 
             public void RenewHorizontalClipping()
             {
-                horizontalClippingStartIndex = parent.ScreenToGridCoordinatesX(PITCH_LABEL_THICKNESS);
+                horizontalClippingStartIndex = parent.ScreenToGridCoordinatesX(Labels.PITCH_LABEL_THICKNESS);
                 horizontalClippingEndIndex = Math.Min(parent.ScreenToGridCoordinatesX(parent.parent.Window.ClientBounds.Width), parent.SongCells.GetLength(1) - 1);
             }
 
             public void RenewVerticalClipping()
             {
                 verticalClippingStartIndex = Math.Max(0, parent.ScreenToGridCoordinatesY(parent.parent.Window.ClientBounds.Height));
-                verticalClippingEndIndex = parent.ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION + TIME_LABEL_THICKNESS);
+                verticalClippingEndIndex = parent.ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
             }
 
             public void ResetGridDrawOffset()
             {
-                gridDrawOffset = new Vector2(PITCH_LABEL_THICKNESS, Automatone.CONTROLS_AND_GRID_DIVISION + TIME_LABEL_THICKNESS);
+                gridDrawOffset = new Vector2(Labels.PITCH_LABEL_THICKNESS, Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
                 RenewHorizontalClipping();
                 RenewVerticalClipping();
             }
@@ -562,10 +567,10 @@ namespace Automatone.GUI
 
             public void SetScrollLocation(int noteNumber)
             {
-                playOffset = -1 * noteNumber * CELLWIDTH;
+                playOffset = -1 * noteNumber * Cells.CELLWIDTH;
             }
 
-            public void Update()
+            public void Update(GameTime gameTime)
             {
                 if (parent.ScrollWithMidi)
                 {
@@ -584,7 +589,7 @@ namespace Automatone.GUI
 
             private void HandlePlayScrolling()
             {
-                playOffset -= parent.parent.Tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * CELLWIDTH;
+                playOffset -= parent.parent.Tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * Cells.CELLWIDTH;
                 gridDrawOffset.X = Math.Min(playOffset + CURSOR_OFFSET, 0);
                 ClampGridOffsetX();
                 RenewHorizontalClipping();
@@ -606,11 +611,11 @@ namespace Automatone.GUI
                 }
                 else if(moveVal > 0)
                 {
-                    moveVal = Math.Max(moveVal - GRID_MOVE_ACCELERATION, 0);
+                    moveVal = MathHelper.Clamp(moveVal - GRID_MOVE_ACCELERATION, 0, MAX_GRID_MOMENTUM);
                 }
                 else if (moveVal < 0)
                 {
-                    moveVal = Math.Min(moveVal + GRID_MOVE_ACCELERATION, 0);
+                    moveVal = MathHelper.Clamp(moveVal + GRID_MOVE_ACCELERATION, -MAX_GRID_MOMENTUM, 0);
                 }
 
                 gridOffsetDimension += moveVal;
@@ -630,12 +635,12 @@ namespace Automatone.GUI
 
             private void ClampGridOffsetX()
             {
-                gridDrawOffset.X = MathHelper.Clamp(gridDrawOffset.X, parent.parent.Window.ClientBounds.Width - (Math.Max(parent.SongCells.GetLength(1), (parent.parent.Window.ClientBounds.Width - PITCH_LABEL_THICKNESS) / CELLWIDTH) * CELLWIDTH), TIME_LABEL_THICKNESS);
+                gridDrawOffset.X = MathHelper.Clamp(gridDrawOffset.X, parent.parent.Window.ClientBounds.Width - (Math.Max(parent.SongCells.GetLength(1), (parent.parent.Window.ClientBounds.Width - Labels.PITCH_LABEL_THICKNESS) / Cells.CELLWIDTH) * Cells.CELLWIDTH), Labels.TIME_LABEL_THICKNESS);
             }
 
             private void ClampGridOffsetY()
             {
-                gridDrawOffset.Y = MathHelper.Clamp(gridDrawOffset.Y, parent.parent.Window.ClientBounds.Height - ((parent.SongCells.GetLength(0)) * CELLHEIGHT), Automatone.CONTROLS_AND_GRID_DIVISION + TIME_LABEL_THICKNESS);
+                gridDrawOffset.Y = MathHelper.Clamp(gridDrawOffset.Y, parent.parent.Window.ClientBounds.Height - ((parent.SongCells.GetLength(0)) * Cells.CELLHEIGHT), Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
             }
         }
     }
