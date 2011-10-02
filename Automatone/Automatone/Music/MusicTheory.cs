@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public abstract class MusicTheory
     {

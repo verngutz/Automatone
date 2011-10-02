@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Duet.Audio_System;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
+using Automatone.Theories;
 
 namespace Automatone.GUI
 {

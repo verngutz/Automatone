@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public class Note : IComparable<Note>
     {

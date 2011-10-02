@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public class Rhythm
     {
