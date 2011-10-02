@@ -5,26 +5,24 @@ namespace Automatone
 {
     public class Rhythm
     {
-        private MusicTheory theory;
         private List<double> rhythmCurve;
 
-        public Rhythm(MusicTheory theory, double timeSignatureN, double timeSignatureD, double rhythmObedience)
+        public Rhythm(MusicTheory theory)
         {
             rhythmCurve = new List<double>();
             List<double> rhythmCurveSample = new List<double>(theory.RHYTHM_CURVE_SAMPLE);
 
-            int l = rhythmCurveSample.Count;
-            int r = (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * 2 / (double)timeSignatureD);
-            int lim = (int)(timeSignatureN > 1 ? r : r * timeSignatureN / 2);
+            int oldCount = rhythmCurveSample.Count;
+            int newCount = (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * 2 / (double)InputParameters.Instance.timeSignatureD);
 
-            for (int i = 0; i < lim; i++)
+            for (int i = 0; i < newCount; i++)
             {
-                rhythmCurve.Add(rhythmCurveSample.ElementAt<double>(i*l/r));
-                rhythmCurveSample.RemoveAt(i * l / r);
-                rhythmCurveSample.Insert(i * l / r, 0.0);
+                double sampleValue = rhythmCurveSample.ElementAt<double>(i * oldCount / newCount);
+                sampleValue += (InputParameters.Instance.rhythmObedience - 1) * (sampleValue - 0.5);
+                rhythmCurve.Add(sampleValue);
+                rhythmCurveSample.RemoveAt(i * oldCount / newCount);
+                rhythmCurveSample.Insert(i * oldCount / newCount, 0.0);
             }
-
-            this.theory = theory;
         }
 
         public double[] GetRhythmCurve(int measureLength)

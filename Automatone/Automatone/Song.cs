@@ -10,12 +10,6 @@ namespace Automatone
         private int measureCount;
         public int MeasureCount { get { return measureCount; } }
 
-        private ushort tempo;
-        public ushort Tempo { get { return tempo; } }
-        private double timeSignatureN;
-        public double TimeSignatureN { get { return timeSignatureN; } }
-        private double timeSignatureD;
-        public double TimeSignatureD { get { return timeSignatureD; } }
         private int measureLength;
         public int MeasureLength { get { return measureLength; } }
         private NoteName key;
@@ -26,16 +20,14 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Song(MusicTheory theory, InputParameters inputParameters, Random rand)
+        public Song(MusicTheory theory, Random rand)
         {
+            InputParameters inputParameters = InputParameters.Instance;
+
             song = new List<Verse>();
 
-            //Music stuff
-            tempo = (ushort)(theory.MIN_TEMPO + ((inputParameters.songSpeed + (inputParameters.songSpeed * ((rand.NextDouble() - 0.5) * inputParameters.songSpeedVariance))) * (theory.MAX_TEMPO - theory.MIN_TEMPO)));
-            timeSignatureN = Math.Round(inputParameters.timeSignatureN);
-            timeSignatureD = Math.Pow(2, Math.Round(Math.Log(inputParameters.timeSignatureD) / Math.Log(2)));
-            double timeSignature = timeSignatureN / timeSignatureD;
-            measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
+            //Music data
+            measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * inputParameters.TimeSignature);
             key = new NoteName((byte)rand.Next(12));
             mode = (rand.NextDouble() > 0.4 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
 
@@ -45,13 +37,13 @@ namespace Automatone
             songLength = Math.Max(1, songLength);
 
             //generate rhythm
-            Rhythm rhythm = new Rhythm(theory, timeSignatureN, timeSignatureD, inputParameters.rhythmObedience);
+            Rhythm rhythm = new Rhythm(theory);
 
             //generate melody
-            Melody melody = new Melody(theory, inputParameters.chordalityObedience, inputParameters.tonalityObedience, inputParameters.meanPitchContiguity);
+            Melody melody = new Melody(theory);
             
             //generate harmony
-            Harmony harmony = new Harmony(theory, rand, key, mode, inputParameters.seventhChordProbability);
+            Harmony harmony = new Harmony(theory, rand, key, mode);
 
             //generate parts
             List<Part> parts = new List<Part>();
@@ -64,7 +56,7 @@ namespace Automatone
             {
                 rhythmNumber = (rand.NextDouble() < inputParameters.homophony ? rhythmNumber : rand.Next(1, partCount));
                 melodyNumber = (rand.NextDouble() < inputParameters.homophony ? melodyNumber : rand.Next(1, partCount));
-                parts.Add(new Part(theory, rand, inputParameters, rhythm, rhythmNumber, melody, melodyNumber, measureLength));
+                parts.Add(new Part(theory, rand, rhythm, rhythmNumber, melody, melodyNumber, measureLength));
             }
 
             //Manual part creation
@@ -102,7 +94,7 @@ namespace Automatone
 		    for(int i = 0; i < 1 + 2 * inputParameters.structuralVariance * songLength; i++)
             {
                 System.Console.Write("Verse " + i); //remove later
-                verses.Add(new Verse(theory, inputParameters, rand, parts, harmony, songLength, rhythmSeeds, melodySeeds));
+                verses.Add(new Verse(theory, rand, parts, harmony, songLength, rhythmSeeds, melodySeeds));
 		    }
 
             System.Console.Write("Final song:"); //remove later

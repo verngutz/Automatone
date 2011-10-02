@@ -8,7 +8,6 @@ namespace Automatone
     {
         private MusicTheory theory;
         private Random rand;
-        private InputParameters inputParameters;
         private Rhythm rhythm;
         private int rhythmNumber;
         private Melody melody;
@@ -22,11 +21,12 @@ namespace Automatone
         private bool forceChord;
         private bool forceDiatonic;
 
-        public Part(MusicTheory theory, Random rand, InputParameters inputParameters, Rhythm rhythm, int rhythmNumber, Melody melody, int melodyNumber, int measureLength)
+        public Part(MusicTheory theory, Random rand, Rhythm rhythm, int rhythmNumber, Melody melody, int melodyNumber, int measureLength)
         {
+            InputParameters inputParameters = InputParameters.Instance;
+
             this.theory = theory;
             this.rand = rand;
-            this.inputParameters = inputParameters;
             this.rhythm = rhythm;
             this.rhythmNumber = rhythmNumber;
             this.melody = melody;
@@ -46,8 +46,8 @@ namespace Automatone
             }
         }
 
-        public Part(MusicTheory theory, Random rand, InputParameters inputParameters, Rhythm rhythm, int rhythmNumber, Melody melody, int melodyNumber, int measureLength, double rhythmCrowdedness, double noteLengthAdjustment, double regularity, int lowerPitchLimit, int octaveRange, bool forceChord, bool forceDiatonic)
-            : this(theory, rand, inputParameters, rhythm, rhythmNumber, melody, melodyNumber, measureLength)
+        public Part(MusicTheory theory, Random rand, Rhythm rhythm, int rhythmNumber, Melody melody, int melodyNumber, int measureLength, double rhythmCrowdedness, double noteLengthAdjustment, double regularity, int lowerPitchLimit, int octaveRange, bool forceChord, bool forceDiatonic)
+            : this(theory, rand, rhythm, rhythmNumber, melody, melodyNumber, measureLength)
         {
             this.rhythmCrowdedness = rhythmCrowdedness;
             this.noteLengthAdjustment = noteLengthAdjustment;
@@ -60,6 +60,8 @@ namespace Automatone
 
         public List<Note> GenerateNotes(List<int> rhythmSeeds, List<int> melodySeeds, List<NoteName> chord, List<NoteName> diatonic)
         {
+            InputParameters inputParameters = InputParameters.Instance;
+
             List<Note> notes = new List<Note>();
             double[] rhythmCurve = rhythm.GetRhythmCurve(measureLength);
             double[] melodyBias = melody.GetMelodyBias();

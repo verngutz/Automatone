@@ -7,7 +7,6 @@ namespace Automatone
     public class Harmony
     {
         private Random random;
-        private MusicTheory theory;
 
         private NoteName key;
         private MusicTheory.SCALE_MODE mode;
@@ -16,13 +15,12 @@ namespace Automatone
 
         private List<NoteName> diatonicScale;
 
-	    public Harmony (MusicTheory theory, Random random, NoteName key, MusicTheory.SCALE_MODE mode, double seventhChordProbability) 
+	    public Harmony (MusicTheory theory, Random random, NoteName key, MusicTheory.SCALE_MODE mode) 
         {
             this.random = random;
-            this.theory = theory;
             this.key = key;
             this.mode = mode;
-            this.seventhChordProbability = seventhChordProbability;
+            this.seventhChordProbability = InputParameters.Instance.seventhChordProbability;
             diatonicScale = createDiatonicScale();
         }
 	
@@ -83,7 +81,7 @@ namespace Automatone
                     break;
                 case MusicTheory.CADENCE_NAMES.DECEPTIVE:
                     intervals.Add(4);
-                    intervals.Add(circle[random.Next(1,circle.Length)]);
+                    intervals.Add(circle[random.Next(1, circle.Length)]);
                     break;
                 default:
                     intervals.Add(0);

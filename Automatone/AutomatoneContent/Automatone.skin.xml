@@ -10,8 +10,6 @@
 	    Resources used to draw GUI elements using this skin
 	  -->
 	  <resources>
-	    <font name="title" contentPath="Title" />
-	    <font name="default" contentPath="Font" />
 	    <bitmap name="randomize" contentPath="randomize"/>
       <bitmap name="randomizeHover" contentPath="randomizeHover"/>
       <bitmap name="randomizeClicked" contentPath="randomizeClicked"/>
@@ -41,7 +39,6 @@
 	      Frame used for a label
 	    -->
 	    <frame name="label">
-	      <text font="default" hplacement="left" vplacement="center" yoffset="15" color="#3F3F3F" />
 	    </frame>
 	
 	    <!--

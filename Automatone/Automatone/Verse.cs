@@ -16,8 +16,10 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Verse(MusicTheory theory, InputParameters inputParameters, Random rand, List<Part> parts, Harmony harmony, int songLength, List<int> rhythmSeeds, List<int> melodySeeds)
+        public Verse(MusicTheory theory, Random rand, List<Part> parts, Harmony harmony, int songLength, List<int> rhythmSeeds, List<int> melodySeeds)
         {
+            InputParameters inputParameters = InputParameters.Instance;
+
             //Calculate verse length
             verseLength = (int)(theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength);
             verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * inputParameters.verseLengthVariance));
@@ -83,7 +85,7 @@ namespace Automatone
 			    {
 				    if(r < MusicTheory.CADENCES[aboveCurve][j])
 				    {
-                        verse.Add(new Phrase(theory, inputParameters, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
+                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
                         addDefaultPhrase = false;
 					    break;
 				    }
@@ -94,7 +96,7 @@ namespace Automatone
 			    }
 			    if(addDefaultPhrase)
 			    {
-                    verse.Add(new Phrase(theory, inputParameters, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
+                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
 			    }
             }
 

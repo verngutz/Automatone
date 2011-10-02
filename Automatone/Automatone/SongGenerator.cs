@@ -11,13 +11,13 @@ namespace Automatone
         private const byte START_OFFSET = 21;
         public static String WriteSong(Automatone automatone)
         {
-            NoteThread thread = new NoteThread(automatone.GridPanel.SongCells, automatone.MeasureLength, automatone.TimeSignatureN / automatone.TimeSignatureD);
+            NoteThread thread = new NoteThread(automatone.GridPanel.SongCells, automatone.MeasureLength, InputParameters.Instance.TimeSignature);
             return thread.ToString();
         }
-	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory, InputParameters inputParameters)
+	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory)
         {
-            Song s = new Song(theory, inputParameters, random);
-		    NoteThread thread = new NoteThread(s.Notes, s.TimeSignatureN / s.TimeSignatureD);
+            Song s = new Song(theory, random);
+		    NoteThread thread = new NoteThread(s.Notes, InputParameters.Instance.TimeSignature);
             int gridWidth = s.MeasureCount * s.MeasureLength;
             CellState[,] grid = new CellState[Automatone.PIANO_SIZE,gridWidth];
             foreach (List<Note> nts in s.Notes)
@@ -35,10 +35,6 @@ namespace Automatone
                 }
             }
             automatone.MeasureLength = s.MeasureLength;
-            automatone.TimeSignatureN = s.TimeSignatureN;
-            automatone.TimeSignatureD = s.TimeSignatureD;
-            automatone.Tempo = s.Tempo;
-            //automatone.Song = thread.ToString(); //do we still need this?
             return grid;
 	    }
 

@@ -139,7 +139,7 @@ namespace Automatone.GUI
             startCell = parent.Content.Load<Texture2D>("lightbox");
             holdCell = parent.Content.Load<Texture2D>("holdbox");
             pitchTimeLabelBackground = parent.Content.Load<Texture2D>("BlackPixel");
-            labelFont = parent.Content.Load<SpriteFont>("Font");
+            labelFont = parent.Content.Load<SpriteFont>("LabelFont");
         }
 
         protected override void UnloadContent()
@@ -272,7 +272,7 @@ namespace Automatone.GUI
             {
                 if (parent.ScrollWithMidi)
                 {
-                    parent.playOffset -= parent.parent.Tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / 14400.0f * CELLWIDTH;
+                    parent.playOffset -= InputParameters.Instance.tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / 14400.0f * CELLWIDTH;
                     parent.GridOffsetX = Math.Min(parent.playOffset + 100, 0);
                 }
                 else if (parent.parent.IsActive)
@@ -477,6 +477,8 @@ namespace Automatone.GUI
 
             private void DrawPitchLabel()
             {
+                bool sharpLabels = true;
+
                 parent.parent.SpriteBatch.Draw(pitchTimeLabelBackground, pitchLabelRectangle, Color.White);
 
                 for (int i = parent.visibleStartI; i <= parent.visibleEndI; i++)
@@ -489,13 +491,13 @@ namespace Automatone.GUI
                             letter = "C";
                             break;
                         case 1:
-                            letter = "C#";
+                            letter = (sharpLabels ? "C♯" : "D♭");
                             break;
                         case 2:
                             letter = "D";
                             break;
                         case 3:
-                            letter = "D#";
+                            letter = (sharpLabels ? "D♯" : "E♭");
                             break;
                         case 4:
                             letter = "E";
@@ -504,19 +506,19 @@ namespace Automatone.GUI
                             letter = "F";
                             break;
                         case 6:
-                            letter = "F#";
+                            letter = (sharpLabels ? "F♯" : "G♭");
                             break;
                         case 7:
                             letter = "G";
                             break;
                         case 8:
-                            letter = "G#";
+                            letter = (sharpLabels ? "G♯" : "A♭");
                             break;
                         case 9:
                             letter = "A";
                             break;
                         case 10:
-                            letter = "A#";
+                            letter = (sharpLabels ? "A♯" : "B♭");
                             break;
                         case 11:
                             letter = "B";
@@ -541,7 +543,7 @@ namespace Automatone.GUI
                     {
                         if (j % parent.parent.MeasureLength == k * Automatone.SUBBEATS_PER_WHOLE_NOTE / 4)
                         {
-                            parent.parent.SpriteBatch.DrawString(parent.labelFont, "|", loc, Color.Navy);
+                            parent.parent.SpriteBatch.DrawString(parent.labelFont, "♩", loc, Color.Navy);
                         }
                     }
                 }

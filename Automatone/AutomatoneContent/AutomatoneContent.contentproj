@@ -42,13 +42,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Title.spritefont">
-      <Name>Title</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="audio\GrandPiano\PianoA2_4x.wav">
       <Name>PianoA2_4x</Name>
       <Importer>WavImporter</Importer>
@@ -322,8 +315,8 @@
       <Importer>XACTPatchImporter</Importer>
       <Processor>XACTPatchProcessor</Processor>
     </Compile>
-    <Compile Include="Font.spritefont">
-      <Name>Font</Name>
+    <Compile Include="LabelFont.spritefont">
+      <Name>LabelFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

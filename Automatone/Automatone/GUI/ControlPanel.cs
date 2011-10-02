@@ -101,11 +101,7 @@ namespace Automatone.GUI
         private void NewButtonPressed(object sender, EventArgs e)
         {
             automatone.StopSongPlaying();
-            automatone.Tempo = 120;
-            automatone.TimeSignatureN = 4;
-            automatone.TimeSignatureD = 4;
-            double timeSignature = automatone.TimeSignatureN / automatone.TimeSignatureD;
-            automatone.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
+            automatone.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
             automatone.GridPanel.SongCells = new CellState[Automatone.PIANO_SIZE, 45];
         }
 
@@ -127,9 +123,6 @@ namespace Automatone.GUI
                     automatone.MeasureLength = (int)formatter.Deserialize(loadStream);
                     automatone.Song = (string)formatter.Deserialize(loadStream);
                     automatone.GridPanel.SongCells = (CellState[,])formatter.Deserialize(loadStream);
-                    automatone.Tempo = (ushort)formatter.Deserialize(loadStream);
-                    automatone.TimeSignatureD = (double)formatter.Deserialize(loadStream);
-                    automatone.TimeSignatureN = (double)formatter.Deserialize(loadStream);
                     loadStream.Close();
                 }
             }
@@ -155,9 +148,6 @@ namespace Automatone.GUI
                         automatone.RewriteSong();
                         formatter.Serialize(saveStream, automatone.Song);
                         formatter.Serialize(saveStream, automatone.GridPanel.SongCells);
-                        formatter.Serialize(saveStream, automatone.Tempo);
-                        formatter.Serialize(saveStream, automatone.TimeSignatureD);
-                        formatter.Serialize(saveStream, automatone.TimeSignatureN);
                         saveStream.Close();
                     }
                 }
@@ -190,11 +180,12 @@ namespace Automatone.GUI
         private void RandomizeButtonPressed(object sender, EventArgs e)
         {
             automatone.StopSongPlaying();
+            GetUserInput();
 
 #if USESEED
-            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), GetUserInput());
+            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory());
 #else
-            automatone.GridPanel.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), GetUserInput());
+            automatone.GridPanel.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory());
 #endif      
         }
 
@@ -203,66 +194,65 @@ namespace Automatone.GUI
             automatone.StopSongPlaying();
         }
 
-        private InputParameters GetUserInput()
+        private void GetUserInput()
         {
-            InputParameters input = InputParameters.Instance;
+            InputParameters inputParameters = InputParameters.Instance;
 
             //Song Parameters
-            input.songSpeed = 0.4;
-            input.songSpeedVariance = 0.5;
-            input.timeSignatureN = 3.0;
-            input.timeSignatureD = 4.0;
-            input.meanSongLength = 0.5;
-            input.structuralVariance = 0.2;
-            input.songRhythmVariance = 0.5;
-            input.songMelodyVariance = 0.5;
-            input.songLengthVariance = 0.5;
+            inputParameters.tempo = 120;
+            inputParameters.timeSignatureN = 4;
+            inputParameters.timeSignatureD = 4;
+
+            //Song Parameters
+            inputParameters.meanSongLength = 0.5;
+            inputParameters.structuralVariance = 0.5;
+            inputParameters.songRhythmVariance = 0.5;
+            inputParameters.songMelodyVariance = 0.5;
+            inputParameters.songLengthVariance = 0.5;
 
             //Verse Parameters
-            input.meanVerseLength = 0.5;
-            input.verseLengthVariance = 0.5;
-            input.verseRhythmVariance = 0.5;
-            input.verseMelodyVariance = 0.5;
+            inputParameters.meanVerseLength = 0.5;
+            inputParameters.verseLengthVariance = 0.5;
+            inputParameters.verseRhythmVariance = 0.5;
+            inputParameters.verseMelodyVariance = 0.5;
 
             //Phrase Parameters
-            input.meanPhraseLength = 0.5;
-            input.phraseLengthVariance = 0.5;
-            input.phraseRhythmVariance = 0.5;
-            input.phraseMelodyVariance = 0.5;
+            inputParameters.meanPhraseLength = 0.5;
+            inputParameters.phraseLengthVariance = 0.5;
+            inputParameters.phraseRhythmVariance = 0.5;
+            inputParameters.phraseMelodyVariance = 0.5;
 
             //Measure Parameters
-            input.measureRhythmVariance = 0.5;
-            input.measureMelodyVariance = 0.5;
+            inputParameters.measureRhythmVariance = 0.5;
+            inputParameters.measureMelodyVariance = 0.5;
             
             //Part Parameters
-            input.homophony = 1;
-            input.polyphony = 0.4;
-            input.beatDefinition = 0.5;
+            inputParameters.homophony = 1;
+            inputParameters.polyphony = 0.4;
+            inputParameters.beatDefinition = 0.5;
             //Per-part Parameters
-            input.meanPartRhythmCrowdedness = 0.5;
-            input.partRhythmCrowdednessVariance = 0.5;
-            input.partNoteLengthVariance = 0.5;
-            input.meanPartOctaveRange = 0.5;
-            input.partOctaveRangeVariance = 0.5;
-            input.forceChordChance = 0;
-            input.forceDiatonicChance = 0;
+            inputParameters.meanPartRhythmCrowdedness = 0.5;
+            inputParameters.partRhythmCrowdednessVariance = 0.5;
+            inputParameters.partNoteLengthVariance = 0.5;
+            inputParameters.meanPartOctaveRange = 0.5;
+            inputParameters.partOctaveRangeVariance = 0.5;
+            inputParameters.forceChordChance = 0;
+            inputParameters.forceDiatonicChance = 0;
 
             //Note Parameters
-            input.meanNoteLength = 0.5;
-            input.noteLengthVariance = 0.5;
+            inputParameters.meanNoteLength = 0.5;
+            inputParameters.noteLengthVariance = 0.5;
 
             //Rhythm
-            input.rhythmObedience = 0.8;
+            inputParameters.rhythmObedience = 0.8;
         
             //Melody
-            input.chordalityObedience = 0.95;
-            input.tonalityObedience = 0.95;
-            input.meanPitchContiguity = 0.5;
+            inputParameters.chordalityObedience = 0.95;
+            inputParameters.tonalityObedience = 0.95;
+            inputParameters.meanPitchContiguity = 0.5;
 
             //Harmony
-            input.seventhChordProbability = 0.1;
-
-            return input;
+            inputParameters.seventhChordProbability = 0.1;
         }
     }
 }

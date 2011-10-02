@@ -9,8 +9,10 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Measure(MusicTheory theory, InputParameters inputParameters, Random rand, List<Part> parts, int phraseLength, List<int> rhythmSeeds, List<int> melodySeeds, List<NoteName> chord, List<NoteName> diatonic)
+        public Measure(MusicTheory theory, Random rand, List<Part> parts, int phraseLength, List<int> rhythmSeeds, List<int> melodySeeds, List<NoteName> chord, List<NoteName> diatonic)
         {
+            InputParameters inputParameters = InputParameters.Instance;
+
             notes = new List<List<Note>>();
 
             //Select seeds

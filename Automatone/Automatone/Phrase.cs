@@ -16,8 +16,10 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, InputParameters inputParameters, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, int verseLength, List<int> rhythmSeeds, List<int> melodySeeds)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, int verseLength, List<int> rhythmSeeds, List<int> melodySeeds)
         {
+            InputParameters inputParameters = InputParameters.Instance;
+
             phrase = new List<Measure>();
 
             //Calculate phrase length
@@ -51,7 +53,7 @@ namespace Automatone
 
             for (int i = 0; i < phraseLength; i++)
             {
-                phrase.Add(new Measure(theory, inputParameters, rand, parts, phraseLength, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), diatonic));
+                phrase.Add(new Measure(theory, rand, parts, phraseLength, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), diatonic));
             }
 
             notes = new List<List<Note>>();
