@@ -214,7 +214,7 @@ namespace Automatone
             sw.WriteLine("0 TimeSig " + InputParameters.Instance.timeSignatureN + "/" + InputParameters.Instance.timeSignatureD + " 24 8");
             //sw.WriteLine("0 TimeSig 4/4 24 8");
             sw.WriteLine("0 Tempo " + (TEMPO_DIVIDEND / InputParameters.Instance.tempo));
-            sw.WriteLine("0 KeySig 0 major");
+            //sw.WriteLine("0 KeySig 0 major");
             sw.WriteLine("0 Meta TrkEnd");
             sw.WriteLine("TrkEnd");
             sw.Write(Song);
