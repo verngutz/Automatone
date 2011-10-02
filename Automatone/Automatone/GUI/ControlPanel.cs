@@ -29,7 +29,7 @@ namespace Automatone.GUI
         
         private void InitializeComponent()
         {
-            Bounds = new UniRectangle(0, 0, automatone.Window.ClientBounds.Width, automatone.Window.ClientBounds.Height);
+            Bounds = new UniRectangle(0, 0, automatone.Window.ClientBounds.Width, Automatone.CONTROLS_AND_GRID_DIVISION);
             EnableDragging = false;
 
             // Construct children
@@ -107,6 +107,7 @@ namespace Automatone.GUI
             double timeSignature = automatone.TimeSignatureN / automatone.TimeSignatureD;
             automatone.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * timeSignature);
             automatone.GridPanel.SongCells = new CellState[Automatone.PIANO_SIZE, 45];
+            GridPanel.Instance.ResetGridView();
         }
 
         private void LoadButtonPressed(object sender, EventArgs e)
@@ -133,6 +134,8 @@ namespace Automatone.GUI
                     loadStream.Close();
                 }
             }
+
+            GridPanel.Instance.ResetGridView();
         }
 
         private void SaveButtonPressed(object sender, EventArgs e)
@@ -190,12 +193,12 @@ namespace Automatone.GUI
         private void RandomizeButtonPressed(object sender, EventArgs e)
         {
             automatone.StopSongPlaying();
-
 #if USESEED
             automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory(), GetUserInput());
 #else
             automatone.GridPanel.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory(), GetUserInput());
 #endif      
+            GridPanel.Instance.ResetGridView();
         }
 
         private void StopButtonPressed(object sender, EventArgs e)
