@@ -85,6 +85,8 @@ namespace Automatone.Music
         public const int PERFECT_OCTAVE_INTERVAL = 12;
         public const int AUGMENTED_OCTAVE_INTERVAL = 13;
 
+        public const int OCTAVE_SIZE = 12;
+
         public const int WHOLE_STEP = 2;
         public const int HALF_STEP = 1;
 

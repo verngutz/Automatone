@@ -18,6 +18,7 @@ namespace Automatone.Music
 
         public Verse(MusicTheory theory, Random rand, List<Part> parts, Harmony harmony, int songLength, List<int> rhythmSeeds, List<int> melodySeeds)
         {
+            //Get instance of InputParameters
             InputParameters inputParameters = InputParameters.Instance;
 
             //Calculate verse length
@@ -27,7 +28,7 @@ namespace Automatone.Music
 
             System.Console.WriteLine(" length " + verseLength); //remove later
 
-            //Select seeds
+            //Select seeds for rhythm and melody
             double rhythmSeedLength = 1 + inputParameters.measureRhythmVariance * (parts.Count);
             rhythmSeedLength += inputParameters.phraseRhythmVariance * (theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * rhythmSeedLength);
             rhythmSeedLength += inputParameters.verseRhythmVariance * (verseLength * rhythmSeedLength);
@@ -36,7 +37,6 @@ namespace Automatone.Music
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
-
             double melodySeedLength = 1 + inputParameters.measureMelodyVariance * (parts.Count);
             melodySeedLength += inputParameters.phraseMelodyVariance * (theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * melodySeedLength);
             melodySeedLength += inputParameters.verseMelodyVariance * (verseLength * melodySeedLength);
@@ -81,26 +81,26 @@ namespace Automatone.Music
 			    }
 			    double r = rand.NextDouble() * sum;
                 bool addDefaultPhrase = true;
-			    for(int j = 0; j < 4; j++)
-			    {
-				    if(r < MusicTheory.CADENCES[aboveCurve][j])
-				    {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (r < MusicTheory.CADENCES[aboveCurve][j])
+                    {
                         verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
                         addDefaultPhrase = false;
-					    break;
-				    }
-				    else
-				    {
-					    r -= MusicTheory.CADENCES[aboveCurve][j];
-				    }
-			    }
-			    if(addDefaultPhrase)
+                        break;
+                    }
+                    else
+                    {
+                        r -= MusicTheory.CADENCES[aboveCurve][j];
+                    }
+                }
+                if (addDefaultPhrase)
 			    {
                     verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
 			    }
             }
 
-            //make note lists
+            //Build notes from phrases
             measureCount = 0;
             notes = new List<List<Note>>();
             for (int i = 0; i < verse.Count; i++)

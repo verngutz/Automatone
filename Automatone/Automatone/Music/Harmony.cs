@@ -14,6 +14,7 @@ namespace Automatone.Music
         private double seventhChordProbability;
 
         private List<NoteName> diatonicScale;
+        public List<NoteName> DiatonicScale { get { return diatonicScale; } }
 
 	    public Harmony (MusicTheory theory, Random random, NoteName key, MusicTheory.SCALE_MODE mode) 
         {
@@ -27,9 +28,15 @@ namespace Automatone.Music
 	    private List<NoteName> createDiatonicScale()
 	    {
 		    List<NoteName> scale = new List<NoteName>();
+
+            //Add white note
 		    scale.Add(key);
+
+            //Get note value of key
             int noteVal;
             MusicTheory.CHROMATIC_EQUIVALENTS.TryGetValue(key, out noteVal);
+
+            //Create array of intervals
             int[] intervals;
             MusicTheory.SCALE_INTERVALS.TryGetValue(mode,out intervals);
             for (int i = 0; i < intervals.Length; i++)
@@ -40,13 +47,17 @@ namespace Automatone.Music
 		    return scale;
 	    }
 	
-	    private List<NoteName> createChord(NoteName root, int[] intervals)
+	    private List<NoteName> createChord(NoteName root, int[] otherNotes)
 	    {
-		    List<NoteName> chord = new List<NoteName>();
-		    chord.Add(root);
-            for (int i = 1; i < 12; i++)
+            List<NoteName> chord = new List<NoteName>();
+
+            //Add root note
+            chord.Add(root);
+            
+            //Add other notes
+            for (int i = 1; i < MusicTheory.OCTAVE_SIZE; i++)
             {
-                if (intervals.Contains<int>(i))
+                if (otherNotes.Contains<int>(i))
                 {
                     chord.Add(diatonicScale[(diatonicScale.IndexOf(root) + i) % diatonicScale.Count]);
                 }
@@ -58,9 +69,11 @@ namespace Automatone.Music
         {
             List<int> intervals = new List<int>();
 
+            //Get circle progression
             int[] circle;
             MusicTheory.CIRCLE_PROGRESSION.TryGetValue(mode, out circle);
 
+            //Select last chords of progression based on cadence
             switch (cadence)
             {
                 case MusicTheory.CADENCE_NAMES.HALF:
@@ -87,15 +100,20 @@ namespace Automatone.Music
                     intervals.Add(0);
                     break;
             }
+
+            //Add chords to progression to fill phrase
             while (intervals.Count < phraseLength)
             {
                 intervals.Insert(0, circle[(circle.ToList<int>().IndexOf(intervals.First<int>()) + circle.Length - (random.NextDouble() < 0.1 ? 0 : 1)) % circle.Length]);
             }
+
+            //Trim progression to fit phrase
             while (intervals.Count > phraseLength)
             {
                 intervals.RemoveAt(0);
             }
 
+            //Build chord progression
             List<List<NoteName>> progression = new List<List<NoteName>>();
             foreach (int i in intervals)
             {
@@ -103,11 +121,6 @@ namespace Automatone.Music
             }
 
             return progression;
-        }
-
-        public List<NoteName> GetDiatonicScale()
-        {
-            return diatonicScale;
         }
     }
 }

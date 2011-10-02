@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Automatone.Music;
 using Nuclex.Graphics.SpecialEffects.Particles;
 
 namespace Automatone.GUI
@@ -198,7 +199,7 @@ namespace Automatone.GUI
 
         private Color GetChromaticColor(int pitch)
         {
-            int chromaticIndex = pitch % 12;
+            int chromaticIndex = pitch % MusicTheory.OCTAVE_SIZE;
             switch (chromaticIndex)
             {
                 case 0:
@@ -485,7 +486,7 @@ namespace Automatone.GUI
                 {
                     Vector2 loc = new Vector2(2, (int)((parent.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT + parent.gridOffset.Y));
                     string letter = "";
-                    switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + 12) % 12)
+                    switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + MusicTheory.OCTAVE_SIZE) % MusicTheory.OCTAVE_SIZE)
                     {
                         case 0:
                             letter = "C";

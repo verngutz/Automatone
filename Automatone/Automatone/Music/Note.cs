@@ -11,7 +11,7 @@ namespace Automatone.Music
         private int startMeasure;
         private double startBeat;
 
-        public byte MidiNumber { get { return (byte)(noteName.ChromaticIndex + (octave + 1) * 12); } }
+        public byte MidiNumber { get { return (byte)(noteName.ChromaticIndex + (octave + 1) * MusicTheory.OCTAVE_SIZE); } }
 
         //lowest note is a0 = 21
         //highest note is c8 = 108

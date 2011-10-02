@@ -237,8 +237,6 @@ namespace Automatone.GUI
             inputParameters.partNoteLengthVariance = 0.5;
             inputParameters.meanPartOctaveRange = 0.5;
             inputParameters.partOctaveRangeVariance = 0.5;
-            inputParameters.forceChordChance = 0;
-            inputParameters.forceDiatonicChance = 0;
 
             //Note Parameters
             inputParameters.meanNoteLength = 0.5;

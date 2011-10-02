@@ -44,8 +44,6 @@ namespace Automatone
         public double partNoteLengthVariance = 0.5;
         public double meanPartOctaveRange = 0.5;
         public double partOctaveRangeVariance = 0.5;
-        public double forceChordChance = 0;
-        public double forceDiatonicChance = 0;
 
         //Note Parameters
         public double meanNoteLength = 0.5;
