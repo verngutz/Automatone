@@ -4,9 +4,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
 using Nuclex.Graphics.SpecialEffects.Particles;
+
+using Automatone.Music;
 
 namespace Automatone.GUI
 {
@@ -119,7 +120,7 @@ namespace Automatone.GUI
 
         private Color GetChromaticColor(int pitch)
         {
-            int chromaticIndex = pitch % 12;
+            int chromaticIndex = pitch % MusicTheory.OCTAVE_SIZE;
             switch (chromaticIndex)
             {
                 case 0:
@@ -342,7 +343,7 @@ namespace Automatone.GUI
             public void LoadContent()
             {
                 pitchTimeLabelBackground = parent.parent.Content.Load<Texture2D>("BlackPixel");
-                labelFont = parent.parent.Content.Load<SpriteFont>("Font");
+                labelFont = parent.parent.Content.Load<SpriteFont>("LabelFont");
             }
 
             public void Dispose()
@@ -361,25 +362,27 @@ namespace Automatone.GUI
 
             private void DrawPitchLabel()
             {
+                bool sharpLabels = true;
+
                 parent.parent.SpriteBatch.Draw(pitchTimeLabelBackground, pitchLabelRectangle, Color.White);
 
                 for (int i = parent.navigators.VerticalClippingStartIndex; i <= parent.navigators.VerticalClippingEndIndex; i++)
                 {
                     Vector2 loc = new Vector2(2, (int)((parent.SongCells.GetLength(0) - 1 - i) * Cells.CELLHEIGHT + parent.navigators.GridDrawOffsetY));
                     string letter = "";
-                    switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + 12) % 12)
+                    switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + MusicTheory.OCTAVE_SIZE) % MusicTheory.OCTAVE_SIZE)
                     {
                         case 0:
                             letter = "C";
                             break;
                         case 1:
-                            letter = "C#";
+                            letter = (sharpLabels ? "C♯" : "D♭");
                             break;
                         case 2:
                             letter = "D";
                             break;
                         case 3:
-                            letter = "D#";
+                            letter = (sharpLabels ? "D♯" : "E♭");
                             break;
                         case 4:
                             letter = "E";
@@ -388,19 +391,19 @@ namespace Automatone.GUI
                             letter = "F";
                             break;
                         case 6:
-                            letter = "F#";
+                            letter = (sharpLabels ? "F♯" : "G♭");
                             break;
                         case 7:
                             letter = "G";
                             break;
                         case 8:
-                            letter = "G#";
+                            letter = (sharpLabels ? "G♯" : "A♭");
                             break;
                         case 9:
                             letter = "A";
                             break;
                         case 10:
-                            letter = "A#";
+                            letter = (sharpLabels ? "A♯" : "B♭");
                             break;
                         case 11:
                             letter = "B";
@@ -425,7 +428,7 @@ namespace Automatone.GUI
                     {
                         if (j % parent.parent.MeasureLength == k * Automatone.SUBBEATS_PER_WHOLE_NOTE / 4)
                         {
-                            parent.parent.SpriteBatch.DrawString(labelFont, "|", loc, Color.Navy);
+                            parent.parent.SpriteBatch.DrawString(labelFont, "♩", loc, Color.Navy);
                         }
                     }
                 }
@@ -589,7 +592,7 @@ namespace Automatone.GUI
 
             private void HandlePlayScrolling()
             {
-                playOffset -= parent.parent.Tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * Cells.CELLWIDTH;
+                playOffset -= InputParameters.Instance.tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * Cells.CELLWIDTH;
                 gridDrawOffset.X = Math.Min(playOffset + CURSOR_OFFSET, 0);
                 ClampGridOffsetX();
                 RenewHorizontalClipping();

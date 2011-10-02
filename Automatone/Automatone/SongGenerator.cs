@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Automatone.Music;
 
 namespace Automatone
 {
@@ -11,34 +11,30 @@ namespace Automatone
         private const byte START_OFFSET = 21;
         public static String WriteSong(Automatone automatone)
         {
-            NoteThread thread = new NoteThread(automatone.GridPanel.SongCells, automatone.MeasureLength, automatone.TimeSignatureN / automatone.TimeSignatureD);
+            NoteThread thread = new NoteThread(automatone.GridPanel.SongCells, automatone.MeasureLength, InputParameters.Instance.TimeSignature);
             return thread.ToString();
         }
-	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory, InputParameters inputParameters)
+	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory)
         {
-            Song s = new Song(theory, inputParameters, random);
-		    NoteThread thread = new NoteThread(s.Notes, s.TimeSignatureN / s.TimeSignatureD);
+            Song s = new Song(theory, random);
+		    NoteThread thread = new NoteThread(s.Notes, InputParameters.Instance.TimeSignature);
             int gridWidth = s.MeasureCount * s.MeasureLength;
             CellState[,] grid = new CellState[Automatone.PIANO_SIZE,gridWidth];
             foreach (List<Note> nts in s.Notes)
             {
                 foreach (Note n in nts)
                 {
-                    grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE, gridWidth - 1)] = CellState.START;
+                    grid[n.GetOctave() * MusicTheory.OCTAVE_SIZE + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE, gridWidth - 1)] = CellState.START;
                     for (int i = 1; i < n.GetRemainingDuration() * Automatone.SUBBEATS_PER_WHOLE_NOTE; i++)
                     {
-                        if (grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] == CellState.SILENT)
+                        if (grid[n.GetOctave() * MusicTheory.OCTAVE_SIZE + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] == CellState.SILENT)
                         {
-                            grid[n.GetOctave() * 12 + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] = CellState.HOLD;
+                            grid[n.GetOctave() * MusicTheory.OCTAVE_SIZE + n.GetNoteName().ChromaticIndex - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER, (int)Math.Min(n.GetStartMeasure() * s.MeasureLength + n.GetStartBeat() * Automatone.SUBBEATS_PER_WHOLE_NOTE + i, gridWidth - 1)] = CellState.HOLD;
                         }
                     }
                 }
             }
             automatone.MeasureLength = s.MeasureLength;
-            automatone.TimeSignatureN = s.TimeSignatureN;
-            automatone.TimeSignatureD = s.TimeSignatureD;
-            automatone.Tempo = s.Tempo;
-            //automatone.Song = thread.ToString(); //do we still need this?
             return grid;
 	    }
 
@@ -73,7 +69,7 @@ namespace Automatone
                                 duration += Automatone.getBeatResolution();
                                 k++;
                             }
-                            this.notes.Add(new Note(new NoteName((byte)((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) % 12)), (byte)((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / 12), duration, (int)(j / measureLength), (j % measureLength) * Automatone.getBeatResolution()));
+                            this.notes.Add(new Note(new NoteName((byte)((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) % MusicTheory.OCTAVE_SIZE)), (byte)((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / MusicTheory.OCTAVE_SIZE), duration, (int)(j / measureLength), (j % measureLength) * Automatone.getBeatResolution()));
                         }
                     }
                 }

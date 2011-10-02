@@ -1,4 +1,4 @@
-﻿namespace Automatone
+﻿namespace Automatone.Music
 {
     public class NoteName
     {

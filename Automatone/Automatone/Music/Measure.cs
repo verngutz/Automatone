@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public class Measure
     {
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Measure(MusicTheory theory, InputParameters inputParameters, Random rand, List<Part> parts, int phraseLength, List<int> rhythmSeeds, List<int> melodySeeds, List<NoteName> chord, List<NoteName> diatonic)
+        public Measure(MusicTheory theory, Random rand, List<Part> parts, int phraseLength, List<int> rhythmSeeds, List<int> melodySeeds, List<NoteName> chord, List<NoteName> diatonic)
         {
+            //Get instance of InputParameters
+            InputParameters inputParameters = InputParameters.Instance;
+
             notes = new List<List<Note>>();
 
-            //Select seeds
+            //Select seeds for rhythm and melody
             List<int> selectedRhythmSeeds = new List<int>();
             for (int i = 0; i < 1 + inputParameters.measureRhythmVariance * (parts.Count); i++)
             {
@@ -25,6 +28,7 @@ namespace Automatone
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }
 
+            //Build notes from parts
             foreach (Part prt in parts)
             {
                 notes.Add(prt.GenerateNotes(selectedRhythmSeeds, selectedMelodySeeds, chord, diatonic));

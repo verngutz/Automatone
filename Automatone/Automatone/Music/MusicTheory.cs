@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public abstract class MusicTheory
     {
@@ -85,10 +85,12 @@ namespace Automatone
         public const int PERFECT_OCTAVE_INTERVAL = 12;
         public const int AUGMENTED_OCTAVE_INTERVAL = 13;
 
+        public const int OCTAVE_SIZE = 12;
+
         public const int WHOLE_STEP = 2;
         public const int HALF_STEP = 1;
 
-        public enum SCALE_MODE { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR, GENERIC_MINOR }
+        public enum SCALE_MODE { MAJOR, NATURAL_MINOR, HARMONIC_MINOR, MELODIC_MINOR, GENERIC_MINOR, IONIAN, DORIAN, PRHYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, LOCRIAN}
         public static Dictionary<SCALE_MODE, int[]> SCALE_INTERVALS = createScaleIntervals();
         private static Dictionary<SCALE_MODE, int[]> createScaleIntervals()
         {
@@ -99,6 +101,13 @@ namespace Automatone
             intervals.Add(SCALE_MODE.HARMONIC_MINOR, new int[] { 2, 1, 2, 2, 1, 3 });
             intervals.Add(SCALE_MODE.MELODIC_MINOR, new int[] { 2, 1, 2, 2, 2, 2 });
             intervals.Add(SCALE_MODE.GENERIC_MINOR, new int[] { 2, 1, 2, 2, 1, 2, 1 });
+            intervals.Add(SCALE_MODE.IONIAN, new int[] { 2, 2, 1, 2, 2, 2 });
+            intervals.Add(SCALE_MODE.DORIAN, new int[] { 2, 1, 2, 2, 2, 1 });
+            intervals.Add(SCALE_MODE.PRHYGIAN, new int[] { 1, 2, 2, 2, 1, 2 });
+            intervals.Add(SCALE_MODE.LYDIAN, new int[] { 2, 2, 2, 1, 2, 2 });
+            intervals.Add(SCALE_MODE.MIXOLYDIAN, new int[] { 2, 2, 1, 2, 2, 1 });
+            intervals.Add(SCALE_MODE.AEOLIAN, new int[] { 2, 1, 2, 2, 1, 2 });
+            intervals.Add(SCALE_MODE.LOCRIAN, new int[] { 1, 2, 2, 1, 2, 2 });
 
             return intervals;
         }
@@ -112,6 +121,13 @@ namespace Automatone
             intervals.Add(SCALE_MODE.HARMONIC_MINOR, new int[] { 0, 3, 6, 2, 5, 1, 4 });
             intervals.Add(SCALE_MODE.MELODIC_MINOR, new int[] { 0, 3, 6, 2, 5, 1, 4 });
             intervals.Add(SCALE_MODE.GENERIC_MINOR, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.IONIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.DORIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.PRHYGIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.LYDIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.MIXOLYDIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.AEOLIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
+            intervals.Add(SCALE_MODE.LOCRIAN, new int[] { 0, 3, 6, 2, 5, 1, 4 });
 
             return intervals;
         }

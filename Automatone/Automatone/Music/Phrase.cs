@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public class Phrase
     {
@@ -16,8 +16,11 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Phrase(MusicTheory theory, InputParameters inputParameters, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, int verseLength, List<int> rhythmSeeds, List<int> melodySeeds)
+        public Phrase(MusicTheory theory, Random rand, MusicTheory.CADENCE_NAMES c, List<Part> parts, Harmony harmony, int verseLength, List<int> rhythmSeeds, List<int> melodySeeds)
         {
+            //Get instance of InputParameters
+            InputParameters inputParameters = InputParameters.Instance;
+
             phrase = new List<Measure>();
 
             //Calculate phrase length
@@ -28,7 +31,7 @@ namespace Automatone
 
             System.Console.WriteLine(" length " + phraseLength); //remove later
 
-            //Select seeds
+            //Select seeds for rhythm and melody
             double rhythmSeedLength = 1 + inputParameters.measureRhythmVariance * (parts.Count);
             rhythmSeedLength += inputParameters.phraseRhythmVariance * (phraseLength * rhythmSeedLength);
             List<int> selectedRhythmSeeds = new List<int>();
@@ -36,7 +39,6 @@ namespace Automatone
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
-
             double melodySeedLength = 1 + inputParameters.measureMelodyVariance * (parts.Count);
             melodySeedLength += inputParameters.phraseMelodyVariance * (phraseLength * melodySeedLength);
             List<int> selectedMelodySeeds = new List<int>();
@@ -45,15 +47,16 @@ namespace Automatone
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }
 
+            //Build chord progression
             List<List<NoteName>> progression = harmony.createChordProgression(phraseLength, c);
 
-            List<NoteName> diatonic = harmony.GetDiatonicScale();
-
+            //Create measures
             for (int i = 0; i < phraseLength; i++)
             {
-                phrase.Add(new Measure(theory, inputParameters, rand, parts, phraseLength, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), diatonic));
+                phrase.Add(new Measure(theory, rand, parts, phraseLength, selectedRhythmSeeds, selectedMelodySeeds, progression.ElementAt<List<NoteName>>(i), harmony.DiatonicScale));
             }
 
+            //Build notes from measures
             notes = new List<List<Note>>();
             for (int i = 0; i < phrase.Count; i++)
             {

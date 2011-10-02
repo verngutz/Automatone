@@ -5,11 +5,13 @@ namespace Automatone
     [Serializable]
     public class InputParameters
     {
+        //Global Song Parameters
+        public ushort tempo = 120;
+        public int timeSignatureN = 4;
+        public int timeSignatureD = 4;
+        public double TimeSignature { get { return (timeSignatureN / (double)timeSignatureD); } }
+        
         //Song Parameters
-        public double songSpeed = 0.5;
-        public double songSpeedVariance = 0.5;
-        public double timeSignatureN = 4.0;
-        public double timeSignatureD = 4.0;
         public double meanSongLength = 0.5;
         public double structuralVariance = 0.5;
         public double songRhythmVariance = 0.5;
@@ -27,7 +29,6 @@ namespace Automatone
         public double phraseLengthVariance = 0.5;
         public double phraseRhythmVariance = 0.5;
         public double phraseMelodyVariance = 0.5;
-        //public double phraseDistinctiveness = 0.5; //not yet using this?
 
         //Measure Parameters
         public double measureRhythmVariance = 0.5;
@@ -43,8 +44,6 @@ namespace Automatone
         public double partNoteLengthVariance = 0.5;
         public double meanPartOctaveRange = 0.5;
         public double partOctaveRangeVariance = 0.5;
-        public double forceChordChance = 0;
-        public double forceDiatonicChance = 0;
 
         //Note Parameters
         public double meanNoteLength = 0.5;
@@ -60,13 +59,6 @@ namespace Automatone
 
         //Harmony
         public double seventhChordProbability = 0.1;
-        /*public double meanBeatharmonicCovariance = 0.9;
-        public double beatHarmonicCovarianceOffsetDivisor = 10;
-        public double randomModulationProbability = 0.01;
-        public double perfectFifthModulationProbability = 0.20;
-        public double perfectFourthModulationProbability = 0.15;
-        public double relativeModeModulationProbability = 0.1;
-        public double absoluteModeModulationProbability = 0.04;*/
 
         private InputParameters() { }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Automatone
+namespace Automatone.Music
 {
     public class Verse
     {
@@ -16,8 +16,11 @@ namespace Automatone
         private List<List<Note>> notes;
         public List<List<Note>> Notes { get { return notes; } }
 
-        public Verse(MusicTheory theory, InputParameters inputParameters, Random rand, List<Part> parts, Harmony harmony, int songLength, List<int> rhythmSeeds, List<int> melodySeeds)
+        public Verse(MusicTheory theory, Random rand, List<Part> parts, Harmony harmony, int songLength, List<int> rhythmSeeds, List<int> melodySeeds)
         {
+            //Get instance of InputParameters
+            InputParameters inputParameters = InputParameters.Instance;
+
             //Calculate verse length
             verseLength = (int)(theory.VERSE_LENGTHINESS * inputParameters.meanVerseLength);
             verseLength += (int)(verseLength * ((rand.NextDouble() - 0.5) * inputParameters.verseLengthVariance));
@@ -25,7 +28,7 @@ namespace Automatone
 
             System.Console.WriteLine(" length " + verseLength); //remove later
 
-            //Select seeds
+            //Select seeds for rhythm and melody
             double rhythmSeedLength = 1 + inputParameters.measureRhythmVariance * (parts.Count);
             rhythmSeedLength += inputParameters.phraseRhythmVariance * (theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * rhythmSeedLength);
             rhythmSeedLength += inputParameters.verseRhythmVariance * (verseLength * rhythmSeedLength);
@@ -34,7 +37,6 @@ namespace Automatone
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
-
             double melodySeedLength = 1 + inputParameters.measureMelodyVariance * (parts.Count);
             melodySeedLength += inputParameters.phraseMelodyVariance * (theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength * melodySeedLength);
             melodySeedLength += inputParameters.verseMelodyVariance * (verseLength * melodySeedLength);
@@ -79,26 +81,26 @@ namespace Automatone
 			    }
 			    double r = rand.NextDouble() * sum;
                 bool addDefaultPhrase = true;
-			    for(int j = 0; j < 4; j++)
-			    {
-				    if(r < MusicTheory.CADENCES[aboveCurve][j])
-				    {
-                        verse.Add(new Phrase(theory, inputParameters, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
+                for (int j = 0; j < 4; j++)
+                {
+                    if (r < MusicTheory.CADENCES[aboveCurve][j])
+                    {
+                        verse.Add(new Phrase(theory, rand, (MusicTheory.CADENCE_NAMES)j, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
                         addDefaultPhrase = false;
-					    break;
-				    }
-				    else
-				    {
-					    r -= MusicTheory.CADENCES[aboveCurve][j];
-				    }
-			    }
-			    if(addDefaultPhrase)
+                        break;
+                    }
+                    else
+                    {
+                        r -= MusicTheory.CADENCES[aboveCurve][j];
+                    }
+                }
+                if (addDefaultPhrase)
 			    {
-                    verse.Add(new Phrase(theory, inputParameters, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
+                    verse.Add(new Phrase(theory, rand, MusicTheory.CADENCE_NAMES.SILENT, parts, harmony, verseLength, selectedRhythmSeeds, selectedMelodySeeds));
 			    }
             }
 
-            //make note lists
+            //Build notes from phrases
             measureCount = 0;
             notes = new List<List<Note>>();
             for (int i = 0; i < verse.Count; i++)

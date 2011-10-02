@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Automatone.Music;
 
-namespace Automatone
+namespace Automatone.Theories
 {
     public class ClassicalTheory : MusicTheory
     {

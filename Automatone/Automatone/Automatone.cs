@@ -37,6 +37,7 @@ namespace Automatone
 
         // Services
         private IAudioSystemService audioService;
+        public IAudioSystemService AudioService { get { return audioService; } }
 
         //GUI
         private InputManager inputManager;
@@ -59,23 +60,8 @@ namespace Automatone
         
 
         //Music Stuff
-        private double timeSignatureN;
-        public double TimeSignatureN { set { timeSignatureN = value; } get { return timeSignatureN; } }
-        private double timeSignatureD;
-        public double TimeSignatureD { set { timeSignatureD = value; } get { return timeSignatureD; } }
         private int measureLength;
         public int MeasureLength { set { measureLength = value; } get { return measureLength; } }
-        private ushort tempo;
-        public ushort Tempo 
-        {
-            set 
-            {
-                tempo = value;
-                audioService.BeatsPerMinute = value;
-            }
-
-            get { return tempo; }
-        }
 
         public const int SUBBEATS_PER_WHOLE_NOTE = 16;
         public static double getBeatResolution()
@@ -225,10 +211,10 @@ namespace Automatone
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
             sw.WriteLine("MTrk");
-            sw.WriteLine("0 TimeSig " + timeSignatureN + "/" + timeSignatureD + " 24 8");
+            sw.WriteLine("0 TimeSig " + InputParameters.Instance.timeSignatureN + "/" + InputParameters.Instance.timeSignatureD + " 24 8");
             //sw.WriteLine("0 TimeSig 4/4 24 8");
-            sw.WriteLine("0 Tempo " + (TEMPO_DIVIDEND / Tempo));
-            sw.WriteLine("0 KeySig 0 major");
+            sw.WriteLine("0 Tempo " + (TEMPO_DIVIDEND / InputParameters.Instance.tempo));
+            //sw.WriteLine("0 KeySig 0 major");
             sw.WriteLine("0 Meta TrkEnd");
             sw.WriteLine("TrkEnd");
             sw.Write(Song);
@@ -245,7 +231,6 @@ namespace Automatone
             txt2midi.StartInfo.CreateNoWindow = true;
             txt2midi.Start();
             while(!Sequencer.LoadMidi("sample.mid"));
-            //txt2midi.Kill();//it now kills itself
         }
 
         public void StopSongPlaying()
