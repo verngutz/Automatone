@@ -180,6 +180,8 @@ namespace Automatone.GUI
             private static Texture2D silentCell;
             private static Texture2D startCell;
             private static Texture2D holdCell;
+            private static Texture2D holdCellEnd;
+            private static Texture2D gridPanelBackground;
 
             private Rectangle clickableArea;
             private int? gridInputStartXIndex;
@@ -205,9 +207,17 @@ namespace Automatone.GUI
 
             public void LoadContent()
             {
-                silentCell = parent.parent.Content.Load<Texture2D>("darkbox");
-                startCell = parent.parent.Content.Load<Texture2D>("lightbox");
-                holdCell = parent.parent.Content.Load<Texture2D>("holdbox");
+                startCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox");
+                holdCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox");
+                holdCellEnd = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdboxend");
+                silentCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Darkbox");
+                gridPanelBackground = parent.parent.Content.Load<Texture2D>("Grid Panel/Bg_Gridpanel");
+                if (false)
+                {
+                    startCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox2");
+                    holdCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox2");
+                    holdCellEnd = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox2");
+                }
             }
 
             public void Dispose()
@@ -215,6 +225,8 @@ namespace Automatone.GUI
                 if (silentCell != null) silentCell.Dispose();
                 if (startCell != null) startCell.Dispose();
                 if (holdCell != null) holdCell.Dispose();
+                if (holdCellEnd != null) holdCellEnd.Dispose();
+                if (gridPanelBackground != null) gridPanelBackground.Dispose();
             }
 
             public void Update(GameTime gameTime)
@@ -274,24 +286,29 @@ namespace Automatone.GUI
 
             public void Draw(GameTime gameTime)
             {
-                parent.parent.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+                parent.parent.SpriteBatch.Begin();
+                parent.parent.SpriteBatch.Draw(gridPanelBackground, clickableArea, Color.White);
                 for (int i = parent.navigators.VerticalClippingStartIndex; i <= parent.navigators.VerticalClippingEndIndex; i++)
                 {
                     for (int j = parent.navigators.HorizontalClippingStartIndex; j <= parent.navigators.HorizontalClippingEndIndex; j++)
                     {
                         Rectangle drawRectangle = new Rectangle((int)(j * CELLWIDTH + parent.navigators.GridDrawOffsetX), (int)((parent.SongCells.GetLength(0) - 1 - i) * CELLHEIGHT + parent.navigators.GridDrawOffsetY), CELLWIDTH, CELLHEIGHT);
                         Color drawColor = parent.GetChromaticColor(i);
-                        if (j * CELLWIDTH < -parent.navigators.PlayOffset - CELLWIDTH)
+                        if (((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / 12) % 2 == 0)
                         {
-                            parent.parent.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
-                        }
-                        else if (j * CELLWIDTH < -parent.navigators.PlayOffset)
-                        {
-                            parent.parent.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
+                            parent.parent.SpriteBatch.Draw(silentCell, drawRectangle, Color.White);
                         }
                         else
                         {
-                            parent.parent.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, parent.SongCells[i, j] == CellState.SILENT ? (parent.parent.Sequencer.State == Sequencer.MidiPlayerState.STOPPED ? 128 : 64) : 255));
+                            parent.parent.SpriteBatch.Draw(silentCell, drawRectangle, Color.Black);
+                        }
+                        if (parent.SongCells[i, j] != CellState.SILENT && j * CELLWIDTH < -parent.navigators.PlayOffset - CELLWIDTH)
+                        {
+                            parent.parent.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
+                        }
+                        else if (parent.SongCells[i, j] != CellState.SILENT)
+                        {
+                            parent.parent.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
                         }
                     }
                 }
@@ -302,11 +319,11 @@ namespace Automatone.GUI
             {
                 switch (parent.SongCells[i, j])
                 {
-                    case CellState.SILENT:
-                        return silentCell;
                     case CellState.START:
                         return startCell;
                     case CellState.HOLD:
+                        if (j + 1 >= parent.SongCells.GetLength(1) || parent.SongCells[i, j+1] != CellState.HOLD)
+                            return holdCellEnd;
                         return holdCell;
                 }
                 return null;
