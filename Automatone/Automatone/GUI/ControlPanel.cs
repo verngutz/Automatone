@@ -142,18 +142,15 @@ namespace Automatone.GUI
                 projectSaveDialog.Filter = "Automatone Project (*.aut)|*.aut";
                 projectSaveDialog.RestoreDirectory = true;
 
-                if (projectSaveDialog.ShowDialog() == DialogResult.OK)
+                if (projectSaveDialog.ShowDialog() == DialogResult.OK && (saveStream = projectSaveDialog.OpenFile()) != null)
                 {
-                    if ((saveStream = projectSaveDialog.OpenFile()) != null)
-                    {
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        formatter.Serialize(saveStream, InputParameters.Instance);
-                        formatter.Serialize(saveStream, automatone.MeasureLength);
-                        automatone.RewriteSong();
-                        formatter.Serialize(saveStream, automatone.Song);
-                        formatter.Serialize(saveStream, automatone.GridPanel.SongCells);
-                        saveStream.Close();
-                    }
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(saveStream, InputParameters.Instance);
+                    formatter.Serialize(saveStream, automatone.MeasureLength);
+                    automatone.RewriteSong();
+                    formatter.Serialize(saveStream, automatone.Song);
+                    formatter.Serialize(saveStream, automatone.GridPanel.SongCells);
+                    saveStream.Close();
                 }
             }
         }
