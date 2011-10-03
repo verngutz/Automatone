@@ -26,8 +26,15 @@ namespace Automatone.GUI
         private OptionControl playPauseButton;
         private SkinNamedButtonControl stopButton;
         private SkinNamedButtonControl saveButton;
-        private SkinNamedButtonControl loadButton;
+        private SkinNamedButtonControl openButton;
         private SkinNamedButtonControl newButton;
+        private SkinNamedButtonControl addCellsButton;
+        private SkinNamedButtonControl copyButton;
+        private SkinNamedButtonControl cutButton;
+        private SkinNamedButtonControl pasteButton;
+        private SkinNamedButtonControl redoButton;
+        private SkinNamedButtonControl removeCellsButton;
+        private SkinNamedButtonControl undoButton;
         
         private void InitializeComponent()
         {
@@ -39,8 +46,15 @@ namespace Automatone.GUI
             playPauseButton = new OptionControl();
             stopButton = new SkinNamedButtonControl();
             saveButton = new SkinNamedButtonControl();
-            loadButton = new SkinNamedButtonControl();
+            openButton = new SkinNamedButtonControl();
             newButton = new SkinNamedButtonControl();
+            addCellsButton = new SkinNamedButtonControl();
+            copyButton = new SkinNamedButtonControl();
+            cutButton = new SkinNamedButtonControl();
+            pasteButton = new SkinNamedButtonControl();
+            redoButton = new SkinNamedButtonControl();
+            removeCellsButton =  new SkinNamedButtonControl();
+            undoButton = new SkinNamedButtonControl();
 
             //
             // generateSongButton
@@ -48,6 +62,55 @@ namespace Automatone.GUI
             generateSongButton.Bounds = LayoutManager.GenerateSongButtonBounds;
             generateSongButton.Pressed += new EventHandler(RandomizeButtonPressed);
             generateSongButton.SkinName = "generate.song";
+
+            //
+            // addButton
+            //
+            addCellsButton.Bounds = LayoutManager.AddButtonBounds;
+            addCellsButton.Pressed += new EventHandler(AddButtonPressed);
+            addCellsButton.SkinName = "add.cells";
+            
+            //
+            // copyButton
+            //
+            copyButton.Bounds = LayoutManager.CopyButtonBounds;
+            copyButton.Pressed += new EventHandler(CopyButtonPressed);
+            copyButton.SkinName = "copy";
+            
+            //
+            // cutButton
+            //
+            cutButton.Bounds = LayoutManager.CutButtonBounds;
+            cutButton.Pressed += new EventHandler(CutButtonPressed);
+            cutButton.SkinName = "cut";
+            
+            //
+            // pasteButton
+            //
+            pasteButton.Bounds = LayoutManager.PasteButtonBounds;
+            pasteButton.Pressed += new EventHandler(PasteButtonPressed);
+            pasteButton.SkinName = "paste";
+            
+            //
+            // redoButton
+            //
+            redoButton.Bounds = LayoutManager.RedoButtonBounds;
+            redoButton.Pressed += new EventHandler(RedoButtonPressed);
+            redoButton.SkinName = "redo";
+            
+            //
+            // removeButton
+            //
+            removeCellsButton.Bounds = LayoutManager.RemoveButtonBounds;
+            removeCellsButton.Pressed += new EventHandler(RemoveButtonPressed);
+            removeCellsButton.SkinName = "remove.cells";
+
+            //
+            // undoButton
+            //
+            undoButton.Bounds = LayoutManager.UndoButtonBounds;
+            undoButton.Pressed += new EventHandler(UndoButtonPressed);
+            undoButton.SkinName = "undo";
 
             //
             // playPauseButton
@@ -68,21 +131,21 @@ namespace Automatone.GUI
             //
             saveButton.Bounds = LayoutManager.SaveButtonBounds;
             saveButton.Pressed += new EventHandler(SaveButtonPressed);
-            saveButton.SkinName = "stop";
+            saveButton.SkinName = "save";
 
             //
-            // loadButton
+            // openButton
             //
-            loadButton.Bounds = LayoutManager.LoadButtonBounds
-            loadButton.Pressed += new EventHandler(LoadButtonPressed);
-            loadButton.SkinName = "stop";
+            openButton.Bounds = LayoutManager.OpenButtonBounds;
+            openButton.Pressed += new EventHandler(OpenButtonPressed);
+            openButton.SkinName = "open";
 
             //
             // newButton
             //
             newButton.Bounds = LayoutManager.NewButtonBounds;
             newButton.Pressed += new EventHandler(NewButtonPressed);
-            newButton.SkinName = "stop";
+            newButton.SkinName = "new";
 
             //
             // Add Children
@@ -91,13 +154,55 @@ namespace Automatone.GUI
             Children.Add(playPauseButton);
             Children.Add(stopButton);
             Children.Add(saveButton);
-            Children.Add(loadButton);
+            Children.Add(openButton);
             Children.Add(newButton);
+            Children.Add(addCellsButton);
+            Children.Add(copyButton);
+            Children.Add(cutButton);
+            Children.Add(pasteButton);
+            Children.Add(undoButton);
+            Children.Add(removeCellsButton);
+            Children.Add(redoButton);
         }
 
         public void ResetPlayButton()
         {
             playPauseButton.Selected = false;
+        }
+
+        private void AddButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CutButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CopyButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PasteButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RedoButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RemoveButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UndoButtonPressed(object sender, EventArgs e)
+        {
+
         }
 
         private void NewButtonPressed(object sender, EventArgs e)
@@ -108,7 +213,7 @@ namespace Automatone.GUI
             GridPanel.Instance.ResetGridView();
         }
 
-        private void LoadButtonPressed(object sender, EventArgs e)
+        private void OpenButtonPressed(object sender, EventArgs e)
         {
             automatone.StopSongPlaying();
             Stream loadStream;

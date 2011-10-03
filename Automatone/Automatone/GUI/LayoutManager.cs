@@ -50,7 +50,7 @@ namespace Automatone.GUI
             }
         }
 
-        public static UniRectangle LoadButtonBounds
+        public static UniRectangle OpenButtonBounds
         {
             get
             {
@@ -59,6 +59,62 @@ namespace Automatone.GUI
         }
 
         public static UniRectangle NewButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle AddButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle CopyButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle CutButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle PasteButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle RedoButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle RemoveButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(10, 100, 43, 43);
+            }
+        }
+
+        public static UniRectangle UndoButtonBounds
         {
             get
             {

@@ -331,8 +331,9 @@ namespace NuclexUserInterfaceExtension
                 {
                     return new MultiGuiVisualizer(contentManager, skinStream);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    System.Console.Write(((KeyNotFoundException)e).StackTrace);
                     contentManager.Dispose();
                     throw;
                 }
