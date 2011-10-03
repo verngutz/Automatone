@@ -22,7 +22,7 @@ namespace Automatone.GUI
             InitializeComponent();
         }
 
-        private SkinNamedButtonControl randomizeButton;
+        private SkinNamedButtonControl generateSongButton;
         private OptionControl playPauseButton;
         private SkinNamedButtonControl stopButton;
         private SkinNamedButtonControl saveButton;
@@ -35,7 +35,7 @@ namespace Automatone.GUI
             EnableDragging = false;
 
             // Construct children
-            randomizeButton = new SkinNamedButtonControl();
+            generateSongButton = new SkinNamedButtonControl();
             playPauseButton = new OptionControl();
             stopButton = new SkinNamedButtonControl();
             saveButton = new SkinNamedButtonControl();
@@ -43,51 +43,51 @@ namespace Automatone.GUI
             newButton = new SkinNamedButtonControl();
 
             //
-            // randomizeButton
+            // generateSongButton
             //
-            randomizeButton.Bounds = new UniRectangle(10, 10, 163, 48);
-            randomizeButton.Pressed += new EventHandler(RandomizeButtonPressed);
-            randomizeButton.SkinName = "randomize";
+            generateSongButton.Bounds = LayoutManager.GenerateSongButtonBounds;
+            generateSongButton.Pressed += new EventHandler(RandomizeButtonPressed);
+            generateSongButton.SkinName = "generate.song";
 
             //
             // playPauseButton
             //
-            playPauseButton.Bounds = new UniRectangle(10, 55, 43, 43);
+            playPauseButton.Bounds = LayoutManager.PlayPauseButtonBounds;
             playPauseButton.Changed += new EventHandler(PlayPauseButtonToggled);
             playPauseButton.Selected = false;
 
             //
             // stopButton
             //
-            stopButton.Bounds = new UniRectangle(55, 55, 43, 43);
+            stopButton.Bounds = LayoutManager.StopButtonBounds;
             stopButton.Pressed += new EventHandler(StopButtonPressed);
             stopButton.SkinName = "stop";
 
             //
             // saveButton
             //
-            saveButton.Bounds = new UniRectangle(55, 100, 43, 43);
+            saveButton.Bounds = LayoutManager.SaveButtonBounds;
             saveButton.Pressed += new EventHandler(SaveButtonPressed);
             saveButton.SkinName = "stop";
 
             //
             // loadButton
             //
-            loadButton.Bounds = new UniRectangle(100, 100, 43, 43);
+            loadButton.Bounds = LayoutManager.LoadButtonBounds
             loadButton.Pressed += new EventHandler(LoadButtonPressed);
             loadButton.SkinName = "stop";
 
             //
             // newButton
             //
-            newButton.Bounds = new UniRectangle(10, 100, 43, 43);
+            newButton.Bounds = LayoutManager.NewButtonBounds;
             newButton.Pressed += new EventHandler(NewButtonPressed);
             newButton.SkinName = "stop";
 
             //
             // Add Children
             //
-            Children.Add(randomizeButton);
+            Children.Add(generateSongButton);
             Children.Add(playPauseButton);
             Children.Add(stopButton);
             Children.Add(saveButton);

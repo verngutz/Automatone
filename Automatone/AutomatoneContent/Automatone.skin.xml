@@ -60,27 +60,27 @@
       <!--
 	      Frame used for a disabled randomize button
 	    -->
-      <frame name="randomize.button.disabled">
+      <frame name="generate.song.button.disabled">
       </frame>
 
       <!--
 	      Frame used for a randomize button in its normal state
 	    -->
-      <frame name="randomize.button.normal">
+      <frame name="generate.song.button.normal">
         <region source="randomize" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
       </frame>
 
       <!--
 	      Frame used for a randomize button when it is highlighted
 	    -->
-      <frame name="randomize.button.highlighted">
+      <frame name="generate.song.button.highlighted">
         <region source="randomizeHover" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
       </frame>
 
       <!--
 	      Frame used for a randomize button when it is depressed
 	    -->
-      <frame name="randomize.button.depressed">
+      <frame name="generate.song.button.depressed">
         <region source="randomizeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
       </frame>
 
