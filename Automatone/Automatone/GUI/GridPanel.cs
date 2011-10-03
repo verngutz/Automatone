@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 using Nuclex.UserInterface.Controls.Desktop;
 using Nuclex.Graphics.SpecialEffects.Particles;
+using NuclexUserInterfaceExtension;
 
 using Automatone.Music;
 
@@ -73,10 +74,13 @@ namespace Automatone.GUI
 
         private void RespondToWindowResize()
         {
-            labels.RefreshBoundaries();
-            cells.RefreshBoundaries();
-            navigators.RenewHorizontalClipping();
-            navigators.RenewVerticalClipping();
+            if (SongCells != null)
+            {
+                labels.RefreshBoundaries();
+                cells.RefreshBoundaries();
+                navigators.RenewHorizontalClipping();
+                navigators.RenewVerticalClipping();
+            }
         }
 
         protected override void LoadContent()
@@ -193,9 +197,9 @@ namespace Automatone.GUI
                 clickableArea = new Rectangle
                 (
                     Labels.PITCH_LABEL_THICKNESS,
-                    Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS,
-                    parent.parent.Window.ClientBounds.Width - Labels.PITCH_LABEL_THICKNESS,
-                    parent.parent.Window.ClientBounds.Height - Automatone.CONTROLS_AND_GRID_DIVISION - Labels.TIME_LABEL_THICKNESS
+                    LayoutManager.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS,
+                    parent.parent.Window.ClientBounds.Width - Labels.PITCH_LABEL_THICKNESS - Labels.RIGHT_BORDER_THICKNESS,
+                    parent.parent.Window.ClientBounds.Height - LayoutManager.CONTROLS_AND_GRID_DIVISION - Labels.TIME_LABEL_THICKNESS - Labels.BOTTOM_BORDER_THICKNESS
                 );
             }
 
@@ -322,11 +326,16 @@ namespace Automatone.GUI
 
             public const int TIME_LABEL_THICKNESS = 25;
             public const int PITCH_LABEL_THICKNESS = 25;
-            private Texture2D pitchTimeLabelBackground;
+            public const int RIGHT_BORDER_THICKNESS = 25;
+            public const int BOTTOM_BORDER_THICKNESS = 25;
+
+            private Texture2D labelsBackground;
             private SpriteFont labelFont;
 
             private Rectangle pitchLabelRectangle;
             private Rectangle timeLabelRectangle;
+            private Rectangle rightBorderRectangle;
+            private Rectangle bottomBorderRectangle;
 
             public Labels(GridPanel parent)
             {
@@ -336,20 +345,22 @@ namespace Automatone.GUI
 
             public void RefreshBoundaries()
             {
-                pitchLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, PITCH_LABEL_THICKNESS, parent.parent.Window.ClientBounds.Height - Automatone.CONTROLS_AND_GRID_DIVISION);
-                timeLabelRectangle = new Rectangle(0, Automatone.CONTROLS_AND_GRID_DIVISION, parent.parent.Window.ClientBounds.Width, TIME_LABEL_THICKNESS);
+                pitchLabelRectangle = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, PITCH_LABEL_THICKNESS, parent.parent.Window.ClientBounds.Height - LayoutManager.CONTROLS_AND_GRID_DIVISION);
+                timeLabelRectangle = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, parent.parent.Window.ClientBounds.Width, TIME_LABEL_THICKNESS);
+                rightBorderRectangle = new Rectangle(parent.parent.Window.ClientBounds.Width - RIGHT_BORDER_THICKNESS, LayoutManager.CONTROLS_AND_GRID_DIVISION, RIGHT_BORDER_THICKNESS, parent.parent.Window.ClientBounds.Height - LayoutManager.CONTROLS_AND_GRID_DIVISION);
+                bottomBorderRectangle = new Rectangle(0, parent.parent.Window.ClientBounds.Height - BOTTOM_BORDER_THICKNESS, parent.parent.Window.ClientBounds.Width, BOTTOM_BORDER_THICKNESS);
             }
 
             public void LoadContent()
             {
-                pitchTimeLabelBackground = parent.parent.Content.Load<Texture2D>("BlackPixel");
+                labelsBackground = parent.parent.Content.Load<Texture2D>("BlackPixel");
                 labelFont = parent.parent.Content.Load<SpriteFont>("LabelFont");
             }
 
             public void Dispose()
             {
-                if (pitchTimeLabelBackground != null) 
-                    pitchTimeLabelBackground.Dispose();
+                if (labelsBackground != null) 
+                    labelsBackground.Dispose();
             }
 
             public void Draw(GameTime gameTime)
@@ -357,6 +368,8 @@ namespace Automatone.GUI
                 parent.parent.SpriteBatch.Begin();
                 DrawPitchLabel();
                 DrawTimeLabel();
+                DrawRightBorder();
+                DrawBottomBorder();
                 parent.parent.SpriteBatch.End();
             }
 
@@ -364,7 +377,7 @@ namespace Automatone.GUI
             {
                 bool sharpLabels = true;
 
-                parent.parent.SpriteBatch.Draw(pitchTimeLabelBackground, pitchLabelRectangle, Color.White);
+                parent.parent.SpriteBatch.Draw(labelsBackground, pitchLabelRectangle, Color.White);
 
                 for (int i = parent.navigators.VerticalClippingStartIndex; i <= parent.navigators.VerticalClippingEndIndex; i++)
                 {
@@ -415,11 +428,11 @@ namespace Automatone.GUI
 
             private void DrawTimeLabel()
             {
-                parent.parent.SpriteBatch.Draw(pitchTimeLabelBackground, timeLabelRectangle, Color.White);
+                parent.parent.SpriteBatch.Draw(labelsBackground, timeLabelRectangle, Color.White);
 
                 for (int j = parent.navigators.HorizontalClippingStartIndex; j <= parent.navigators.HorizontalClippingEndIndex; j++)
                 {
-                    Vector2 loc = new Vector2((int)(j * Cells.CELLWIDTH + parent.navigators.GridDrawOffsetX), 2 + Automatone.CONTROLS_AND_GRID_DIVISION);
+                    Vector2 loc = new Vector2((int)(j * Cells.CELLWIDTH + parent.navigators.GridDrawOffsetX), 2 + LayoutManager.CONTROLS_AND_GRID_DIVISION);
                     if (j % parent.parent.MeasureLength == 0)
                     {
                         parent.parent.SpriteBatch.DrawString(labelFont, "" + (j / parent.parent.MeasureLength + 1), loc, Color.White);
@@ -432,6 +445,16 @@ namespace Automatone.GUI
                         }
                     }
                 }
+            }
+
+            private void DrawRightBorder()
+            {
+                parent.parent.SpriteBatch.Draw(labelsBackground, rightBorderRectangle, Color.White);
+            }
+
+            private void DrawBottomBorder()
+            {
+                parent.parent.SpriteBatch.Draw(labelsBackground, bottomBorderRectangle, Color.White);
             }
         }
 
@@ -508,6 +531,9 @@ namespace Automatone.GUI
             private float playOffset;
             public float PlayOffset { get { return playOffset; } }
 
+            private KeyboardState oldKeyboardState;
+            private KeyboardState newKeyboardState;
+
             private const int CURSOR_OFFSET = 100;
             private const float SCROLL_SPEED_DIVISOR = 14400f;
 
@@ -529,12 +555,19 @@ namespace Automatone.GUI
             public int HorizontalClippingStartIndex { get { return horizontalClippingStartIndex; } }
             public int HorizontalClippingEndIndex { get { return horizontalClippingEndIndex; } }
 
-            private delegate void VoidDelegate();
+            private class ClampDelegateReturn { }
+            private delegate ClampDelegateReturn ClampDelegate();
+
+            public class RenewClippingDelegateReturn { }
+            private delegate RenewClippingDelegateReturn RenewClippingDelegate();
+
+            private SkinNamedHorizontalSliderControl horizonalSlider;
 
             public Navigators(GridPanel parent)
                 : base()
             {
                 this.parent = parent;
+                oldKeyboardState = Keyboard.GetState();
                 ResetScrolling();
                 InitializeComponent();
             }
@@ -543,21 +576,23 @@ namespace Automatone.GUI
             {
             }
 
-            public void RenewHorizontalClipping()
+            public RenewClippingDelegateReturn RenewHorizontalClipping()
             {
                 horizontalClippingStartIndex = parent.ScreenToGridCoordinatesX(Labels.PITCH_LABEL_THICKNESS);
                 horizontalClippingEndIndex = Math.Min(parent.ScreenToGridCoordinatesX(parent.parent.Window.ClientBounds.Width), parent.SongCells.GetLength(1) - 1);
+                return null;
             }
 
-            public void RenewVerticalClipping()
+            public RenewClippingDelegateReturn RenewVerticalClipping()
             {
                 verticalClippingStartIndex = Math.Max(0, parent.ScreenToGridCoordinatesY(parent.parent.Window.ClientBounds.Height));
-                verticalClippingEndIndex = parent.ScreenToGridCoordinatesY(Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
+                verticalClippingEndIndex = parent.ScreenToGridCoordinatesY(LayoutManager.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
+                return null;
             }
 
             public void ResetGridDrawOffset()
             {
-                gridDrawOffset = new Vector2(Labels.PITCH_LABEL_THICKNESS, Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
+                gridDrawOffset = new Vector2(Labels.PITCH_LABEL_THICKNESS, LayoutManager.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
                 RenewHorizontalClipping();
                 RenewVerticalClipping();
             }
@@ -575,6 +610,7 @@ namespace Automatone.GUI
 
             public void Update(GameTime gameTime)
             {
+                newKeyboardState = Keyboard.GetState();
                 if (parent.ScrollWithMidi)
                 {
                     HandlePlayScrolling();
@@ -588,6 +624,7 @@ namespace Automatone.GUI
                 {
                     HandleVerticalScrolling();
                 }
+                oldKeyboardState = newKeyboardState;
             }
 
             private void HandlePlayScrolling()
@@ -598,7 +635,7 @@ namespace Automatone.GUI
                 RenewHorizontalClipping();
             }
 
-            private void HandleManualScrolling(ref float moveVal, ref float gridOffsetDimension, VoidDelegate clampDelegate, VoidDelegate renewClippingDelegate, Keys positiveDirectionKey, Keys negativeDirectionKey)
+            private void HandleManualScrolling(ref float moveVal, ref float gridOffsetDimension, ClampDelegate clampDelegate, RenewClippingDelegate renewClippingDelegate, Keys positiveDirectionKey, Keys negativeDirectionKey)
             {
                 if (Keyboard.GetState().IsKeyDown(negativeDirectionKey) && Keyboard.GetState().IsKeyDown(positiveDirectionKey))
                 {
@@ -629,6 +666,14 @@ namespace Automatone.GUI
             private void HandleHorizontalScrolling()
             {
                 HandleManualScrolling(ref moveValX, ref gridDrawOffset.X, ClampGridOffsetX, RenewHorizontalClipping, Keys.Right, Keys.Left);
+                if (newKeyboardState.IsKeyDown(Keys.Home) && oldKeyboardState.IsKeyUp(Keys.Home))
+                {
+                    gridDrawOffset.X = Labels.TIME_LABEL_THICKNESS;
+                }
+                if (newKeyboardState.IsKeyDown(Keys.End) && oldKeyboardState.IsKeyUp(Keys.End))
+                {
+                    gridDrawOffset.X = parent.parent.Window.ClientBounds.Width - (Math.Max(parent.SongCells.GetLength(1), (parent.parent.Window.ClientBounds.Width - Labels.PITCH_LABEL_THICKNESS) / Cells.CELLWIDTH) * Cells.CELLWIDTH);
+                }
             }
 
             private void HandleVerticalScrolling()
@@ -636,14 +681,16 @@ namespace Automatone.GUI
                 HandleManualScrolling(ref moveValY, ref gridDrawOffset.Y, ClampGridOffsetY, RenewVerticalClipping, Keys.Down, Keys.Up);
             }
 
-            private void ClampGridOffsetX()
+            private ClampDelegateReturn ClampGridOffsetX()
             {
                 gridDrawOffset.X = MathHelper.Clamp(gridDrawOffset.X, parent.parent.Window.ClientBounds.Width - (Math.Max(parent.SongCells.GetLength(1), (parent.parent.Window.ClientBounds.Width - Labels.PITCH_LABEL_THICKNESS) / Cells.CELLWIDTH) * Cells.CELLWIDTH), Labels.TIME_LABEL_THICKNESS);
+                return null;
             }
 
-            private void ClampGridOffsetY()
+            private ClampDelegateReturn ClampGridOffsetY()
             {
-                gridDrawOffset.Y = MathHelper.Clamp(gridDrawOffset.Y, parent.parent.Window.ClientBounds.Height - ((parent.SongCells.GetLength(0)) * Cells.CELLHEIGHT), Automatone.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
+                gridDrawOffset.Y = MathHelper.Clamp(gridDrawOffset.Y, parent.parent.Window.ClientBounds.Height - ((parent.SongCells.GetLength(0)) * Cells.CELLHEIGHT), LayoutManager.CONTROLS_AND_GRID_DIVISION + Labels.TIME_LABEL_THICKNESS);
+                return null;
             }
         }
     }

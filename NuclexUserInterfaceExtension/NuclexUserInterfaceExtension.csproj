@@ -110,6 +110,8 @@
     <Compile Include="OpeningLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkinNamedButtonControlRenderer.cs" />
+    <Compile Include="SkinNamedHorizontalSliderControl.cs" />
+    <Compile Include="SkinNamedHorizontalSliderControlRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MultiGuiGraphics.Drawing.cs" />

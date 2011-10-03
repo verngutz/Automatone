@@ -44,22 +44,12 @@ namespace Automatone
         private GuiManager gui;
         public GuiManager Gui { get { return gui; } }
         private ControlPanel controlPanel;
-
-        public const short CONTROLS_AND_GRID_DIVISION = 150;
-
-        //Grid (Visual)
         private GridPanel gridPanel;
         public GridPanel GridPanel { get { return gridPanel; } }
-        public const byte GRID_PADDING = 10;
-
-        public const byte X_DIMENSION = 1;
-        public const byte Y_DIMENSION = 0;
-
-        //Grid (Logical)
-        public String Song { set; get; }
-        
 
         //Music Stuff
+        public String Song { set; get; }
+
         private int measureLength;
         public int MeasureLength { set { measureLength = value; } get { return measureLength; } }
 

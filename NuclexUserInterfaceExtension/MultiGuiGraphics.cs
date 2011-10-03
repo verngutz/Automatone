@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Resources;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +9,6 @@ using Microsoft.Xna.Framework.Content;
 
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Visuals.Flat;
-using Nuclex.UserInterface.Visuals;
 
 namespace NuclexUserInterfaceExtension
 {

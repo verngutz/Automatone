@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Schema;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 
-using Nuclex.Support;
 using Nuclex.UserInterface;
 
 namespace NuclexUserInterfaceExtension {

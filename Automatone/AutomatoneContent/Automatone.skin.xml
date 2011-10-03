@@ -22,6 +22,10 @@
       <bitmap name="stop" contentPath="stop"/>
       <bitmap name="stopHover" contentPath="stopHover"/>
       <bitmap name="stopClicked" contentPath="stopClicked"/>
+      <bitmap name="navigatorHorizontalRail" contentPath="darkbox"/>
+      <bitmap name="navigatorThumb" contentPath="holdbox"/>
+      <bitmap name="navigatorThumbHover" contentPath="lightbox"/>
+      <bitmap name="navigatorThumbClicked" contentPath="darkbox"/>
 	  </resources>
 	
 	  <!--
@@ -52,83 +56,58 @@
 	    -->
 	    <frame name="progress.bar">
 	    </frame>
-	
-	    <!--
-	      Frame used for a disabled pushbutton
-	    -->
-	    <frame name="button.disabled">
-	    </frame>
-	
-	    <!--
-	      Frame used for a pushbutton in its normal state
-	    -->
-	    <frame name="button.normal">
-        <region source="randomize" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
-	    </frame>
-	
-	    <!--
-	      Frame used for a pushbutton when it is highlighted
-	    -->
-	    <frame name="button.highlighted">
-	    </frame>
-	
-	    <!--
-	      Frame used for a pushbutton when it is depressed
-	    -->
-	    <frame name="button.depressed">
-	    </frame>
-
+      
       <!--
-	      Frame used for a disabled pushbutton
+	      Frame used for a disabled randomize button
 	    -->
-      <frame name="randomizebutton.disabled">
+      <frame name="randomize.button.disabled">
       </frame>
 
       <!--
-	      Frame used for a pushbutton in its normal state
+	      Frame used for a randomize button in its normal state
 	    -->
-      <frame name="randomizebutton.normal">
+      <frame name="randomize.button.normal">
         <region source="randomize" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
       </frame>
 
       <!--
-	      Frame used for a pushbutton when it is highlighted
+	      Frame used for a randomize button when it is highlighted
 	    -->
-      <frame name="randomizebutton.highlighted">
+      <frame name="randomize.button.highlighted">
         <region source="randomizeHover" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
       </frame>
 
       <!--
-	      Frame used for a pushbutton when it is depressed
+	      Frame used for a randomize button when it is depressed
 	    -->
-      <frame name="randomizebutton.depressed">
+      <frame name="randomize.button.depressed">
         <region source="randomizeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="163" h="48" />
       </frame>
 
       <!--
-	      Frame used for a disabled pushbutton
+	      Frame used for a disabled stop button
 	    -->
-      <frame name="stopbutton.disabled">
+      <frame name="stop.button.disabled">
       </frame>
 
       <!--
-	      Frame used for a pushbutton in its normal state
+	      Frame used for a stop button in its normal state
 	    -->
-      <frame name="stopbutton.normal">
+      <frame name="stop.button.normal">
         <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
       </frame>
 
       <!--
-	      Frame used for a pushbutton when it is highlighted
+	      Frame used for a stop button when it is highlighted
 	    -->
-      <frame name="stopbutton.highlighted">
+      <frame name="stop.button.highlighted">
         <region source="stopHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
       </frame>
 
       <!--
-	      Frame used for a pushbutton when it is depressed
+	      Frame used for a stop button when it is depressed
 	    -->
-      <frame name="stopbutton.depressed">
+      <frame name="stop.button.depressed">
         <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
       </frame>
 	
@@ -166,21 +145,18 @@
 	      Frame used for a normal radio button that is toggled on
 	    -->
 	    <frame name="radio.on.depressed">
-        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--
 	      Frame used for a highlighted radio button that is toggled on
 	    -->
 	    <frame name="radio.on.highlighted">
-        <region source="stopHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--
 	      Frame used for a depressed radio button that is toggled on
 	    -->
 	    <frame name="radio.on.normal">
-        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--
@@ -286,29 +262,33 @@
 	    </frame>
 	
 	    <!--
-	      Frame used to draw a horizontal rail for a scroll bar
+	      Frame used to draw a horizontal rail for the navigator's scroll bar
 	    -->
-	    <frame name="rail.horizontal">
+	    <frame name="navigator.rail.horizontal">
+        <region source="navigatorHorizontalRail" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
-	      Frame used to draw a vertical slider on a scroll bar in its normal state
+	      Frame used to draw the navigator's horizontal slider in its normal state
 	    -->
-	    <frame name="slider.horizontal.normal">
+	    <frame name="navigator.slider.horizontal.normal">
+        <region source="navigatorThumb" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
-	      Frame used to draw a vertical slider on a scroll bar in its highlighted state
+	      Frame used to draw the navigator's horizontal slider in its highlighted state
 	    -->
-	    <frame name="slider.horizontal.highlighted">
+	    <frame name="navigator.slider.horizontal.highlighted">
+        <region source="navigatorThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
-	      Frame used to draw a vertical slider on a scroll bar in its depressed state
+	      Frame used to draw the navigator's horizontal slider in its depressed state
 	    -->
-	    <frame name="slider.horizontal.depressed">
+	    <frame name="navigator.slider.horizontal.depressed">
+        <region source="navigatorThumbClicked" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
-	
+
 	    <!--
 	      Frame used to draw an input box
 	    -->

@@ -2,7 +2,7 @@
 
 namespace NuclexUserInterfaceExtension
 {
-    public class SkinNamedButtonControl : ButtonControl
+    public class SkinNamedHorizontalSliderControl : HorizontalSliderControl
     {
         public string SkinName { set; get; }
     }

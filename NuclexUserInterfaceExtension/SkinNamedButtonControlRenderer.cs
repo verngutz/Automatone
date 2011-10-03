@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Nuclex.UserInterface;
+using Nuclex.UserInterface.Visuals.Flat;
 
-using Nuclex.UserInterface;
-using Nuclex.UserInterface.Controls;
-using Nuclex.UserInterface.Controls.Desktop;
-
-namespace Nuclex.UserInterface.Visuals.Flat
+namespace NuclexUserInterfaceExtension
 {
 
     /// <summary>Renders button controls in a traditional flat style</summary>
@@ -60,10 +56,10 @@ namespace Nuclex.UserInterface.Visuals.Flat
         ///   any garbage from forming during rendering.
         /// </remarks>
         private static readonly string[] states = new string[] {
-      "button.disabled",
-      "button.normal",
-      "button.highlighted",
-      "button.depressed"
+      ".button.disabled",
+      ".button.normal",
+      ".button.highlighted",
+      ".button.depressed"
     };
 
     }

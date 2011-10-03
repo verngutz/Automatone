@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Duet.Audio_System;
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
+using NuclexUserInterfaceExtension;
 using Automatone.Theories;
 
 namespace Automatone.GUI
@@ -30,7 +31,7 @@ namespace Automatone.GUI
         
         private void InitializeComponent()
         {
-            Bounds = new UniRectangle(0, 0, automatone.Window.ClientBounds.Width, Automatone.CONTROLS_AND_GRID_DIVISION);
+            Bounds = LayoutManager.ControlPanelBounds;
             EnableDragging = false;
 
             // Construct children
