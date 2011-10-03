@@ -182,6 +182,7 @@ namespace Automatone.GUI
             private static Texture2D holdCell;
             private static Texture2D holdCellEnd;
             private static Texture2D gridPanelBackground;
+            private static Texture2D cursor;
 
             private Rectangle clickableArea;
             private int? gridInputStartXIndex;
@@ -212,12 +213,7 @@ namespace Automatone.GUI
                 holdCellEnd = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdboxend");
                 silentCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Darkbox");
                 gridPanelBackground = parent.parent.Content.Load<Texture2D>("Grid Panel/Bg_Gridpanel");
-                if (false)
-                {
-                    startCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox2");
-                    holdCell = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox2");
-                    holdCellEnd = parent.parent.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox2");
-                }
+                cursor = parent.parent.Content.Load<Texture2D>("Grid Panel/Itm_Cursor");
             }
 
             public void Dispose()
@@ -227,6 +223,7 @@ namespace Automatone.GUI
                 if (holdCell != null) holdCell.Dispose();
                 if (holdCellEnd != null) holdCellEnd.Dispose();
                 if (gridPanelBackground != null) gridPanelBackground.Dispose();
+                if (cursor != null) cursor.Dispose();
             }
 
             public void Update(GameTime gameTime)
@@ -312,6 +309,7 @@ namespace Automatone.GUI
                         }
                     }
                 }
+                parent.parent.SpriteBatch.Draw(cursor, new Rectangle((int)(parent.navigators.GridDrawOffsetX-parent.navigators.PlayOffset-CELLWIDTH-Labels.PITCH_LABEL_THICKNESS), clickableArea.Y, 32, clickableArea.Height), Color.AliceBlue);
                 parent.parent.SpriteBatch.End();
             }
 
@@ -551,7 +549,7 @@ namespace Automatone.GUI
             private KeyboardState oldKeyboardState;
             private KeyboardState newKeyboardState;
 
-            private const int CURSOR_OFFSET = 100;
+            private const int CURSOR_OFFSET = 200;
             private const float SCROLL_SPEED_DIVISOR = 14400f;
 
             private float moveValX = 0;
