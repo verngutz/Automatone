@@ -12,7 +12,6 @@ using Nuclex.UserInterface.Visuals.Flat;
 using Nuclex.UserInterface.Controls;
 using Nuclex.UserInterface.Visuals;
 using Nuclex.Support.Plugins;
-using Nuclex.UserInterface.Controls.Desktop;
 
 namespace NuclexUserInterfaceExtension
 {
@@ -178,6 +177,7 @@ namespace NuclexUserInterfaceExtension
             {
                 this.renderers = new Dictionary<Type, IControlRendererAdapter>();
                 renderers.Add(typeof(SkinNamedButtonControl), new ControlRendererAdapter<SkinNamedButtonControl>(new SkinNamedButtonControlRenderer()));
+                renderers.Add(typeof(SkinNamedHorizontalSliderControl), new ControlRendererAdapter<SkinNamedHorizontalSliderControl>(new SkinNamedHorizontalSliderControlRenderer()));
             }
 
             /// <summary>Determines whether the type suites the employer's requirements</summary>

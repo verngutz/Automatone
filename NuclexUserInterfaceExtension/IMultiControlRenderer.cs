@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Nuclex.UserInterface.Controls;
+﻿using Nuclex.UserInterface.Controls;
 using Nuclex.UserInterface.Visuals.Flat;
 
 namespace NuclexUserInterfaceExtension
