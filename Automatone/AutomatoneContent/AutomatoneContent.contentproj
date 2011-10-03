@@ -426,6 +426,173 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Control Panel\Btn_Add.png">
+      <Name>Btn_Add</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Add_Clicked.png">
+      <Name>Btn_Add_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Add_Hovered.png">
+      <Name>Btn_Add_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Copy.png">
+      <Name>Btn_Copy</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Copy_Clicked.png">
+      <Name>Btn_Copy_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Copy_Hovered.png">
+      <Name>Btn_Copy_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Cut.png">
+      <Name>Btn_Cut</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Cut_Clicked.png">
+      <Name>Btn_Cut_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Cut_Hovered.png">
+      <Name>Btn_Cut_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Generate.png">
+      <Name>Btn_Generate</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Generate_Clicked.png">
+      <Name>Btn_Generate_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Generate_Hovered.png">
+      <Name>Btn_Generate_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_New.png">
+      <Name>Btn_New</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_New_Clicked.png">
+      <Name>Btn_New_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_New_Hovered.png">
+      <Name>Btn_New_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Open.png">
+      <Name>Btn_Open</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Open_Clicked.png">
+      <Name>Btn_Open_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Open_Hovered.png">
+      <Name>Btn_Open_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Paste.png">
+      <Name>Btn_Paste</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Paste_Clicked.png">
+      <Name>Btn_Paste_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Paste_Hovered.png">
+      <Name>Btn_Paste_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Redo.png">
+      <Name>Btn_Redo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Redo_Clicked.png">
+      <Name>Btn_Redo_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Redo_Hovered.png">
+      <Name>Btn_Redo_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Remove.png">
+      <Name>Btn_Remove</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Remove_Clicked.png">
+      <Name>Btn_Remove_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Remove_Hovered.png">
+      <Name>Btn_Remove_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Save.png">
+      <Name>Btn_Save</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Save_Clicked.png">
+      <Name>Btn_Save_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Save_Hovered.png">
+      <Name>Btn_Save_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Undo.png">
+      <Name>Btn_Undo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Undo_Clicked.png">
+      <Name>Btn_Undo_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Undo_Hovered.png">
+      <Name>Btn_Undo_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

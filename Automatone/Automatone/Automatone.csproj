@@ -149,8 +149,8 @@
     <Compile Include="Music\Verse.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Automicon.ico" />
     <Content Include="Authumbnail.png" />
+    <Content Include="Automicon.ico" />
     <Content Include="Mtx2Midi.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
