@@ -28,6 +28,7 @@ namespace Automatone.GUI
         private ControlPanel() : base()
         {
             InitializeComponent();
+            Automatone.Instance.Window.ClientSizeChanged += delegate { Bounds = LayoutManager.ControlPanelBounds; };
         }
 
         private SkinNamedButtonControl generateSongButton;
@@ -50,75 +51,19 @@ namespace Automatone.GUI
             EnableDragging = false;
 
             // Construct children
-            generateSongButton = new SkinNamedButtonControl();
             playPauseButton = new OptionControl();
             stopButton = new SkinNamedButtonControl();
-            saveButton = new SkinNamedButtonControl();
-            openButton = new SkinNamedButtonControl();
             newButton = new SkinNamedButtonControl();
-            addCellsButton = new SkinNamedButtonControl();
-            copyButton = new SkinNamedButtonControl();
+            openButton = new SkinNamedButtonControl();
             cutButton = new SkinNamedButtonControl();
+            saveButton = new SkinNamedButtonControl();
+            copyButton = new SkinNamedButtonControl();
             pasteButton = new SkinNamedButtonControl();
-            redoButton = new SkinNamedButtonControl();
-            removeCellsButton =  new SkinNamedButtonControl();
             undoButton = new SkinNamedButtonControl();
-
-            //
-            // generateSongButton
-            //
-            generateSongButton.Bounds = LayoutManager.GenerateSongButtonBounds;
-            generateSongButton.Pressed += new EventHandler(RandomizeButtonPressed);
-            generateSongButton.SkinName = "generate.song";
-
-            //
-            // addButton
-            //
-            addCellsButton.Bounds = LayoutManager.AddButtonBounds;
-            addCellsButton.Pressed += new EventHandler(AddButtonPressed);
-            addCellsButton.SkinName = "add.cells";
-            
-            //
-            // copyButton
-            //
-            copyButton.Bounds = LayoutManager.CopyButtonBounds;
-            copyButton.Pressed += new EventHandler(CopyButtonPressed);
-            copyButton.SkinName = "copy";
-            
-            //
-            // cutButton
-            //
-            cutButton.Bounds = LayoutManager.CutButtonBounds;
-            cutButton.Pressed += new EventHandler(CutButtonPressed);
-            cutButton.SkinName = "cut";
-            
-            //
-            // pasteButton
-            //
-            pasteButton.Bounds = LayoutManager.PasteButtonBounds;
-            pasteButton.Pressed += new EventHandler(PasteButtonPressed);
-            pasteButton.SkinName = "paste";
-            
-            //
-            // redoButton
-            //
-            redoButton.Bounds = LayoutManager.RedoButtonBounds;
-            redoButton.Pressed += new EventHandler(RedoButtonPressed);
-            redoButton.SkinName = "redo";
-            
-            //
-            // removeButton
-            //
-            removeCellsButton.Bounds = LayoutManager.RemoveButtonBounds;
-            removeCellsButton.Pressed += new EventHandler(RemoveButtonPressed);
-            removeCellsButton.SkinName = "remove.cells";
-
-            //
-            // undoButton
-            //
-            undoButton.Bounds = LayoutManager.UndoButtonBounds;
-            undoButton.Pressed += new EventHandler(UndoButtonPressed);
-            undoButton.SkinName = "undo";
+            redoButton = new SkinNamedButtonControl();
+            addCellsButton = new SkinNamedButtonControl();
+            removeCellsButton = new SkinNamedButtonControl();
+            generateSongButton = new SkinNamedButtonControl();
 
             //
             // playPauseButton
@@ -135,11 +80,11 @@ namespace Automatone.GUI
             stopButton.SkinName = "stop";
 
             //
-            // saveButton
+            // newButton
             //
-            saveButton.Bounds = LayoutManager.SaveButtonBounds;
-            saveButton.Pressed += new EventHandler(SaveButtonPressed);
-            saveButton.SkinName = "save";
+            newButton.Bounds = LayoutManager.NewButtonBounds;
+            newButton.Pressed += new EventHandler(NewButtonPressed);
+            newButton.SkinName = "new";
 
             //
             // openButton
@@ -149,28 +94,84 @@ namespace Automatone.GUI
             openButton.SkinName = "open";
 
             //
-            // newButton
+            // saveButton
             //
-            newButton.Bounds = LayoutManager.NewButtonBounds;
-            newButton.Pressed += new EventHandler(NewButtonPressed);
-            newButton.SkinName = "new";
+            saveButton.Bounds = LayoutManager.SaveButtonBounds;
+            saveButton.Pressed += new EventHandler(SaveButtonPressed);
+            saveButton.SkinName = "save";
+
+            //
+            // cutButton
+            //
+            cutButton.Bounds = LayoutManager.CutButtonBounds;
+            cutButton.Pressed += new EventHandler(CutButtonPressed);
+            cutButton.SkinName = "cut";
+            
+            //
+            // copyButton
+            //
+            copyButton.Bounds = LayoutManager.CopyButtonBounds;
+            copyButton.Pressed += new EventHandler(CopyButtonPressed);
+            copyButton.SkinName = "copy";
+            
+            //
+            // pasteButton
+            //
+            pasteButton.Bounds = LayoutManager.PasteButtonBounds;
+            pasteButton.Pressed += new EventHandler(PasteButtonPressed);
+            pasteButton.SkinName = "paste";
+
+            //
+            // undoButton
+            //
+            undoButton.Bounds = LayoutManager.UndoButtonBounds;
+            undoButton.Pressed += new EventHandler(UndoButtonPressed);
+            undoButton.SkinName = "undo";
+            
+            //
+            // redoButton
+            //
+            redoButton.Bounds = LayoutManager.RedoButtonBounds;
+            redoButton.Pressed += new EventHandler(RedoButtonPressed);
+            redoButton.SkinName = "redo";
+
+            //
+            // addButton
+            //
+            addCellsButton.Bounds = LayoutManager.AddButtonBounds;
+            addCellsButton.Pressed += new EventHandler(AddButtonPressed);
+            addCellsButton.SkinName = "add.cells";
+
+            //
+            // removeButton
+            //
+            removeCellsButton.Bounds = LayoutManager.RemoveButtonBounds;
+            removeCellsButton.Pressed += new EventHandler(RemoveButtonPressed);
+            removeCellsButton.SkinName = "remove.cells";
+
+            //
+            // generateSongButton
+            //
+            generateSongButton.Bounds = LayoutManager.GenerateSongButtonBounds;
+            generateSongButton.Pressed += new EventHandler(RandomizeButtonPressed);
+            generateSongButton.SkinName = "generate.song";
 
             //
             // Add Children
             //
-            Children.Add(generateSongButton);
             Children.Add(playPauseButton);
             Children.Add(stopButton);
-            Children.Add(saveButton);
-            Children.Add(openButton);
             Children.Add(newButton);
-            Children.Add(addCellsButton);
-            Children.Add(copyButton);
+            Children.Add(openButton);
+            Children.Add(saveButton);
             Children.Add(cutButton);
+            Children.Add(copyButton);
             Children.Add(pasteButton);
             Children.Add(undoButton);
-            Children.Add(removeCellsButton);
             Children.Add(redoButton);
+            Children.Add(addCellsButton);
+            Children.Add(removeCellsButton);
+            Children.Add(generateSongButton);
         }
 
         public void ResetPlayButton()
@@ -178,39 +179,32 @@ namespace Automatone.GUI
             playPauseButton.Selected = false;
         }
 
-        private void AddButtonPressed(object sender, EventArgs e)
+        private void PlayPauseButtonToggled(object sender, EventArgs e)
         {
+            if (GridPanel.Instance.SongCells != null)
+            {
+                if (playPauseButton.Selected)
+                {
+                    if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                        Automatone.Instance.RewriteSong();
+                    Automatone.Instance.Sequencer.PlayMidi();
+                }
+                else
+                {
+                    Automatone.Instance.Sequencer.PauseMidi();
+                }
 
+                GridPanel.Instance.ScrollWithMidi = playPauseButton.Selected;
+            }
+            else
+            {
+                playPauseButton.Selected = false;
+            }
         }
 
-        private void CutButtonPressed(object sender, EventArgs e)
+        private void StopButtonPressed(object sender, EventArgs e)
         {
-
-        }
-
-        private void CopyButtonPressed(object sender, EventArgs e)
-        {
-
-        }
-
-        private void PasteButtonPressed(object sender, EventArgs e)
-        {
-
-        }
-
-        private void RedoButtonPressed(object sender, EventArgs e)
-        {
-
-        }
-
-        private void RemoveButtonPressed(object sender, EventArgs e)
-        {
-
-        }
-
-        private void UndoButtonPressed(object sender, EventArgs e)
-        {
-
+            Automatone.Instance.StopSongPlaying();
         }
 
         private void NewButtonPressed(object sender, EventArgs e)
@@ -267,27 +261,39 @@ namespace Automatone.GUI
             }
         }
 
-        private void PlayPauseButtonToggled(object sender, EventArgs e)
+        private void CutButtonPressed(object sender, EventArgs e)
         {
-            if (GridPanel.Instance.SongCells != null)
-            {
-                if (playPauseButton.Selected)
-                {
-                    if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
-                        Automatone.Instance.RewriteSong();
-                    Automatone.Instance.Sequencer.PlayMidi();
-                }
-                else
-                {
-                    Automatone.Instance.Sequencer.PauseMidi();
-                }
 
-                GridPanel.Instance.ScrollWithMidi = playPauseButton.Selected;
-            }
-            else
-            {
-                playPauseButton.Selected = false;
-            }
+        }
+
+        private void CopyButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PasteButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UndoButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RedoButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+        
+        private void AddButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RemoveButtonPressed(object sender, EventArgs e)
+        {
+
         }
 
         private void RandomizeButtonPressed(object sender, EventArgs e)
@@ -301,11 +307,6 @@ namespace Automatone.GUI
             GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
 #endif      
             GridPanel.Instance.ResetGridView();
-        }
-
-        private void StopButtonPressed(object sender, EventArgs e)
-        {
-            Automatone.Instance.StopSongPlaying();
         }
 
         private void GetUserInput()

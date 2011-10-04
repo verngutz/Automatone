@@ -12,7 +12,7 @@ namespace Automatone.GUI
         public const short DEFAULT_WINDOW_WIDTH = 800;
         public const short DEFAULT_WINDOW_HEIGHT = 600;
 
-        public const byte CONTROLS_AND_GRID_DIVISION = 150;
+        public const byte CONTROLS_AND_GRID_DIVISION = 116;
 
         public const byte CELLHEIGHT = 20;
         public const byte CELLWIDTH = 20;
@@ -33,19 +33,11 @@ namespace Automatone.GUI
             }
         }
 
-        public static UniRectangle GenerateSongButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(10, 10, 163, 48);
-            }
-        }
-
         public static UniRectangle PlayPauseButtonBounds
         {
             get
             {
-                return new UniRectangle(10, 55, 43, 43);
+                return new UniRectangle(10, 26, 64, 64);
             }
         }
 
@@ -53,23 +45,7 @@ namespace Automatone.GUI
         {
             get
             {
-                return new UniRectangle(55, 55, 43, 43);
-            }
-        }
-
-        public static UniRectangle SaveButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(55, 100, 43, 43);
-            }
-        }
-
-        public static UniRectangle OpenButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(100, 100, 43, 43);
+                return new UniRectangle(84, 26, 64, 64);
             }
         }
 
@@ -77,23 +53,23 @@ namespace Automatone.GUI
         {
             get
             {
-                return new UniRectangle(10, 100, 43, 43);
+                return new UniRectangle(158, 10, 64, 96);
             }
         }
 
-        public static UniRectangle AddButtonBounds
+        public static UniRectangle OpenButtonBounds
         {
             get
             {
-                return new UniRectangle(10, 100, 43, 43);
+                return new UniRectangle(232, 10, 64, 96);
             }
         }
 
-        public static UniRectangle CopyButtonBounds
+        public static UniRectangle SaveButtonBounds
         {
             get
             {
-                return new UniRectangle(10, 100, 43, 43);
+                return new UniRectangle(306, 10, 64, 96);
             }
         }
 
@@ -101,7 +77,15 @@ namespace Automatone.GUI
         {
             get
             {
-                return new UniRectangle(10, 100, 43, 43);
+                return new UniRectangle(380, 10, 64, 96);
+            }
+        }
+
+        public static UniRectangle CopyButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(454, 10, 64, 96);
             }
         }
 
@@ -109,23 +93,7 @@ namespace Automatone.GUI
         {
             get
             {
-                return new UniRectangle(10, 100, 43, 43);
-            }
-        }
-
-        public static UniRectangle RedoButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(10, 100, 43, 43);
-            }
-        }
-
-        public static UniRectangle RemoveButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(10, 100, 43, 43);
+                return new UniRectangle(528, 10, 64, 96);
             }
         }
 
@@ -133,7 +101,39 @@ namespace Automatone.GUI
         {
             get
             {
-                return new UniRectangle(10, 100, 43, 43);
+                return new UniRectangle(602, 10, 64, 96);
+            }
+        }
+
+        public static UniRectangle RedoButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(676, 10, 64, 96);
+            }
+        }
+
+        public static UniRectangle AddButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(750, 10, 64, 96);
+            }
+        }
+
+        public static UniRectangle RemoveButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(824, 10, 64, 96);
+            }
+        }
+
+        public static UniRectangle GenerateSongButtonBounds
+        {
+            get
+            {
+                return new UniRectangle(898, 10, 64, 96);
             }
         }
 

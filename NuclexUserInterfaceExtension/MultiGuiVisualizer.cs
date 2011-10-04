@@ -327,16 +327,16 @@ namespace NuclexUserInterfaceExtension
                 ContentManager contentManager = new ContentManager(
                   serviceProvider, Path.GetDirectoryName(skinPath)
                 );
-                try
-                {
+                //try
+                //{
                     return new MultiGuiVisualizer(contentManager, skinStream);
-                }
-                catch (Exception e)
-                {
-                    System.Console.Write(((KeyNotFoundException)e).StackTrace);
-                    contentManager.Dispose();
-                    throw;
-                }
+                //}
+                //catch (Exception e)
+                //{
+                //    System.Console.Write(e.StackTrace);
+                //    contentManager.Dispose();
+                //    throw;
+                //}
             }
         }
 

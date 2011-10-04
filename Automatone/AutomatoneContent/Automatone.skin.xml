@@ -13,21 +13,20 @@
       <!--
 	    add, copy, cut, generate, new, open, paste, redo, remove, save, undo
 	  -->
-      <bitmap name="add" contentPath="Control Panel/Btn_Add"/>
-      <bitmap name="addClicked" contentPath="Control Panel/Btn_Add_Clicked"/>
-      <bitmap name="addHovered" contentPath="Control Panel/Btn_Add_Hovered"/>
 
-      <bitmap name="copy" contentPath="Control Panel/Btn_Copy"/>
-      <bitmap name="copyClicked" contentPath="Control Panel/Btn_Copy_Clicked"/>
-      <bitmap name="copyHovered" contentPath="Control Panel/Btn_Copy_Hovered"/>
+      <bitmap name="controlpanel" contentPath="Control Panel/Bg_Controlpanel"/>
 
-      <bitmap name="cut" contentPath="Control Panel/Btn_Add"/>
-      <bitmap name="cutClicked" contentPath="Control Panel/Btn_Cut_Clicked"/>
-      <bitmap name="cutHovered" contentPath="Control Panel/Btn_Cut_Hovered"/>
+      <bitmap name="play" contentPath="Music Controls/Ctrl_Play"/>
+      <bitmap name="playClicked" contentPath="Music Controls/Ctrl_Play_Clicked"/>
+      <bitmap name="playHovered" contentPath="Music Controls/Ctrl_Play_Hovered"/>
+      
+      <bitmap name="pause" contentPath="Music Controls/Ctrl_Pause"/>
+      <bitmap name="pauseClicked" contentPath="Music Controls/Ctrl_Pause_Clicked"/>
+      <bitmap name="pauseHovered" contentPath="Music Controls/Ctrl_Pause_Hovered"/>
 
-      <bitmap name="generate" contentPath="Control Panel/Btn_Generate"/>
-      <bitmap name="generateClicked" contentPath="Control Panel/Btn_Generate_Clicked"/>
-      <bitmap name="generateHovered" contentPath="Control Panel/Btn_Generate_Hovered"/>
+      <bitmap name="stop" contentPath="Music Controls/Ctrl_Stop"/>
+      <bitmap name="stopClicked" contentPath="Music Controls/Ctrl_Stop_Clicked"/>
+      <bitmap name="stopHovered" contentPath="Music Controls/Ctrl_Stop_Hovered"/>
 
       <bitmap name="new" contentPath="Control Panel/Btn_New"/>
       <bitmap name="newClicked" contentPath="Control Panel/Btn_New_Clicked"/>
@@ -37,35 +36,42 @@
       <bitmap name="openClicked" contentPath="Control Panel/Btn_Open_Clicked"/>
       <bitmap name="openHovered" contentPath="Control Panel/Btn_Open_Hovered"/>
 
+      <bitmap name="save" contentPath="Control Panel/Btn_Save"/>
+      <bitmap name="saveClicked" contentPath="Control Panel/Btn_Save_Clicked"/>
+      <bitmap name="saveHovered" contentPath="Control Panel/Btn_Save_Hovered"/>
+
+      <bitmap name="cut" contentPath="Control Panel/Btn_Cut"/>
+      <bitmap name="cutClicked" contentPath="Control Panel/Btn_Cut_Clicked"/>
+      <bitmap name="cutHovered" contentPath="Control Panel/Btn_Cut_Hovered"/>
+
+      <bitmap name="copy" contentPath="Control Panel/Btn_Copy"/>
+      <bitmap name="copyClicked" contentPath="Control Panel/Btn_Copy_Clicked"/>
+      <bitmap name="copyHovered" contentPath="Control Panel/Btn_Copy_Hovered"/>
+
       <bitmap name="paste" contentPath="Control Panel/Btn_Paste"/>
       <bitmap name="pasteClicked" contentPath="Control Panel/Btn_Paste_Clicked"/>
       <bitmap name="pasteHovered" contentPath="Control Panel/Btn_Paste_Hovered"/>
 
-      <bitmap name="redo" contentPath="Control Panel/Btn_Paste"/>
-      <bitmap name="redoClicked" contentPath="Control Panel/Btn_Paste_Clicked"/>
-      <bitmap name="redoHovered" contentPath="Control Panel/Btn_Paste_Hovered"/>
+      <bitmap name="undo" contentPath="Control Panel/Btn_Undo"/>
+      <bitmap name="undoClicked" contentPath="Control Panel/Btn_Undo_Clicked"/>
+      <bitmap name="undoHovered" contentPath="Control Panel/Btn_Undo_Hovered"/>
 
-      <bitmap name="remove" contentPath="Control Panel/Btn_Paste"/>
-      <bitmap name="removeClicked" contentPath="Control Panel/Btn_Paste_Clicked"/>
-      <bitmap name="removeHovered" contentPath="Control Panel/Btn_Paste_Hovered"/>
+      <bitmap name="redo" contentPath="Control Panel/Btn_Redo"/>
+      <bitmap name="redoClicked" contentPath="Control Panel/Btn_Redo_Clicked"/>
+      <bitmap name="redoHovered" contentPath="Control Panel/Btn_Redo_Hovered"/>
+      
+      <bitmap name="add" contentPath="Control Panel/Btn_Add"/>
+      <bitmap name="addClicked" contentPath="Control Panel/Btn_Add_Clicked"/>
+      <bitmap name="addHovered" contentPath="Control Panel/Btn_Add_Hovered"/>
 
-      <bitmap name="save" contentPath="Control Panel/Btn_Paste"/>
-      <bitmap name="saveClicked" contentPath="Control Panel/Btn_Paste_Clicked"/>
-      <bitmap name="saveHovered" contentPath="Control Panel/Btn_Paste_Hovered"/>
+      <bitmap name="remove" contentPath="Control Panel/Btn_Remove"/>
+      <bitmap name="removeClicked" contentPath="Control Panel/Btn_Remove_Clicked"/>
+      <bitmap name="removeHovered" contentPath="Control Panel/Btn_Remove_Hovered"/>
 
-      <bitmap name="undo" contentPath="Control Panel/Btn_Paste"/>
-      <bitmap name="undoClicked" contentPath="Control Panel/Btn_Paste_Clicked"/>
-      <bitmap name="undoHovered" contentPath="Control Panel/Btn_Paste_Hovered"/>
-
-      <bitmap name="play" contentPath="play"/>
-      <bitmap name="playHover" contentPath="playHover"/>
-      <bitmap name="playClicked" contentPath="playClicked"/>
-      <bitmap name="pause" contentPath="pause"/>
-      <bitmap name="pauseHover" contentPath="pauseHover"/>
-      <bitmap name="pauseClicked" contentPath="pauseClicked"/>
-      <bitmap name="stop" contentPath="stop"/>
-      <bitmap name="stopHover" contentPath="stopHover"/>
-      <bitmap name="stopClicked" contentPath="stopClicked"/>
+      <bitmap name="generate" contentPath="Control Panel/Btn_Generate"/>
+      <bitmap name="generateClicked" contentPath="Control Panel/Btn_Generate_Clicked"/>
+      <bitmap name="generateHovered" contentPath="Control Panel/Btn_Generate_Hovered"/>
+      
       <bitmap name="navigatorHorizontalRail" contentPath="holdbox"/>
       <bitmap name="navigatorThumb" contentPath="lightbox"/>
       <bitmap name="navigatorThumbHover" contentPath="darkbox"/>
@@ -81,6 +87,7 @@
 	      Frame used to draw a normal window
 	    -->
 	    <frame name="window">
+        <region source="controlpanel" hplacement ="stretch" vplacement="stretch" x="0" y="0" w="800" h="150" />
 	    </frame>
 	
 	    <!--
@@ -100,113 +107,86 @@
 	    -->
 	    <frame name="progress.bar">
 	    </frame>
-      
-      <!--
-	      Frame used for a disabled generate song button
+	
+	    <!--
+	      Frame used for a disabled play/pause button that is toggled off
 	    -->
-      <frame name="generate.song.button.disabled">
+	    <frame name="check.off.disabled">
+	    </frame>
+	
+	    <!--
+	      Frame used for a normal play/pause button that is toggled off
+	    -->
+	    <frame name="check.off.normal">
+        <region source="play" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+	    </frame>
+	
+	    <!--
+	      Frame used for a depressed play/pause button that is toggled off
+	    -->
+	    <frame name="check.off.depressed">
+        <region source="playClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+	    </frame>
+	
+	    <!--
+	      Frame used for a highlighted play/pause button that is toggled off
+	    -->
+	    <frame name="check.off.highlighted">
+        <region source="playHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+	    </frame>
+	
+	    <!--
+	      Frame used for a disabled play/pause button that is toggled on
+	    -->
+	    <frame name="check.on.disabled">
+	    </frame>
+	
+	    <!--
+	      Frame used for a normal play/pause button that is toggled on
+	    -->
+	    <frame name="check.on.normal">
+        <region source="pause" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+	    </frame>
+	
+	    <!--
+	      Frame used for a depressed play/pause button that is toggled on
+	    -->
+	    <frame name="check.on.depressed">
+        <region source="pauseClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+	    </frame>
+	
+	    <!--
+	      Frame used for a highlighted play/pause button that is toggled on
+	    -->
+	    <frame name="check.on.highlighted">
+        <region source="pauseHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+	    </frame>
+
+      <!--
+	      Frame used for a disabled stop button
+	    -->
+      <frame name="stop.button.disabled">
       </frame>
 
       <!--
-	      Frame used for a generate song button in its normal state
+	      Frame used for a stop button in its normal state
 	    -->
-      <frame name="generate.song.button.normal">
-        <region source="generate" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      <frame name="stop.button.normal">
+        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
-	      Frame used for a generate song button when it is highlighted
+	      Frame used for a stop button when it is depressed
 	    -->
-      <frame name="generate.song.button.highlighted">
-        <region source="generateHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      <frame name="stop.button.depressed">
+        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
-	      Frame used for a generate song button when it is depressed
+	      Frame used for a stop button when it is highlighted
 	    -->
-      <frame name="generate.song.button.depressed">
-        <region source="generateClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a disabled add cells button
-	    -->
-      <frame name="add.cells.button.disabled">
-      </frame>
-
-      <!--
-	      Frame used for a add cells button in its normal state
-	    -->
-      <frame name="add.cells.button.normal">
-        <region source="add" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a add cells button when it is highlighted
-	    -->
-      <frame name="add.cells.button.highlighted">
-        <region source="addHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a add cells button when it is depressed
-	    -->
-      <frame name="add.cells.button.depressed">
-        <region source="addClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a disabled copy button
-	    -->
-      <frame name="copy.button.disabled">
-      </frame>
-
-      <!--
-	      Frame used for a copy button in its normal state
-	    -->
-      <frame name="copy.button.normal">
-        <region source="copy" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a copy button when it is highlighted
-	    -->
-      <frame name="copy.button.highlighted">
-        <region source="copyHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a copy button when it is depressed
-	    -->
-      <frame name="copy.button.depressed">
-        <region source="copyClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a disabled cut button
-	    -->
-      <frame name="cut.button.disabled">
-      </frame>
-
-      <!--
-	      Frame used for a cut button in its normal state
-	    -->
-      <frame name="cut.button.normal">
-        <region source="cut" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a cut button when it is highlighted
-	    -->
-      <frame name="cut.button.highlighted">
-        <region source="cutHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a cut button when it is depressed
-	    -->
-      <frame name="cut.button.depressed">
-        <region source="cutClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      <frame name="stop.button.highlighted">
+        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
@@ -262,87 +242,6 @@
       <frame name="open.button.depressed">
         <region source="openClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
-      
-      <!--
-	      Frame used for a disabled paste button
-	    -->
-      <frame name="paste.button.disabled">
-      </frame>
-
-      <!--
-	      Frame used for a paste button in its normal state
-	    -->
-      <frame name="paste.button.normal">
-        <region source="paste" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a paste button when it is highlighted
-	    -->
-      <frame name="paste.button.highlighted">
-        <region source="pasteHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a paste button when it is depressed
-	    -->
-      <frame name="paste.button.depressed">
-        <region source="pasteClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a disabled redo button
-	    -->
-      <frame name="redo.button.disabled">
-      </frame>
-
-      <!--
-	      Frame used for a redo button in its normal state
-	    -->
-      <frame name="redo.button.normal">
-        <region source="redo" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a redo button when it is highlighted
-	    -->
-      <frame name="redo.button.highlighted">
-        <region source="redoHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a redo button when it is depressed
-	    -->
-      <frame name="redo.button.depressed">
-        <region source="redoClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a disabled remove cells button
-	    -->
-      <frame name="remove.cells.button.disabled">
-      </frame>
-
-      <!--
-	      Frame used for a remove cells button in its normal state
-	    -->
-      <frame name="remove.cells.button.normal">
-        <region source="remove" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a remove cells button when it is highlighted
-	    -->
-      <frame name="remove.cells.button.highlighted">
-        <region source="removeHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
-
-      <!--
-	      Frame used for a remove cells button when it is depressed
-	    -->
-      <frame name="remove.cells.button.depressed">
-        <region source="removeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
-      </frame>
 
       <!--
 	      Frame used for a disabled save button
@@ -369,6 +268,87 @@
 	    -->
       <frame name="save.button.depressed">
         <region source="saveClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled cut button
+	    -->
+      <frame name="cut.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a cut button in its normal state
+	    -->
+      <frame name="cut.button.normal">
+        <region source="cut" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a cut button when it is highlighted
+	    -->
+      <frame name="cut.button.highlighted">
+        <region source="cutHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a cut button when it is depressed
+	    -->
+      <frame name="cut.button.depressed">
+        <region source="cutClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled copy button
+	    -->
+      <frame name="copy.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a copy button in its normal state
+	    -->
+      <frame name="copy.button.normal">
+        <region source="copy" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a copy button when it is highlighted
+	    -->
+      <frame name="copy.button.highlighted">
+        <region source="copyHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a copy button when it is depressed
+	    -->
+      <frame name="copy.button.depressed">
+        <region source="copyClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+      
+      <!--
+	      Frame used for a disabled paste button
+	    -->
+      <frame name="paste.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a paste button in its normal state
+	    -->
+      <frame name="paste.button.normal">
+        <region source="paste" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a paste button when it is highlighted
+	    -->
+      <frame name="paste.button.highlighted">
+        <region source="pasteHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a paste button when it is depressed
+	    -->
+      <frame name="paste.button.depressed">
+        <region source="pasteClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 
       <!--
@@ -399,30 +379,111 @@
       </frame>
 
       <!--
-	      Frame used for a disabled stop button
+	      Frame used for a disabled redo button
 	    -->
-      <frame name="stop.button.disabled">
+      <frame name="redo.button.disabled">
       </frame>
 
       <!--
-	      Frame used for a stop button in its normal state
+	      Frame used for a redo button in its normal state
 	    -->
-      <frame name="stop.button.normal">
-        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
+      <frame name="redo.button.normal">
+        <region source="redo" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 
       <!--
-	      Frame used for a stop button when it is highlighted
+	      Frame used for a redo button when it is highlighted
 	    -->
-      <frame name="stop.button.highlighted">
-        <region source="stopHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
+      <frame name="redo.button.highlighted">
+        <region source="redoHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 
       <!--
-	      Frame used for a stop button when it is depressed
+	      Frame used for a redo button when it is depressed
 	    -->
-      <frame name="stop.button.depressed">
-        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
+      <frame name="redo.button.depressed">
+        <region source="redoClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled add cells button
+	    -->
+      <frame name="add.cells.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a add cells button in its normal state
+	    -->
+      <frame name="add.cells.button.normal">
+        <region source="add" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a add cells button when it is highlighted
+	    -->
+      <frame name="add.cells.button.highlighted">
+        <region source="addHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a add cells button when it is depressed
+	    -->
+      <frame name="add.cells.button.depressed">
+        <region source="addClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled remove cells button
+	    -->
+      <frame name="remove.cells.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a remove cells button in its normal state
+	    -->
+      <frame name="remove.cells.button.normal">
+        <region source="remove" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a remove cells button when it is highlighted
+	    -->
+      <frame name="remove.cells.button.highlighted">
+        <region source="removeHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a remove cells button when it is depressed
+	    -->
+      <frame name="remove.cells.button.depressed">
+        <region source="removeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+      
+      <!--
+	      Frame used for a disabled generate song button
+	    -->
+      <frame name="generate.song.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a generate song button in its normal state
+	    -->
+      <frame name="generate.song.button.normal">
+        <region source="generate" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a generate song button when it is highlighted
+	    -->
+      <frame name="generate.song.button.highlighted">
+        <region source="generateHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a generate song button when it is depressed
+	    -->
+      <frame name="generate.song.button.depressed">
+        <region source="generateClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 	
 	    <!--
@@ -471,60 +532,6 @@
 	      Frame used for a depressed radio button that is toggled on
 	    -->
 	    <frame name="radio.on.normal">
-	    </frame>
-	
-	    <!--
-	      Frame used for a disabled checkbox that is toggled off
-	    -->
-	    <frame name="check.off.disabled">
-	    </frame>
-	
-	    <!--
-	      Frame used for a normal checkbox that is toggled off
-	    -->
-	    <frame name="check.off.normal">
-        <region source="play" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
-	    </frame>
-	
-	    <!--
-	      Frame used for a highlighted checkbox that is toggled off
-	    -->
-	    <frame name="check.off.highlighted">
-        <region source="playHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
-	    </frame>
-	
-	    <!--
-	      Frame used for a depressed checkbox that is toggled off
-	    -->
-	    <frame name="check.off.depressed">
-        <region source="playClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
-	    </frame>
-	
-	    <!--
-	      Frame used for a disabled checkbox that is toggled on
-	    -->
-	    <frame name="check.on.disabled">
-	    </frame>
-	
-	    <!--
-	      Frame used for a normal checkbox that is toggled on
-	    -->
-	    <frame name="check.on.normal">
-        <region source="pause" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
-	    </frame>
-	
-	    <!--
-	      Frame used for a highlighted checkbox that is toggled on
-	    -->
-	    <frame name="check.on.highlighted">
-        <region source="pauseHover" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
-	    </frame>
-	
-	    <!--
-	      Frame used for a depressed checkbox that is toggled on
-	    -->
-	    <frame name="check.on.depressed">
-        <region source="pauseClicked" hplacement ="left" vplacement="top" x="0" y="0" w="43" h="43" />
 	    </frame>
 	
 	    <!--

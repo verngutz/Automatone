@@ -186,6 +186,9 @@ namespace Automatone.GUI
             private static Texture2D silentCell;
             private static Texture2D startCell;
             private static Texture2D holdCell;
+            private static Texture2D holdCellEnd;
+            private static Texture2D gridPanelBackground;
+            private static Texture2D cursor;
 
             private Rectangle Bounds { set; get; }
             private int? gridInputStartXIndex;
@@ -199,9 +202,12 @@ namespace Automatone.GUI
 
             public void LoadContent()
             {
-                silentCell = Automatone.Instance.Content.Load<Texture2D>("darkbox");
-                startCell = Automatone.Instance.Content.Load<Texture2D>("lightbox");
-                holdCell = Automatone.Instance.Content.Load<Texture2D>("holdbox");
+                startCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox");
+                holdCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox");
+                holdCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdboxend");
+                silentCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Darkbox");
+                gridPanelBackground = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Bg_Gridpanel");
+                cursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor");
             }
 
             public void Dispose()
@@ -209,6 +215,9 @@ namespace Automatone.GUI
                 if (silentCell != null) silentCell.Dispose();
                 if (startCell != null) startCell.Dispose();
                 if (holdCell != null) holdCell.Dispose();
+                if (holdCellEnd != null) holdCellEnd.Dispose();
+                if (gridPanelBackground != null) gridPanelBackground.Dispose();
+                if (cursor != null) cursor.Dispose();
             }
 
             public void Update(GameTime gameTime)
@@ -268,27 +277,37 @@ namespace Automatone.GUI
 
             public void Draw(GameTime gameTime)
             {
-                Automatone.Instance.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+                Automatone.Instance.SpriteBatch.Begin();
+                
+                Automatone.Instance.SpriteBatch.Draw(gridPanelBackground, Bounds, Color.White);
                 for (int i = GridPanel.Instance.navigators.VerticalClippingStartIndex; i <= GridPanel.Instance.navigators.VerticalClippingEndIndex; i++)
                 {
                     for (int j = GridPanel.Instance.navigators.HorizontalClippingStartIndex; j <= GridPanel.Instance.navigators.HorizontalClippingEndIndex; j++)
                     {
+
                         Rectangle drawRectangle = new Rectangle((int)(j * LayoutManager.CELLWIDTH + GridPanel.Instance.navigators.GridDrawOffsetX), (int)((GridPanel.Instance.SongCells.GetLength(DimensionY) - 1 - i) * LayoutManager.CELLHEIGHT + GridPanel.Instance.navigators.GridDrawOffsetY), LayoutManager.CELLWIDTH, LayoutManager.CELLHEIGHT);
                         Color drawColor = GridPanel.Instance.GetChromaticColor(i);
-                        if (j * LayoutManager.CELLWIDTH < -GridPanel.Instance.navigators.PlayOffset - LayoutManager.CELLWIDTH)
+
+                        if (((i + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / 12) % 2 == 0)
                         {
-                            Automatone.Instance.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
-                        }
-                        else if (j * LayoutManager.CELLWIDTH < -GridPanel.Instance.navigators.PlayOffset)
-                        {
-                            Automatone.Instance.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
+                            Automatone.Instance.SpriteBatch.Draw(silentCell, drawRectangle, Color.White);
                         }
                         else
                         {
-                            Automatone.Instance.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, GridPanel.Instance.SongCells[i, j] == CellState.SILENT ? (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED ? 128 : 64) : 255));
+                            Automatone.Instance.SpriteBatch.Draw(silentCell, drawRectangle, Color.Black);
+                        }
+
+                        if (GridPanel.Instance.SongCells[i, j] != CellState.SILENT && j * LayoutManager.CELLWIDTH < -GridPanel.Instance.navigators.PlayOffset - LayoutManager.CELLWIDTH)
+                        {
+                            Automatone.Instance.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 32));
+                        }
+                        else if (GridPanel.Instance.SongCells[i, j] != CellState.SILENT)
+                        {
+                            Automatone.Instance.SpriteBatch.Draw(GetCellTexture(i, j), drawRectangle, new Color(drawColor.R, drawColor.G, drawColor.B, 255));
                         }
                     }
                 }
+                Automatone.Instance.SpriteBatch.Draw(cursor, new Rectangle((int)(GridPanel.Instance.navigators.GridDrawOffsetX-GridPanel.Instance.navigators.PlayOffset-LayoutManager.CELLWIDTH-LayoutManager.LEFT_BORDER_THICKNESS), Bounds.Y, 32, Bounds.Height), Color.AliceBlue);
                 Automatone.Instance.SpriteBatch.End();
             }
 
@@ -296,11 +315,11 @@ namespace Automatone.GUI
             {
                 switch (GridPanel.Instance.SongCells[i, j])
                 {
-                    case CellState.SILENT:
-                        return silentCell;
                     case CellState.START:
                         return startCell;
                     case CellState.HOLD:
+                        if (j + 1 >= GridPanel.Instance.SongCells.GetLength(DimensionX) || GridPanel.Instance.SongCells[i, j+1] != CellState.HOLD)
+                            return holdCellEnd;
                         return holdCell;
                 }
                 return null;
@@ -515,7 +534,7 @@ namespace Automatone.GUI
             private KeyboardState oldKeyboardState;
             private KeyboardState newKeyboardState;
 
-            private const int CURSOR_OFFSET = 100;
+            private const int CURSOR_OFFSET = 200;
             private const float SCROLL_SPEED_DIVISOR = 14400f;
 
             private float moveValX = 0;
@@ -719,11 +738,13 @@ namespace Automatone.GUI
                 HandleManualScrolling(ref moveValX, ref gridDrawOffset.X, ClampGridOffsetX, CalculateHorizontalClipping, Keys.Right, Keys.Left);
                 if (newKeyboardState.IsKeyDown(Keys.Home) && oldKeyboardState.IsKeyUp(Keys.Home))
                 {
-                    gridDrawOffset.X = minGridDrawOffset.X;
+                    moveValX = 0;
+                    gridDrawOffset.X = maxGridDrawOffset.X;
                 }
                 if (newKeyboardState.IsKeyDown(Keys.End) && oldKeyboardState.IsKeyUp(Keys.End))
                 {
-                    gridDrawOffset.X = maxGridDrawOffset.X;
+                    moveValX = 0;
+                    gridDrawOffset.X = minGridDrawOffset.X;
                 }
             }
 
