@@ -14,11 +14,19 @@ namespace Automatone.GUI
 {
     public class ControlPanel : WindowControl
     {
-        private Automatone automatone;
-
-        public ControlPanel(Automatone parent) : base()
+        private static ControlPanel instance;
+        public static ControlPanel Instance
         {
-            automatone = parent;
+            get
+            {
+                if (instance == null)
+                    instance = new ControlPanel();
+                return instance;
+            }
+        }
+
+        private ControlPanel() : base()
+        {
             InitializeComponent();
         }
 
@@ -207,15 +215,15 @@ namespace Automatone.GUI
 
         private void NewButtonPressed(object sender, EventArgs e)
         {
-            automatone.StopSongPlaying();
-            automatone.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
-            automatone.GridPanel.SongCells = new CellState[Automatone.PIANO_SIZE, 45];
+            Automatone.Instance.StopSongPlaying();
+            Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
+            GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
             GridPanel.Instance.ResetGridView();
         }
 
         private void OpenButtonPressed(object sender, EventArgs e)
         {
-            automatone.StopSongPlaying();
+            Automatone.Instance.StopSongPlaying();
             Stream loadStream;
             OpenFileDialog projectLoadDialog = new OpenFileDialog();
 
@@ -228,9 +236,8 @@ namespace Automatone.GUI
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     InputParameters.LoadInstance((InputParameters)formatter.Deserialize(loadStream));
-                    automatone.MeasureLength = (int)formatter.Deserialize(loadStream);
-                    automatone.Song = (string)formatter.Deserialize(loadStream);
-                    automatone.GridPanel.SongCells = (CellState[,])formatter.Deserialize(loadStream);
+                    Automatone.Instance.MeasureLength = (int)formatter.Deserialize(loadStream);
+                    GridPanel.Instance.SongCells = (CellState[,])formatter.Deserialize(loadStream);
                     loadStream.Close();
                 }
             }
@@ -240,7 +247,7 @@ namespace Automatone.GUI
 
         private void SaveButtonPressed(object sender, EventArgs e)
         {
-            if (automatone.Song != null)
+            if (Automatone.Instance.Song != null)
             {
                 Stream saveStream;
                 SaveFileDialog projectSaveDialog = new SaveFileDialog();
@@ -252,10 +259,9 @@ namespace Automatone.GUI
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(saveStream, InputParameters.Instance);
-                    formatter.Serialize(saveStream, automatone.MeasureLength);
-                    automatone.RewriteSong();
-                    formatter.Serialize(saveStream, automatone.Song);
-                    formatter.Serialize(saveStream, automatone.GridPanel.SongCells);
+                    formatter.Serialize(saveStream, Automatone.Instance.MeasureLength);
+                    Automatone.Instance.RewriteSong();
+                    formatter.Serialize(saveStream, GridPanel.Instance.SongCells);
                     saveStream.Close();
                 }
             }
@@ -263,20 +269,20 @@ namespace Automatone.GUI
 
         private void PlayPauseButtonToggled(object sender, EventArgs e)
         {
-            if (automatone.GridPanel.SongCells != null)
+            if (GridPanel.Instance.SongCells != null)
             {
                 if (playPauseButton.Selected)
                 {
-                    if (automatone.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
-                        automatone.RewriteSong();
-                    automatone.Sequencer.PlayMidi();
+                    if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                        Automatone.Instance.RewriteSong();
+                    Automatone.Instance.Sequencer.PlayMidi();
                 }
                 else
                 {
-                    automatone.Sequencer.PauseMidi();
+                    Automatone.Instance.Sequencer.PauseMidi();
                 }
 
-                automatone.GridPanel.ScrollWithMidi = playPauseButton.Selected;
+                GridPanel.Instance.ScrollWithMidi = playPauseButton.Selected;
             }
             else
             {
@@ -286,20 +292,20 @@ namespace Automatone.GUI
 
         private void RandomizeButtonPressed(object sender, EventArgs e)
         {
-            automatone.StopSongPlaying();
+            Automatone.Instance.StopSongPlaying();
             GetUserInput();
 
 #if USESEED
-            automatone.SongCells = SongGenerator.GenerateSong(automatone, new Random(SEED), new ClassicalTheory());
+            GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(SEED), new ClassicalTheory());
 #else
-            automatone.GridPanel.SongCells = SongGenerator.GenerateSong(automatone, new Random(), new ClassicalTheory());
+            GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
 #endif      
             GridPanel.Instance.ResetGridView();
         }
 
         private void StopButtonPressed(object sender, EventArgs e)
         {
-            automatone.StopSongPlaying();
+            Automatone.Instance.StopSongPlaying();
         }
 
         private void GetUserInput()

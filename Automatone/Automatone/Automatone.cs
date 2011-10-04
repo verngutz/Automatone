@@ -43,9 +43,6 @@ namespace Automatone
         private InputManager inputManager;
         private GuiManager gui;
         public GuiManager Gui { get { return gui; } }
-        private ControlPanel controlPanel;
-        private GridPanel gridPanel;
-        public GridPanel GridPanel { get { return gridPanel; } }
 
         //Music Stuff
         public String Song { set; get; }
@@ -65,6 +62,8 @@ namespace Automatone
         //Pitch Range and Offset
         public const int PIANO_SIZE = 61;
         public const int LOWEST_NOTE_CHROMATIC_NUMBER = 6;
+
+        public const int NEW_SONG_LENGTH = 5;
 
         private static Automatone instance;
         public static Automatone Instance
@@ -98,8 +97,8 @@ namespace Automatone
         protected override void Initialize()
         {
             // Set Preferred Resolution
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = LayoutManager.DEFAULT_WINDOW_WIDTH;
+            graphics.PreferredBackBufferHeight = LayoutManager.DEFAULT_WINDOW_HEIGHT;
             graphics.ApplyChanges();
 
             // Initialize Input Handler
@@ -113,12 +112,10 @@ namespace Automatone
             gui.Screen = screen;
 
             // Create control panel
-            controlPanel = new ControlPanel(this);
-            screen.Desktop.Children.Add(controlPanel);
+            screen.Desktop.Children.Add(ControlPanel.Instance);
 
             // Create grid panel
-            gridPanel = GridPanel.Instance;
-            Components.Add(gridPanel);
+            Components.Add(GridPanel.Instance);
 
             // Start up core DUET services
             Duet.Global.Initialize(this);
@@ -226,8 +223,8 @@ namespace Automatone
         public void StopSongPlaying()
         {
             Sequencer.StopMidi();
-            GridPanel.ResetScrolling();
-            controlPanel.ResetPlayButton();
+            GridPanel.Instance.ResetScrolling();
+            ControlPanel.Instance.ResetPlayButton();
         }
     }
 }

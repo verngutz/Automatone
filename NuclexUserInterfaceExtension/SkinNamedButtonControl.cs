@@ -1,4 +1,5 @@
-﻿using Nuclex.UserInterface.Controls.Desktop;
+﻿using Microsoft.Xna.Framework.Input;
+using Nuclex.UserInterface.Controls.Desktop;
 
 namespace NuclexUserInterfaceExtension
 {
