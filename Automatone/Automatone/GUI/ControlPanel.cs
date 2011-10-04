@@ -207,7 +207,7 @@ namespace Automatone.GUI
             Automatone.Instance.StopSongPlaying();
         }
 
-        private void NewButtonPressed(object sender, EventArgs e)
+        public void NewButtonPressed(object sender, EventArgs e)
         {
             Automatone.Instance.StopSongPlaying();
             Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);

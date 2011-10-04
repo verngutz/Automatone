@@ -163,8 +163,7 @@ namespace Automatone.GUI
         {
             get
             {
-                Rectangle bounds = LayoutManager.GridPanelBounds.OuterRectangle;
-                return new UniRectangle(bounds.X, bounds.Y, bounds.Width + RIGHT_SCROLLBAR_THICKNESS, bounds.Height + BOTTOM_SCROLLBAR_THICKNESS);
+                return new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
             }
         }
 
@@ -173,9 +172,7 @@ namespace Automatone.GUI
             get
             {
                 FramedBounds gridPanelBounds = GridPanelBounds;
-                UniRectangle a = new UniRectangle(gridPanelBounds.InnerRectangle.Left, gridPanelBounds.BottomRectangle.Bottom, gridPanelBounds.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
-                System.Console.WriteLine(a.ToString());
-                return a;
+                return new UniRectangle(gridPanelBounds.InnerRectangle.Left, gridPanelBounds.OuterRectangle.Height, gridPanelBounds.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
             }
         }
 
@@ -184,13 +181,13 @@ namespace Automatone.GUI
             get
             {
                 FramedBounds gridPanelBounds = GridPanelBounds;
-                return new UniRectangle(gridPanelBounds.RightRectangle.Right, gridPanelBounds.InnerRectangle.Top, RIGHT_SCROLLBAR_THICKNESS, gridPanelBounds.InnerRectangle.Height);
+                return new UniRectangle(gridPanelBounds.OuterRectangle.Width, gridPanelBounds.InnerRectangle.Top, RIGHT_SCROLLBAR_THICKNESS, gridPanelBounds.InnerRectangle.Height);
             }
         }
 
         public static float GetHorizontalSliderThumbSize(int songCellsWidth)
         {
-            return GridPanelBounds.InnerRectangle.Width / songCellsWidth * CELLWIDTH;
+            return Math.Min(1, (float)GridPanelBounds.InnerRectangle.Width / (songCellsWidth * CELLWIDTH));
         }
     }
 }
