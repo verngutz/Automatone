@@ -112,6 +112,8 @@
     <Compile Include="SkinNamedButtonControlRenderer.cs" />
     <Compile Include="SkinNamedHorizontalSliderControl.cs" />
     <Compile Include="SkinNamedHorizontalSliderControlRenderer.cs" />
+    <Compile Include="SkinNamedVerticalSliderControl.cs" />
+    <Compile Include="SkinNamedVerticalSliderControlRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MultiGuiGraphics.Drawing.cs" />

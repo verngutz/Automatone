@@ -153,10 +153,44 @@ namespace Automatone.GUI
         {
             get
             {
-                Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height - CONTROLS_AND_GRID_DIVISION);
+                Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width - RIGHT_SCROLLBAR_THICKNESS, Automatone.Instance.Window.ClientBounds.Height - CONTROLS_AND_GRID_DIVISION - BOTTOM_SCROLLBAR_THICKNESS);
                 Rectangle innerRectangle = new Rectangle(outerRectangle.X + LEFT_BORDER_THICKNESS, outerRectangle.Y + TOP_BORDER_THICKNESS, outerRectangle.Width - LEFT_BORDER_THICKNESS - RIGHT_BORDER_THICKNESS, outerRectangle.Height - TOP_BORDER_THICKNESS - BOTTOM_BORDER_THICKNESS);
                 return new FramedBounds(outerRectangle, innerRectangle);
             }
+        }
+
+        public static UniRectangle NavigatorBounds
+        {
+            get
+            {
+                Rectangle bounds = LayoutManager.GridPanelBounds.OuterRectangle;
+                return new UniRectangle(bounds.X, bounds.Y, bounds.Width + RIGHT_SCROLLBAR_THICKNESS, bounds.Height + BOTTOM_SCROLLBAR_THICKNESS);
+            }
+        }
+
+        public static UniRectangle NavHorizontalScrollBarBounds
+        {
+            get
+            {
+                FramedBounds gridPanelBounds = GridPanelBounds;
+                UniRectangle a = new UniRectangle(gridPanelBounds.InnerRectangle.Left, gridPanelBounds.BottomRectangle.Bottom, gridPanelBounds.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
+                System.Console.WriteLine(a.ToString());
+                return a;
+            }
+        }
+
+        public static UniRectangle NavVerticalScrollBarBounds
+        {
+            get
+            {
+                FramedBounds gridPanelBounds = GridPanelBounds;
+                return new UniRectangle(gridPanelBounds.RightRectangle.Right, gridPanelBounds.InnerRectangle.Top, RIGHT_SCROLLBAR_THICKNESS, gridPanelBounds.InnerRectangle.Height);
+            }
+        }
+
+        public static float GetHorizontalSliderThumbSize(int songCellsWidth)
+        {
+            return GridPanelBounds.InnerRectangle.Width / songCellsWidth * CELLWIDTH;
         }
     }
 }

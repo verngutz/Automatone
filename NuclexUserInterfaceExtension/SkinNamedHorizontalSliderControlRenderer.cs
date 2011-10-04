@@ -53,4 +53,4 @@ namespace NuclexUserInterfaceExtension
 
     }
 
-} // namespace Nuclex.UserInterface.Visuals.Flat.Renderers
+}

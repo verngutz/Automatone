@@ -66,10 +66,10 @@
       <bitmap name="stop" contentPath="stop"/>
       <bitmap name="stopHover" contentPath="stopHover"/>
       <bitmap name="stopClicked" contentPath="stopClicked"/>
-      <bitmap name="navigatorHorizontalRail" contentPath="darkbox"/>
-      <bitmap name="navigatorThumb" contentPath="holdbox"/>
-      <bitmap name="navigatorThumbHover" contentPath="lightbox"/>
-      <bitmap name="navigatorThumbClicked" contentPath="darkbox"/>
+      <bitmap name="navigatorHorizontalRail" contentPath="holdbox"/>
+      <bitmap name="navigatorThumb" contentPath="lightbox"/>
+      <bitmap name="navigatorThumbHover" contentPath="darkbox"/>
+      <bitmap name="navigatorThumbClicked" contentPath="holdbox"/>
 	  </resources>
 	
 	  <!--

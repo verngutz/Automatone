@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
 using Nuclex.Graphics.SpecialEffects.Particles;
 using NuclexUserInterfaceExtension;
@@ -33,7 +34,8 @@ namespace Automatone.GUI
                 cells.CalculateBounds();
                 labels.CalculateBounds();
                 navigators.CalculateGridOffsetBounds();
-                navigators.RenewHorizontalClipping();
+                navigators.CalculateHorizontalClipping();
+                navigators.CalculateHorizontalSliderThumbSize();
             }
             get
             {
@@ -84,8 +86,11 @@ namespace Automatone.GUI
                 labels.CalculateBounds();
                 cells.CalculateBounds();
                 navigators.CalculateGridOffsetBounds();
-                navigators.CalculateClippingBounds();
+                navigators.CalculateGridClipping();
+                navigators.CalculateSliderThumbSize();
             }
+
+            navigators.CalculateSliderBounds();
         }
 
         protected override void LoadContent()
@@ -321,10 +326,11 @@ namespace Automatone.GUI
 
             public void CalculateBounds()
             {
-                leftBorderBounds = LayoutManager.GridPanelBounds.LeftRectangle;
-                topBorderBounds = LayoutManager.GridPanelBounds.TopRectangle;
-                rightBorderBounds = LayoutManager.GridPanelBounds.RightRectangle;
-                bottomBorderBounds = LayoutManager.GridPanelBounds.BottomRectangle;
+                FramedBounds gridPanelBounds = LayoutManager.GridPanelBounds;
+                leftBorderBounds = gridPanelBounds.LeftRectangle;
+                topBorderBounds = gridPanelBounds.TopRectangle;
+                rightBorderBounds = gridPanelBounds.RightRectangle;
+                bottomBorderBounds = gridPanelBounds.BottomRectangle;
             }
 
             public void LoadContent()
@@ -536,7 +542,7 @@ namespace Automatone.GUI
             public class RenewClippingDelegateReturn { }
             private delegate RenewClippingDelegateReturn RenewClippingDelegate();
 
-            private SkinNamedHorizontalSliderControl horizonalSlider;
+            private SkinNamedHorizontalSliderControl horizontalSlider;
 
             public Navigators()
                 : base()
@@ -548,6 +554,48 @@ namespace Automatone.GUI
 
             private void InitializeComponent()
             {
+                //Bounds = LayoutManager.NavigatorBounds;
+                EnableDragging = false;
+
+                //Contruct Children
+                horizontalSlider = new SkinNamedHorizontalSliderControl();
+
+                //
+                // horizontalSlider
+                //
+                horizontalSlider.Bounds = LayoutManager.NavHorizontalScrollBarBounds;
+                horizontalSlider.ThumbPosition = 0;
+                horizontalSlider.ThumbSize = 0.5f;
+                horizontalSlider.Moved += new EventHandler(HorizontalSliderMoved);
+                horizontalSlider.SkinName = "navigator";
+
+                //Add Children
+                Children.Add(horizontalSlider);
+            }
+
+            private void HorizontalSliderMoved(object sender, EventArgs e)
+            {
+                gridDrawOffset.X = MathHelper.Lerp(maxGridDrawOffset.X, minGridDrawOffset.X, horizontalSlider.ThumbPosition);
+            }
+
+            public void CalculateSliderThumbSize()
+            {
+                CalculateHorizontalSliderThumbSize();
+                CalculateVerticalSliderThumbSize();
+            }
+
+            public void CalculateHorizontalSliderThumbSize()
+            {
+                horizontalSlider.ThumbSize = LayoutManager.GetHorizontalSliderThumbSize(GridPanel.Instance.SongCells.GetLength(DimensionX));
+            }
+
+            public void CalculateVerticalSliderThumbSize()
+            {
+            }
+
+            public void CalculateSliderBounds()
+            {
+                horizontalSlider.Bounds = LayoutManager.NavHorizontalScrollBarBounds;
             }
 
             public void CalculateGridOffsetBounds()
@@ -568,23 +616,25 @@ namespace Automatone.GUI
                 );
             }
 
-            public void CalculateClippingBounds()
+            public void CalculateGridClipping()
             {
-                RenewHorizontalClipping();
-                RenewVerticalClipping();
+                CalculateHorizontalClipping();
+                CalculateVerticalClipping();
             }
 
-            public RenewClippingDelegateReturn RenewHorizontalClipping()
+            public RenewClippingDelegateReturn CalculateHorizontalClipping()
             {
-                horizontalClippingStartIndex = Math.Max(GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.GridPanelBounds.InnerRectangle.Left), 0);
-                horizontalClippingEndIndex = Math.Min(GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.GridPanelBounds.InnerRectangle.Right), GridPanel.Instance.SongCells.GetLength(DimensionX) - 1);
+                Rectangle innerBounds = LayoutManager.GridPanelBounds.InnerRectangle;
+                horizontalClippingStartIndex = Math.Max(GridPanel.Instance.ScreenToGridCoordinatesX(innerBounds.Left), 0);
+                horizontalClippingEndIndex = Math.Min(GridPanel.Instance.ScreenToGridCoordinatesX(innerBounds.Right), GridPanel.Instance.SongCells.GetLength(DimensionX) - 1);
                 return null;
             }
 
-            public RenewClippingDelegateReturn RenewVerticalClipping()
+            public RenewClippingDelegateReturn CalculateVerticalClipping()
             {
-                verticalClippingStartIndex = Math.Max(GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.GridPanelBounds.InnerRectangle.Bottom), 0);
-                verticalClippingEndIndex = Math.Min(GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.GridPanelBounds.InnerRectangle.Top), GridPanel.Instance.SongCells.GetLength(DimensionY) - 1);
+                Rectangle innerBounds = LayoutManager.GridPanelBounds.InnerRectangle;
+                verticalClippingStartIndex = Math.Max(GridPanel.Instance.ScreenToGridCoordinatesY(innerBounds.Bottom), 0);
+                verticalClippingEndIndex = Math.Min(GridPanel.Instance.ScreenToGridCoordinatesY(innerBounds.Top), GridPanel.Instance.SongCells.GetLength(DimensionY) - 1);
                 return null;
             }
 
@@ -593,12 +643,14 @@ namespace Automatone.GUI
                 gridDrawOffset = new Vector2(maxGridDrawOffset.X, maxGridDrawOffset.Y);
                 moveValX = 0;
                 moveValY = 0;
-                CalculateClippingBounds();
+                CalculateGridClipping();
+                horizontalSlider.ThumbPosition = 0;
             }
 
             public void ResetScrolling()
             {
                 playOffset = 0;
+                horizontalSlider.ThumbPosition = 0;
                 GridPanel.Instance.ScrollWithMidi = false;
             }
 
@@ -631,7 +683,7 @@ namespace Automatone.GUI
                 playOffset -= InputParameters.Instance.tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * LayoutManager.CELLWIDTH;
                 gridDrawOffset.X = Math.Min(playOffset + CURSOR_OFFSET, 0);
                 ClampGridOffsetX();
-                RenewHorizontalClipping();
+                CalculateHorizontalClipping();
             }
 
             private void HandleManualScrolling(ref float moveVal, ref float gridOffsetDimension, ClampDelegate clampDelegate, RenewClippingDelegate renewClippingDelegate, Keys positiveDirectionKey, Keys negativeDirectionKey)
@@ -664,7 +716,7 @@ namespace Automatone.GUI
 
             private void HandleHorizontalScrolling()
             {
-                HandleManualScrolling(ref moveValX, ref gridDrawOffset.X, ClampGridOffsetX, RenewHorizontalClipping, Keys.Right, Keys.Left);
+                HandleManualScrolling(ref moveValX, ref gridDrawOffset.X, ClampGridOffsetX, CalculateHorizontalClipping, Keys.Right, Keys.Left);
                 if (newKeyboardState.IsKeyDown(Keys.Home) && oldKeyboardState.IsKeyUp(Keys.Home))
                 {
                     gridDrawOffset.X = minGridDrawOffset.X;
@@ -677,7 +729,7 @@ namespace Automatone.GUI
 
             private void HandleVerticalScrolling()
             {
-                HandleManualScrolling(ref moveValY, ref gridDrawOffset.Y, ClampGridOffsetY, RenewVerticalClipping, Keys.Down, Keys.Up);
+                HandleManualScrolling(ref moveValY, ref gridDrawOffset.Y, ClampGridOffsetY, CalculateVerticalClipping, Keys.Down, Keys.Up);
             }
 
             private ClampDelegateReturn ClampGridOffsetX()
