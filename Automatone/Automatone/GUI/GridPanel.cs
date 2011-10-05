@@ -526,7 +526,6 @@ namespace Automatone.GUI
                 startCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
                 endCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
                 playCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor");
-                
             }
 
             public void Dispose()
