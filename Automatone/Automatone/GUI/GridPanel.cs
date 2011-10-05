@@ -488,23 +488,20 @@ namespace Automatone.GUI
         {
             private Texture2D startCursor;
             private Texture2D endCursor;
-            private Rectangle topBar;
+
             private const int CURSORHEIGHT = 20;
             private const int CURSORWIDTH = 20;
 
-            public int StartIndex { get { return startDraw / LayoutManager.CELLWIDTH; } }
-            public int EndIndex { get { return endDraw / LayoutManager.CELLWIDTH; } }
+            private int startIndex;
+            private int endIndex;
 
-            private int startDrag;
-            private int endDrag;
-            private int startDraw;
-            private int endDraw;
+            public int StartIndex { get { return Math.Min(startIndex, endIndex); } }
+            public int EndIndex { get { return Math.Max(endIndex, startIndex); } }
 
             public void LoadContent()
             {
                 startCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
                 endCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
-                topBar = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, LayoutManager.DEFAULT_WINDOW_WIDTH, LayoutManager.TOP_BORDER_THICKNESS);
             }
 
             public void Dispose()
@@ -519,38 +516,34 @@ namespace Automatone.GUI
                     && Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED
                     && (GridPanel.Instance.newMouseState.LeftButton != ButtonState.Released
                         || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
-                    && topBar.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
+                    && LayoutManager.Instance.GridCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
                 {
-                    if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
+                    if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed)
                     {
-                        startDrag = GridPanel.Instance.newMouseState.X - (int)NavigatorPanel.Instance.GridDrawOffsetX;
-
+                        if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
+                        {
+                            startIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                        }
+                        endIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                        System.Console.WriteLine(StartIndex + " " + EndIndex);
                     }
-                    else if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Released && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        endDrag = GridPanel.Instance.newMouseState.X - (int)NavigatorPanel.Instance.GridDrawOffsetX;
-                        startDrag = (int)MathHelper.Clamp(startDrag, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) * LayoutManager.CELLWIDTH);
-                        startDrag = (int)Math.Round(startDrag / (double)LayoutManager.CELLWIDTH) * LayoutManager.CELLWIDTH;
-                        endDrag = (int)MathHelper.Clamp(endDrag, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) * LayoutManager.CELLWIDTH);
-                        endDrag = (int)Math.Round(endDrag / (double)LayoutManager.CELLWIDTH) * LayoutManager.CELLWIDTH;
-                    }
-                    else if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        endDrag = GridPanel.Instance.newMouseState.X - (int)NavigatorPanel.Instance.GridDrawOffsetX;
-                    }
-                    startDraw = Math.Min(startDrag, endDrag);
-                    endDraw = Math.Max(startDrag, endDrag);
                 }
             }
 
             public void Draw(GameTime gameTime)
             {
                 Automatone.Instance.SpriteBatch.Begin();
-                if (endDraw != startDraw)
+                if (startIndex != endIndex 
+                    && endIndex < GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left + LayoutManager.CELLWIDTH / 2) 
+                    && endIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
-                    Automatone.Instance.SpriteBatch.Draw(endCursor, new Rectangle(endDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
+                    //Automatone.Instance.SpriteBatch.Draw(endCursor, new Rectangle(endDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, LayoutManager.Instance.GridCursorsClickableArea.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
                 }
-                Automatone.Instance.SpriteBatch.Draw(startCursor, new Rectangle(startDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                if(startIndex < GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left + LayoutManager.CELLWIDTH / 2)
+                    && startIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                {
+                    //Automatone.Instance.SpriteBatch.Draw(startCursor, new Rectangle(startDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, LayoutManager.Instance.GridCursorsClickableArea.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                }
                 Automatone.Instance.SpriteBatch.End();
             }
         }
