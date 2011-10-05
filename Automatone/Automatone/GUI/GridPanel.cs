@@ -53,6 +53,7 @@ namespace Automatone.GUI
 
         private Cells cells;
         private Labels labels;
+        private Cursors cursors;
 
         private static GridPanel instance;
         public static GridPanel Instance
@@ -71,6 +72,7 @@ namespace Automatone.GUI
             oldMouseState = Mouse.GetState();
             cells = new Cells();
             labels = new Labels();
+            cursors = new Cursors();
         }
 
         protected override void LoadContent()
@@ -78,12 +80,14 @@ namespace Automatone.GUI
             base.LoadContent();
             cells.LoadContent();
             labels.LoadContent();
+            cursors.LoadContent();
         }
 
         protected override void UnloadContent()
         {
             cells.Dispose();
             labels.Dispose();
+            cursors.Dispose();
             base.UnloadContent();
         }
 
@@ -94,6 +98,8 @@ namespace Automatone.GUI
             if (SongCells != null)
             {
                 cells.Update(gameTime);
+                cursors.Update(gameTime);
+
                 NavigatorPanel.Instance.Update(gameTime);
             }
 
@@ -107,6 +113,7 @@ namespace Automatone.GUI
             {
                 cells.Draw(gameTime);
                 labels.Draw(gameTime);
+                cursors.Draw(gameTime);
             }
 
             base.Draw(gameTime);
@@ -479,6 +486,69 @@ namespace Automatone.GUI
         /// </summary>
         private class Cursors
         {
+            private Texture2D startCursor;
+            private Texture2D endCursor;
+            private Rectangle topBar;
+            private const int CURSORHEIGHT = 20;
+            private const int CURSORWIDTH = 20;
+
+            private int startIndex;
+            public int StartIndex { get { return startIndex; } }
+            private int endIndex;
+            public int EndIndex { get { return endIndex; } }
+
+            private int startDragIndex;
+            private int endDragIndex;
+
+            public void LoadContent()
+            {
+                startCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox");
+                endCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox");
+                topBar = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, LayoutManager.DEFAULT_WINDOW_WIDTH, LayoutManager.TOP_BORDER_THICKNESS);
+            }
+
+            public void Dispose()
+            {
+                if (startCursor != null) startCursor.Dispose();
+                if (endCursor != null) endCursor.Dispose();
+            }
+
+            public void Update(GameTime gameTime)
+            {
+                if (Automatone.Instance.IsActive
+                    && Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED
+                    && (GridPanel.Instance.newMouseState.LeftButton != ButtonState.Released
+                        || GridPanel.Instance.newMouseState.LeftButton != ButtonState.Released)
+                    && topBar.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
+                {
+                    if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
+                    {
+                        startDragIndex = GridPanel.Instance.newMouseState.X;
+                    }
+                    else if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        endDragIndex = GridPanel.Instance.newMouseState.X;
+                    }
+                    startIndex = Math.Min(startDragIndex, endDragIndex);
+                    endIndex = Math.Max(startDragIndex, endDragIndex);
+                    if (endIndex - startIndex < LayoutManager.CELLWIDTH)
+                    {
+                        startIndex = startDragIndex;
+                        endIndex = startDragIndex;
+                    }
+                }
+            }
+
+            public void Draw(GameTime gameTime)
+            {
+                Automatone.Instance.SpriteBatch.Begin();
+                if (endIndex != startIndex)
+                {
+                    Automatone.Instance.SpriteBatch.Draw(endCursor, new Rectangle(endIndex - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
+                }
+                Automatone.Instance.SpriteBatch.Draw(startCursor, new Rectangle(startIndex - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                Automatone.Instance.SpriteBatch.End();
+            }
         }
     }
 }

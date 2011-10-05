@@ -118,7 +118,7 @@ namespace Automatone.GUI
             // horizontalSlider
             //
             horizontalSlider.Bounds = LayoutManager.Instance.HorizontalScrollBarBounds;
-            horizontalSlider.ThumbPosition = 0;
+            horizontalSlider.ThumbPosition = LayoutManager.Instance.HorizontalSliderThumbSize;
             horizontalSlider.Moved += new EventHandler(HorizontalSliderMoved);
             horizontalSlider.SkinName = "navigator";
 
@@ -126,7 +126,7 @@ namespace Automatone.GUI
             // verticalSlider
             //
             verticalSlider.Bounds = LayoutManager.Instance.VerticalScrollBarBounds;
-            verticalSlider.ThumbPosition = 0;
+            verticalSlider.ThumbPosition = LayoutManager.Instance.VerticalSliderThumbSize;
             verticalSlider.Moved += new EventHandler(VerticalSliderMoved);
             verticalSlider.SkinName = "navigator";
 

@@ -75,14 +75,26 @@ namespace Automatone.GUI
         private UniRectangle navigatorPanelBounds;
         private UniRectangle horizontalScrollBarBounds;
         private UniRectangle verticalScrollBarBounds;
-        private float horizontalScrollBarThumbSize;
-        private float verticalScrollBarThumbSize;
 
         public UniRectangle NavigatorPanelBounds { get { return navigatorPanelBounds; } }
         public UniRectangle HorizontalScrollBarBounds { get { return horizontalScrollBarBounds; } }
         public UniRectangle VerticalScrollBarBounds { get { return verticalScrollBarBounds; } }
-        public float HorizontalScrollBarThumbSize { get { return horizontalScrollBarThumbSize; } }
-        public float VerticalScrollBarThumbSize { get { return verticalScrollBarThumbSize; } }
+
+        public float HorizontalSliderThumbSize
+        {
+            get
+            {
+                return Math.Min(1, (float)GridCellsClickableArea.Width / (cellsArrayLengthX * CELLWIDTH));
+            }
+        }
+
+        public float VerticalSliderThumbSize
+        {
+            get
+            {
+                return Math.Min(1, (float)GridCellsClickableArea.Height / (cellsArrayLengthY * CELLHEIGHT));
+            }
+        }
 
         private LayoutManager() 
         {
@@ -161,8 +173,8 @@ namespace Automatone.GUI
             NavigatorPanel.Instance.Bounds = NavigatorPanelBounds;
             NavigatorPanel.Instance.HorizontalScrollBarBounds = horizontalScrollBarBounds;
             NavigatorPanel.Instance.VerticalScrollBarBounds = verticalScrollBarBounds;
-            NavigatorPanel.Instance.HorizontalScrollBarThumbSize = GetHorizontalSliderThumbSize();
-            NavigatorPanel.Instance.VerticalScrollBarThumbSize = GetVerticalSliderThumbSize();
+            NavigatorPanel.Instance.HorizontalScrollBarThumbSize = HorizontalSliderThumbSize;
+            NavigatorPanel.Instance.VerticalScrollBarThumbSize = VerticalSliderThumbSize;
             NavigatorPanel.Instance.CalculateGridOffsetBounds(cellsArrayLengthX);
             NavigatorPanel.Instance.CalculateGridClipping();
         }
@@ -173,8 +185,8 @@ namespace Automatone.GUI
             this.cellsArrayLengthY = cellsArrayLengthY;
             RefreshGridClickableArea();
 
-            NavigatorPanel.Instance.HorizontalScrollBarThumbSize = GetHorizontalSliderThumbSize();
-            NavigatorPanel.Instance.VerticalScrollBarThumbSize = GetVerticalSliderThumbSize();
+            NavigatorPanel.Instance.HorizontalScrollBarThumbSize = HorizontalSliderThumbSize;
+            NavigatorPanel.Instance.VerticalScrollBarThumbSize = VerticalSliderThumbSize;
             NavigatorPanel.Instance.CalculateGridOffsetBounds(cellsArrayLengthX);
             NavigatorPanel.Instance.CalculateHorizontalClipping();
         }
@@ -190,15 +202,7 @@ namespace Automatone.GUI
             );
         }
 
-        private float GetHorizontalSliderThumbSize()
-        {
-            return Math.Min(1, (float)GridCellsClickableArea.Width / (cellsArrayLengthX * CELLWIDTH));
-        }
-
-        private float GetVerticalSliderThumbSize()
-        {
-            return Math.Min(1, (float)GridCellsClickableArea.Height / (cellsArrayLengthY * CELLHEIGHT));
-        }
+        
 
         private class FrameLayout
         {
