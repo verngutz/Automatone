@@ -3,22 +3,15 @@ using Nuclex.UserInterface.Visuals.Flat;
 
 namespace NuclexUserInterfaceExtension
 {
-
-    /// <summary>Renders button controls in a traditional flat style</summary>
-    public class SkinNamedButtonControlRenderer :
-      IFlatControlRenderer<SkinNamedButtonControl>
+    /// <summary>Renders button controls in a traditional flat style, with uniquely identified skin textures</summary>
+    public class SkinNamedButtonControlRenderer : IFlatControlRenderer<SkinNamedButtonControl>
     {
-
         /// <summary>
         ///   Renders the specified control using the provided graphics interface
         /// </summary>
         /// <param name="control">Control that will be rendered</param>
-        /// <param name="graphics">
-        ///   Graphics interface that will be used to draw the control
-        /// </param>
-        public void Render(
-          SkinNamedButtonControl control, IFlatGuiGraphics graphics
-        )
+        /// <param name="graphics">Graphics interface that will be used to draw the control</param>
+        public void Render(SkinNamedButtonControl control, IFlatGuiGraphics graphics)
         {
             RectangleF controlBounds = control.GetAbsoluteBounds();
 
@@ -30,7 +23,7 @@ namespace NuclexUserInterfaceExtension
                 {
                     stateIndex = 3;
                 }
-                else if (control.MouseHovering || control.HasFocus)
+                else if (control.MouseHovering)
                 {
                     stateIndex = 2;
                 }
@@ -51,17 +44,12 @@ namespace NuclexUserInterfaceExtension
         }
 
         /// <summary>Names of the states the button control can be in</summary>
-        /// <remarks>
-        ///   Storing this as full strings instead of building them dynamically prevents
-        ///   any garbage from forming during rendering.
-        /// </remarks>
-        private static readonly string[] states = new string[] {
-      ".button.disabled",
-      ".button.normal",
-      ".button.highlighted",
-      ".button.depressed"
-    };
-
+        private static readonly string[] states = new string[] 
+        {
+            ".button.disabled",
+            ".button.normal",
+            ".button.highlighted",
+            ".button.depressed"
+        };
     }
-
 }

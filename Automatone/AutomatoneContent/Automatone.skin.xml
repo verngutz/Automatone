@@ -561,25 +561,29 @@
 	    <!--
 	      Frame used to draw a vertical rail for a scroll bar
 	    -->
-	    <frame name="rail.vertical">
+	    <frame name="navigator.rail.vertical">
+        <region source="navigatorHorizontalRail" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw a vertical slider on a scroll bar in its normal state
 	    -->
-	    <frame name="slider.vertical.normal">
+	    <frame name="navigator.slider.vertical.normal">
+        <region source="navigatorThumb" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw a vertical slider on a scroll bar in its highlighted state
 	    -->
-	    <frame name="slider.vertical.highlighted">
+	    <frame name="navigator.slider.vertical.highlighted">
+        <region source="navigatorThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw a vertical slider on a scroll bar in its depressed state
 	    -->
-	    <frame name="slider.vertical.depressed">
+	    <frame name="navigator.slider.vertical.depressed">
+        <region source="navigatorThumbClicked" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--

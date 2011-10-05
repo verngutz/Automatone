@@ -12,7 +12,6 @@ using Nuclex.UserInterface.Visuals.Flat;
 
 namespace NuclexUserInterfaceExtension
 {
-
     /// <summary>Graphics interface for the traditional flat GUI visualizer</summary>
     /// <remarks>
     ///   This class is analog to System.Drawing.Graphics, but contains specialized
@@ -21,16 +20,12 @@ namespace NuclexUserInterfaceExtension
     /// </remarks>
     public partial class MultiGuiGraphics : IFlatGuiGraphics, IDisposable
     {
-
         /// <summary>Width of the caret used for text input</summary>
         const float CaretWidth = 2.0f;
-
-        #region struct Frame
 
         /// <summary>Frame that can be drawn by the GUI painter</summary>
         private class Frame
         {
-
             /// <summary>Modes in which text can be horizontally aligned</summary>
             public enum HorizontalTextAlignment
             {
@@ -52,7 +47,6 @@ namespace NuclexUserInterfaceExtension
                 Right,
                 /// <summary>The text is centered horizontally in the frame</summary>
                 Center
-
             }
 
             /// <summary>Modes in which text can be vertically aligned</summary>
@@ -111,17 +105,11 @@ namespace NuclexUserInterfaceExtension
 
             /// <summary>Locations where text can be drawn into the frame</summary>
             public Text[] Texts;
-
         }
-
-        #endregion // struct Frame
-
-        #region class ScissorKeeper
 
         /// <summary>Manages the scissor rectangle for the GUI graphics interface</summary>
         private class ScissorKeeper : IDisposable
         {
-
             /// <summary>Initializes a new scissor manager</summary>
             /// <param name="flatGuiGraphics">
             ///   GUI graphics interface the scissor rectangle will be managed for
@@ -171,25 +159,14 @@ namespace NuclexUserInterfaceExtension
             ///   Scissor rectangle that was previously assigned to the graphics device
             /// </summary>
             private Rectangle oldScissorRectangle;
-
         }
 
-        #endregion // class ScissorKeeper
-
         /// <summary>Initializes a new gui painter</summary>
-        /// <param name="contentManager">
-        ///   Content manager containing the resources for the GUI. The instance takes
-        ///   ownership of the content manager and will dispose it.
-        /// </param>
-        /// <param name="skinStream">
-        ///   Stream from which the skin description will be read
-        /// </param>
+        /// <param name="contentManager">Content manager containing the resources for the GUI. The instance takes ownership of the content manager and will dispose it.</param>
+        /// <param name="skinStream">Stream from which the skin description will be read</param>
         public MultiGuiGraphics(ContentManager contentManager, Stream skinStream)
         {
-            IGraphicsDeviceService graphicsDeviceService =
-              (IGraphicsDeviceService)contentManager.ServiceProvider.GetService(
-                typeof(IGraphicsDeviceService)
-              );
+            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)contentManager.ServiceProvider.GetService(typeof(IGraphicsDeviceService));
 
             this.spriteBatch = new SpriteBatch(graphicsDeviceService.GraphicsDevice);
             this.contentManager = contentManager;
@@ -238,41 +215,29 @@ namespace NuclexUserInterfaceExtension
             switch (anchor.HorizontalPlacement)
             {
                 case Frame.HorizontalTextAlignment.Left:
-                    {
-                        x = bounds.Left;
-                        break;
-                    }
+                    x = bounds.Left;
+                    break;
                 case Frame.HorizontalTextAlignment.Right:
-                    {
-                        x = bounds.Right - textSize.X;
-                        break;
-                    }
+                    x = bounds.Right - textSize.X;
+                    break;
                 case Frame.HorizontalTextAlignment.Center:
                 default:
-                    {
-                        x = (bounds.Width - textSize.X) / 2.0f + bounds.Left;
-                        break;
-                    }
+                    x = (bounds.Width - textSize.X) / 2.0f + bounds.Left;
+                    break;
             }
 
             switch (anchor.VerticalPlacement)
             {
                 case Frame.VerticalTextAlignment.Top:
-                    {
-                        y = bounds.Top;
-                        break;
-                    }
+                    y = bounds.Top;
+                    break;
                 case Frame.VerticalTextAlignment.Bottom:
-                    {
-                        y = bounds.Bottom - anchor.Font.LineSpacing;
-                        break;
-                    }
+                    y = bounds.Bottom - anchor.Font.LineSpacing;
+                    break;
                 case Frame.VerticalTextAlignment.Center:
                 default:
-                    {
-                        y = (bounds.Height - anchor.Font.LineSpacing) / 2.0f + bounds.Top;
-                        break;
-                    }
+                    y = (bounds.Height - anchor.Font.LineSpacing) / 2.0f + bounds.Top;
+                    break;
             }
 
             return new Vector2(floor(x + anchor.Offset.X), floor(y + anchor.Offset.Y));
@@ -286,9 +251,7 @@ namespace NuclexUserInterfaceExtension
         /// <returns>
         ///   The destination rectangle converted to absolute pixel coordinates
         /// </returns>
-        private static Rectangle calculateDestinationRectangle(
-          ref RectangleF bounds, ref UniRectangle destination
-        )
+        private static Rectangle calculateDestinationRectangle(ref RectangleF bounds, ref UniRectangle destination)
         {
             int x = (int)(bounds.X + destination.Location.X.Offset);
             x += (int)(bounds.Width * destination.Location.X.Fraction);
@@ -310,20 +273,16 @@ namespace NuclexUserInterfaceExtension
         /// <returns>The frame with the specified name</returns>
         private Frame lookupFrame(string frameName)
         {
-
             // Make sure the renderer specified a valid frame name. If someone modifies
             // the skin or uses a skin which does not support all required controls,
             // this will provide the user with a clear error message.
             Frame frame;
             if (!this.frames.TryGetValue(frameName, out frame))
             {
-                throw new ArgumentException(
-                  "Unknown frame type: '" + frameName + "'", "frameName"
-                );
+                throw new ArgumentException("Unknown frame type: '" + frameName + "'", "frameName");
             }
 
             return frame;
-
         }
 
         /// <summary>Removes the fractional part from the floating point value</summary>
@@ -353,5 +312,4 @@ namespace NuclexUserInterfaceExtension
         /// <summary>Rasterizer state used for drawing the GUI</summary>
         private RasterizerState rasterizerState;
     }
-
 } 

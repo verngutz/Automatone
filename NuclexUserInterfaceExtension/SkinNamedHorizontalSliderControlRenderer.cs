@@ -8,22 +8,15 @@ using Nuclex.UserInterface.Visuals.Flat;
 
 namespace NuclexUserInterfaceExtension
 {
-
-    /// <summary>Renders horizontal sliders in a traditional flat style</summary>
-    public class SkinNamedHorizontalSliderControlRenderer :
-      IFlatControlRenderer<SkinNamedHorizontalSliderControl>
+    /// <summary>Renders horizontal sliders in a traditional flat style, with uniquely identified skin textures</summary>
+    public class SkinNamedHorizontalSliderControlRenderer : IFlatControlRenderer<SkinNamedHorizontalSliderControl>
     {
-
         /// <summary>
         ///   Renders the specified control using the provided graphics interface
         /// </summary>
         /// <param name="control">Control that will be rendered</param>
-        /// <param name="graphics">
-        ///   Graphics interface that will be used to draw the control
-        /// </param>
-        public void Render(
-          SkinNamedHorizontalSliderControl control, IFlatGuiGraphics graphics
-        )
+        /// <param name="graphics">Graphics interface that will be used to draw the control</param>
+        public void Render(SkinNamedHorizontalSliderControl control, IFlatGuiGraphics graphics)
         {
             RectangleF controlBounds = control.GetAbsoluteBounds();
 
@@ -32,9 +25,7 @@ namespace NuclexUserInterfaceExtension
 
             graphics.DrawElement(control.SkinName + ".rail.horizontal", controlBounds);
 
-            RectangleF thumbBounds = new RectangleF(
-              controlBounds.X + thumbX, controlBounds.Y, thumbWidth, controlBounds.Height
-            );
+            RectangleF thumbBounds = new RectangleF(controlBounds.X + thumbX, controlBounds.Y, thumbWidth, controlBounds.Height);
 
             if (control.ThumbDepressed)
             {
@@ -48,9 +39,6 @@ namespace NuclexUserInterfaceExtension
             {
                 graphics.DrawElement(control.SkinName + ".slider.horizontal.normal", thumbBounds);
             }
-
         }
-
     }
-
 }

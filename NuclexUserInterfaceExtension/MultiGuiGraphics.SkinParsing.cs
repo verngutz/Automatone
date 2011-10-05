@@ -14,16 +14,11 @@ using Nuclex.UserInterface;
 
 namespace NuclexUserInterfaceExtension
 {
-
     partial class MultiGuiGraphics
     {
-
-        #region class RegionListBuilder
-
         /// <summary>Builds a region list from the regions in an frame XML node</summary>
         private class RegionListBuilder
         {
-
             /// <summary>Initializes a new frame region list builder</summary>
             /// <param name="frameNode">Node of the frame whose regions will be processed</param>
             private RegionListBuilder(XmlNode frameNode)
@@ -34,18 +29,10 @@ namespace NuclexUserInterfaceExtension
             /// <summary>
             ///   Builds a region list from the regions specified in the provided frame XML node
             /// </summary>
-            /// <param name="frameNode">
-            ///   XML node for the frame whose regions wille be processed
-            /// </param>
-            /// <param name="bitmaps">
-            ///   Bitmap lookup table used to associate a region's bitmap id to the real bitmap
-            /// </param>
-            /// <returns>
-            ///   A list of the regions that have been extracted from the frame XML node
-            /// </returns>
-            public static Frame.Region[] Build(
-              XmlNode frameNode, IDictionary<string, Texture2D> bitmaps
-            )
+            /// <param name="frameNode">XML node for the frame whose regions wille be processed</param>
+            /// <param name="bitmaps">Bitmap lookup table used to associate a region's bitmap id to the real bitmap</param>
+            /// <returns>A list of the regions that have been extracted from the frame XML node</returns>
+            public static Frame.Region[] Build(XmlNode frameNode, IDictionary<string, Texture2D> bitmaps)
             {
                 RegionListBuilder builder = new RegionListBuilder(frameNode);
                 builder.retrieveBorderSizes();
@@ -57,7 +44,6 @@ namespace NuclexUserInterfaceExtension
             {
                 for (int regionIndex = 0; regionIndex < this.regionNodes.Count; ++regionIndex)
                 {
-
                     // Left and right border width determination
                     string hplacement = this.regionNodes[regionIndex].Attributes["hplacement"].Value;
                     string w = this.regionNodes[regionIndex].Attributes["w"].Value;
@@ -81,7 +67,6 @@ namespace NuclexUserInterfaceExtension
                     {
                         this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(h));
                     }
-
                 }
             }
 
@@ -99,7 +84,6 @@ namespace NuclexUserInterfaceExtension
                 // Fill all regions making up the current frame
                 for (int regionIndex = 0; regionIndex < this.regionNodes.Count; ++regionIndex)
                 {
-
                     // Obtain all attributes of the region node
                     XmlAttribute idAttribute = this.regionNodes[regionIndex].Attributes["id"];
                     string id = (idAttribute == null) ? null : idAttribute.Value;
@@ -120,81 +104,62 @@ namespace NuclexUserInterfaceExtension
                     regions[regionIndex].SourceRegion.Height = int.Parse(h);
 
                     // Process each region's placement and set up the unified coordinates
-                    calculateRegionPlacement(
-                      getHorizontalPlacementIndex(hplacement),
-                      int.Parse(w),
-                      this.leftBorderWidth,
-                      this.rightBorderWidth,
-                      ref regions[regionIndex].DestinationRegion.Location.X,
-                      ref regions[regionIndex].DestinationRegion.Size.X
+                    calculateRegionPlacement
+                    (
+                        getHorizontalPlacementIndex(hplacement),
+                        int.Parse(w),
+                        this.leftBorderWidth,
+                        this.rightBorderWidth,
+                        ref regions[regionIndex].DestinationRegion.Location.X,
+                        ref regions[regionIndex].DestinationRegion.Size.X
                     );
-                    calculateRegionPlacement(
-                      getVerticalPlacementIndex(vplacement),
-                      int.Parse(h),
-                      this.topBorderWidth,
-                      this.bottomBorderWidth,
-                      ref regions[regionIndex].DestinationRegion.Location.Y,
-                      ref regions[regionIndex].DestinationRegion.Size.Y
+                    calculateRegionPlacement
+                    (
+                        getVerticalPlacementIndex(vplacement),
+                        int.Parse(h),
+                        this.topBorderWidth,
+                        this.bottomBorderWidth,
+                        ref regions[regionIndex].DestinationRegion.Location.Y,
+                        ref regions[regionIndex].DestinationRegion.Size.Y
                     );
 
                 }
-
                 return regions;
             }
 
             /// <summary>
             ///   Calculates the unified coordinates a region needs to be placed at
             /// </summary>
-            /// <param name="placementIndex">
-            ///   Placement index indicating where in a frame the region will be located
-            /// </param>
+            /// <param name="placementIndex">Placement index indicating where in a frame the region will be located</param>
             /// <param name="width">Width of the region in pixels</param>
-            /// <param name="lowBorderWidth">
-            ///   Width of the border on the lower end of the coordinate range
-            /// </param>
-            /// <param name="highBorderWidth">
-            ///   Width of the border on the higher end of the coordinate range
-            /// </param>
-            /// <param name="location">
-            ///   Receives the target location of the region in unified coordinates
-            /// </param>
-            /// <param name="size">
-            ///   Receives the size of the region in unified coordinates
-            /// </param>
-            private void calculateRegionPlacement(
-              int placementIndex, int width,
-              int lowBorderWidth, int highBorderWidth,
-              ref UniScalar location, ref UniScalar size
-            )
+            /// <param name="lowBorderWidth">Width of the border on the lower end of the coordinate range</param>
+            /// <param name="highBorderWidth">Width of the border on the higher end of the coordinate range</param>
+            /// <param name="location">Receives the target location of the region in unified coordinates</param>
+            /// <param name="size">Receives the size of the region in unified coordinates</param>
+            private void calculateRegionPlacement(int placementIndex, int width, int lowBorderWidth, int highBorderWidth, ref UniScalar location, ref UniScalar size)
             {
                 switch (placementIndex)
                 {
-                    case (-1):
-                        { // left or top
-                            int gapWidth = lowBorderWidth - width;
+                    case (-1):// left or top
+                        int gapWidth = lowBorderWidth - width;
 
-                            location.Fraction = 0.0f;
-                            location.Offset = (float)gapWidth;
-                            size.Fraction = 0.0f;
-                            size.Offset = (float)width;
-                            break;
-                        }
-                    case (+1):
-                        { // right or bottom
-                            location.Fraction = 1.0f;
-                            location.Offset = -(float)highBorderWidth;
-                            size.Fraction = 0.0f;
-                            size.Offset = (float)width;
-                            break;
-                        }
-                    case (0):
-                        { // stretch
-                            location.Fraction = 0.0f;
-                            location.Offset = (float)lowBorderWidth;
-                            size.Fraction = 1.0f;
-                            size.Offset = -(float)(highBorderWidth + lowBorderWidth);
-                            break;
-                        }
+                        location.Fraction = 0.0f;
+                        location.Offset = (float)gapWidth;
+                        size.Fraction = 0.0f;
+                        size.Offset = (float)width;
+                        break;
+                    case (+1):// right or bottom
+                        location.Fraction = 1.0f;
+                        location.Offset = -(float)highBorderWidth;
+                        size.Fraction = 0.0f;
+                        size.Offset = (float)width;
+                        break;
+                    case (0):// stretch
+                        location.Fraction = 0.0f;
+                        location.Offset = (float)lowBorderWidth;
+                        size.Fraction = 1.0f;
+                        size.Offset = -(float)(highBorderWidth + lowBorderWidth);
+                        break;
                 }
             }
 
@@ -236,32 +201,18 @@ namespace NuclexUserInterfaceExtension
             private int rightBorderWidth;
             /// <summary>Width of the frame's bottom border regions</summary>
             private int bottomBorderWidth;
-
         }
-
-        #endregion // class RegionListBuilder
-
-        #region class TextListBuilder
 
         /// <summary>Builds a text list from the regions in an frame XML node</summary>
         private class TextListBuilder
         {
-
             /// <summary>
             ///   Builds a text list from the text placements specified in the provided node
             /// </summary>
-            /// <param name="frameNode">
-            ///   XML node for the frame whose text placements wille be processed
-            /// </param>
-            /// <param name="fonts">
-            ///   Font lookup table used to associate a text's font id to the real font
-            /// </param>
-            /// <returns>
-            ///   A list of the texts that have been extracted from the frame XML node
-            /// </returns>
-            public static Frame.Text[] Build(
-              XmlNode frameNode, IDictionary<string, SpriteFont> fonts
-            )
+            /// <param name="frameNode">XML node for the frame whose text placements wille be processed</param>
+            /// <param name="fonts">Font lookup table used to associate a text's font id to the real font</param>
+            /// <returns>A list of the texts that have been extracted from the frame XML node</returns>
+            public static Frame.Text[] Build(XmlNode frameNode, IDictionary<string, SpriteFont> fonts)
             {
                 XmlNodeList textNodes = frameNode.SelectNodes("text");
 
@@ -291,25 +242,18 @@ namespace NuclexUserInterfaceExtension
                     }
 
                     texts[index].Font = fonts[font];
-                    texts[index].HorizontalPlacement = horizontalPlacementFromString(
-                      horizontalPlacement
-                    );
-                    texts[index].VerticalPlacement = verticalPlacementFromString(
-                      verticalPlacement
-                    );
+                    texts[index].HorizontalPlacement = horizontalPlacementFromString(horizontalPlacement);
+                    texts[index].VerticalPlacement = verticalPlacementFromString(verticalPlacement);
                     texts[index].Offset = new Point(xOffset, yOffset);
                     texts[index].Color = color;
                 }
-
                 return texts;
             }
 
             /// <summary>Converts a string into a horizontal placement enumeration value</summary>
             /// <param name="placement">Placement string that will be converted</param>
             /// <returns>The horizontal placement enumeration value matching the string</returns>
-            private static Frame.HorizontalTextAlignment horizontalPlacementFromString(
-              string placement
-            )
+            private static Frame.HorizontalTextAlignment horizontalPlacementFromString(string placement)
             {
                 switch (placement)
                 {
@@ -323,9 +267,7 @@ namespace NuclexUserInterfaceExtension
             /// <summary>Converts a string into a vertical placement enumeration value</summary>
             /// <param name="placement">Placement string that will be converted</param>
             /// <returns>The vertical placement enumeration value matching the string</returns>
-            private static Frame.VerticalTextAlignment verticalPlacementFromString(
-              string placement
-            )
+            private static Frame.VerticalTextAlignment verticalPlacementFromString(string placement)
             {
                 switch (placement)
                 {
@@ -335,16 +277,12 @@ namespace NuclexUserInterfaceExtension
                     default: { return Frame.VerticalTextAlignment.Center; }
                 }
             }
-
         }
-
-        #endregion // class TextListBuilder
 
         /// <summary>Loads a skin from the specified path</summary>
         /// <param name="skinStream">Stream containing the skin description</param>
         private void loadSkin(Stream skinStream)
         {
-
             // Load the schema
             XmlSchema schema;
             using (Stream schemaStream = getResourceStream("NuclexUserInterfaceExtension.Resources.skin.xsd"))
@@ -361,7 +299,6 @@ namespace NuclexUserInterfaceExtension
             // so we can efficiently render everything
             loadResources(skinDocument);
             loadFrames(skinDocument);
-
         }
 
         private static XmlDocument ToXmlDocument(XDocument xDocument)
@@ -376,12 +313,9 @@ namespace NuclexUserInterfaceExtension
 
 
         /// <summary>Loads the resources contained in a skin document</summary>
-        /// <param name="skinDocument">
-        ///   XML document containing a skin description whose resources will be loaded
-        /// </param>
+        /// <param name="skinDocument">XML document containing a skin description whose resources will be loaded</param>
         private void loadResources(XmlDocument skinDocument)
         {
-
             // Load the fonts specified in the skin
             XmlNodeList fonts = skinDocument.SelectNodes("/skin/resources/font");
             for (int index = 0; index < fonts.Count; ++index)
@@ -403,28 +337,22 @@ namespace NuclexUserInterfaceExtension
                 Texture2D bitmap = this.contentManager.Load<Texture2D>(contentPath);
                 this.bitmaps.Add(bitmapName, bitmap);
             }
-
         }
 
         /// <summary>Loads the frames contained in a skin document</summary>
-        /// <param name="skinDocument">
-        ///   XML document containing a skin description whose frames will be loaded
-        /// </param>
+        /// <param name="skinDocument">XML document containing a skin description whose frames will be loaded</param>
         private void loadFrames(XmlDocument skinDocument)
         {
-
             // Extract all frames from the skin
             XmlNodeList frames = skinDocument.SelectNodes("/skin/frames/frame");
             for (int frameIndex = 0; frameIndex < frames.Count; ++frameIndex)
             {
-
                 // Extract the frame's attributes
                 string name = frames[frameIndex].Attributes["name"].Value;
 
                 Frame.Region[] regions = RegionListBuilder.Build(frames[frameIndex], this.bitmaps);
                 Frame.Text[] texts = TextListBuilder.Build(frames[frameIndex], this.fonts);
                 this.frames.Add(name, new Frame(regions, texts));
-
             }
         }
 
@@ -451,9 +379,7 @@ namespace NuclexUserInterfaceExtension
                 ++startIndex;
             }
 
-            bool isValidColor =
-              ((trimmedColor.Length - startIndex) == 6) ||
-              ((trimmedColor.Length - startIndex) == 8);
+            bool isValidColor = ((trimmedColor.Length - startIndex) == 6) || ((trimmedColor.Length - startIndex) == 8);
 
             if (!isValidColor)
             {
@@ -477,7 +403,5 @@ namespace NuclexUserInterfaceExtension
             // by definition not grow larger than 255 ;-)        
             return new Color((byte)r, (byte)g, (byte)b, (byte)a);
         }
-
     }
-
 }

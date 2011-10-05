@@ -110,11 +110,8 @@ namespace Automatone
             Components.Add(gui);
             Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             gui.Screen = screen;
-
-            // Create control panel
             screen.Desktop.Children.Add(ControlPanel.Instance);
-
-            // Create grid panel
+            screen.Desktop.Children.Add(NavigatorPanel.Instance);
             Components.Add(GridPanel.Instance);
 
             // Start up core DUET services
@@ -223,7 +220,7 @@ namespace Automatone
         public void StopSongPlaying()
         {
             Sequencer.StopMidi();
-            GridPanel.Instance.ResetScrolling();
+            NavigatorPanel.Instance.ResetScrolling();
             ControlPanel.Instance.ResetPlayButton();
         }
     }

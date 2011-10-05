@@ -124,8 +124,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\FrameBounds.cs" />
     <Compile Include="GUI\LayoutManager.cs" />
+    <Compile Include="GUI\NavigatorPanel.cs" />
     <Compile Include="GUI\NoteHitParticle.cs" />
     <Compile Include="GUI\NoteHitParticleModifier.cs" />
     <Compile Include="Music\Part.cs" />

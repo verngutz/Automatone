@@ -25,169 +25,211 @@ namespace Automatone.GUI
         public const byte BOTTOM_SCROLLBAR_THICKNESS = 50;
         public const byte RIGHT_SCROLLBAR_THICKNESS = 50;
 
-        public static UniRectangle ControlPanelBounds
+        private int cellsArrayLengthX;
+        private int cellsArrayLengthY;
+
+        private int windowWidth;
+        private int windowHeight;
+
+        private UniRectangle controlPanelBounds;
+        private UniRectangle playPauseButtonBounds;
+        private UniRectangle stopButtonBounds;
+        private UniRectangle newButtonBounds;
+        private UniRectangle openButtonBounds;
+        private UniRectangle saveButtonBounds;
+        private UniRectangle cutButtonBounds;
+        private UniRectangle copyButtonBounds;
+        private UniRectangle pasteButtonBounds;
+        private UniRectangle undoButtonBounds;
+        private UniRectangle redoButtonBounds;
+        private UniRectangle addCellsButtonBounds;
+        private UniRectangle removeCellsButtonBounds;
+        private UniRectangle generateSongButtonBounds;
+
+        public UniRectangle ControlPanelBounds { get { return controlPanelBounds; } }
+        public UniRectangle PlayPauseButtonBounds { get { return playPauseButtonBounds; } }
+        public UniRectangle StopButtonBounds { get { return stopButtonBounds; } }
+        public UniRectangle NewButtonBounds { get { return newButtonBounds; } }
+        public UniRectangle OpenButtonBounds { get { return openButtonBounds; } }
+        public UniRectangle SaveButtonBounds { get { return saveButtonBounds; } }
+        public UniRectangle CutButtonBounds { get { return cutButtonBounds; } }
+        public UniRectangle CopyButtonBounds { get { return copyButtonBounds; } }
+        public UniRectangle PasteButtonBounds { get { return pasteButtonBounds; } }
+        public UniRectangle UndoButtonBounds { get { return undoButtonBounds; } }
+        public UniRectangle RedoButtonBounds { get { return redoButtonBounds; } }
+        public UniRectangle AddCellsButtonBounds { get { return addCellsButtonBounds; } }
+        public UniRectangle RemoveCellsButtonBounds { get { return removeCellsButtonBounds; } }
+        public UniRectangle GenerateSongButtonBounds { get { return generateSongButtonBounds; } }
+
+        private FrameLayout gridPanelLayout;
+        private Rectangle gridClickableArea;
+
+        public Rectangle GridTopBorderBounds { get { return gridPanelLayout.TopRectangle; } }
+        public Rectangle GridBottomBorderBounds { get { return gridPanelLayout.BottomRectangle; } }
+        public Rectangle GridLeftBorderBounds { get { return gridPanelLayout.LeftRectangle; } }
+        public Rectangle GridRightBorderBounds { get { return gridPanelLayout.RightRectangle; } }
+        public Rectangle GridPanelBounds { get { return gridPanelLayout.OuterRectangle; } }
+        public Rectangle GridCellsArea { get { return gridPanelLayout.InnerRectangle; } }
+        public Rectangle GridCellsClickableArea { get { return gridClickableArea; } }
+
+        private UniRectangle navigatorPanelBounds;
+        private UniRectangle horizontalScrollBarBounds;
+        private UniRectangle verticalScrollBarBounds;
+        private float horizontalScrollBarThumbSize;
+        private float verticalScrollBarThumbSize;
+
+        public UniRectangle NavigatorPanelBounds { get { return navigatorPanelBounds; } }
+        public UniRectangle HorizontalScrollBarBounds { get { return horizontalScrollBarBounds; } }
+        public UniRectangle VerticalScrollBarBounds { get { return verticalScrollBarBounds; } }
+        public float HorizontalScrollBarThumbSize { get { return horizontalScrollBarThumbSize; } }
+        public float VerticalScrollBarThumbSize { get { return verticalScrollBarThumbSize; } }
+
+        private LayoutManager() 
         {
-            get
+            windowWidth = DEFAULT_WINDOW_WIDTH;
+            windowHeight = DEFAULT_WINDOW_HEIGHT;
+            cellsArrayLengthX = 0;
+            cellsArrayLengthY = 0;
+            CalculateBounds();
+
+            Automatone.Instance.Window.ClientSizeChanged += delegate 
             {
-                return new UniRectangle(0, 0, Automatone.Instance.Window.ClientBounds.Width, LayoutManager.CONTROLS_AND_GRID_DIVISION);
+                RespondToWindowResize(Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
+            };
+            GridPanel.Instance.SongCellsChanged += new GridPanel.GridLengthChangedEvent(RespondToGridResize);
+        }
+
+        private static LayoutManager instance;
+        public static LayoutManager Instance
+        {
+            get 
+            { 
+                if (instance == null) 
+                    instance = new LayoutManager();
+                return instance;
             }
         }
 
-        public static UniRectangle PlayPauseButtonBounds
+        private void CalculateBounds()
         {
-            get
-            {
-                return new UniRectangle(10, 26, 64, 64);
-            }
+            controlPanelBounds = new UniRectangle(0, 0, windowWidth, CONTROLS_AND_GRID_DIVISION);
+            playPauseButtonBounds = new UniRectangle(10, 26, 64, 64);
+            stopButtonBounds = new UniRectangle(84, 26, 64, 64);
+            newButtonBounds = new UniRectangle(158, 10, 64, 96);
+            openButtonBounds = new UniRectangle(232, 10, 64, 96);
+            saveButtonBounds = new UniRectangle(306, 10, 64, 96);
+            cutButtonBounds = new UniRectangle(380, 10, 64, 96);
+            copyButtonBounds = new UniRectangle(454, 10, 64, 96);
+            pasteButtonBounds = new UniRectangle(528, 10, 64, 96);
+            undoButtonBounds = new UniRectangle(602, 10, 64, 96);
+            redoButtonBounds = new UniRectangle(676, 10, 64, 96);
+            addCellsButtonBounds = new UniRectangle(750, 10, 64, 96);
+            removeCellsButtonBounds = new UniRectangle(824, 10, 64, 96);
+            generateSongButtonBounds = new UniRectangle(898, 10, 64, 96);
+
+            Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, windowWidth - RIGHT_SCROLLBAR_THICKNESS, windowHeight - CONTROLS_AND_GRID_DIVISION - BOTTOM_SCROLLBAR_THICKNESS);
+            Rectangle innerRectangle = new Rectangle(outerRectangle.X + LEFT_BORDER_THICKNESS, outerRectangle.Y + TOP_BORDER_THICKNESS, outerRectangle.Width - LEFT_BORDER_THICKNESS - RIGHT_BORDER_THICKNESS, outerRectangle.Height - TOP_BORDER_THICKNESS - BOTTOM_BORDER_THICKNESS);
+            gridPanelLayout = new FrameLayout(outerRectangle, innerRectangle);
+            RefreshGridClickableArea();
+
+            navigatorPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
+            horizontalScrollBarBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height, gridPanelLayout.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
+            verticalScrollBarBounds = new UniRectangle(gridPanelLayout.OuterRectangle.Width, gridPanelLayout.InnerRectangle.Top - CONTROLS_AND_GRID_DIVISION, RIGHT_SCROLLBAR_THICKNESS, gridPanelLayout.InnerRectangle.Height);
         }
 
-        public static UniRectangle StopButtonBounds
+        private void RespondToWindowResize(int windowWidth, int windowHeight)
         {
-            get
-            {
-                return new UniRectangle(84, 26, 64, 64);
-            }
+            this.windowWidth = windowWidth;
+            this.windowHeight = windowHeight;
+
+            CalculateBounds();
+
+            ControlPanel.Instance.Bounds = ControlPanelBounds;
+            ControlPanel.Instance.PlayPauseButtonBounds = PlayPauseButtonBounds;
+            ControlPanel.Instance.StopButtonBounds = StopButtonBounds;
+            ControlPanel.Instance.NewButtonBounds = NewButtonBounds;
+            ControlPanel.Instance.OpenButtonBounds = OpenButtonBounds;
+            ControlPanel.Instance.CutButtonBounds = CutButtonBounds;
+            ControlPanel.Instance.CopyButtonBounds = CopyButtonBounds;
+            ControlPanel.Instance.PasteButtonBounds = PasteButtonBounds;
+            ControlPanel.Instance.UndoButtonBounds = UndoButtonBounds;
+            ControlPanel.Instance.RedoButtonBounds = RedoButtonBounds;
+            ControlPanel.Instance.AddCellsButtonBounds = AddCellsButtonBounds;
+            ControlPanel.Instance.RemoveCellsButtonBounds = RemoveCellsButtonBounds;
+            ControlPanel.Instance.GenerateSongButtonBounds = GenerateSongButtonBounds;
+
+            NavigatorPanel.Instance.Bounds = NavigatorPanelBounds;
+            NavigatorPanel.Instance.HorizontalScrollBarBounds = horizontalScrollBarBounds;
+            NavigatorPanel.Instance.VerticalScrollBarBounds = verticalScrollBarBounds;
+            NavigatorPanel.Instance.HorizontalScrollBarThumbSize = GetHorizontalSliderThumbSize();
+            NavigatorPanel.Instance.VerticalScrollBarThumbSize = GetVerticalSliderThumbSize();
+            NavigatorPanel.Instance.CalculateGridOffsetBounds(cellsArrayLengthX);
+            NavigatorPanel.Instance.CalculateGridClipping();
         }
 
-        public static UniRectangle NewButtonBounds
+        private void RespondToGridResize(int cellsArrayLengthX, int cellsArrayLengthY)
         {
-            get
-            {
-                return new UniRectangle(158, 10, 64, 96);
-            }
+            this.cellsArrayLengthX = cellsArrayLengthX;
+            this.cellsArrayLengthY = cellsArrayLengthY;
+            RefreshGridClickableArea();
+
+            NavigatorPanel.Instance.HorizontalScrollBarThumbSize = GetHorizontalSliderThumbSize();
+            NavigatorPanel.Instance.VerticalScrollBarThumbSize = GetVerticalSliderThumbSize();
+            NavigatorPanel.Instance.CalculateGridOffsetBounds(cellsArrayLengthX);
+            NavigatorPanel.Instance.CalculateHorizontalClipping();
         }
 
-        public static UniRectangle OpenButtonBounds
+        private void RefreshGridClickableArea()
         {
-            get
-            {
-                return new UniRectangle(232, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle SaveButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(306, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle CutButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(380, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle CopyButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(454, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle PasteButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(528, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle UndoButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(602, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle RedoButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(676, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle AddButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(750, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle RemoveButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(824, 10, 64, 96);
-            }
-        }
-
-        public static UniRectangle GenerateSongButtonBounds
-        {
-            get
-            {
-                return new UniRectangle(898, 10, 64, 96);
-            }
-        }
-
-        public static Rectangle GetCellsClickableArea(int songCellsWitdh, int songCellsHeight)
-        {
-            FramedBounds gridPanelBounds = GridPanelBounds;
-            return new Rectangle
+            gridClickableArea = new Rectangle
             (
-                gridPanelBounds.InnerRectangle.X,
-                gridPanelBounds.InnerRectangle.Y,
-                Math.Min(gridPanelBounds.InnerRectangle.Width, songCellsWitdh * CELLWIDTH),
-                Math.Min(gridPanelBounds.InnerRectangle.Height, songCellsHeight * CELLHEIGHT)
+                gridPanelLayout.InnerRectangle.X,
+                gridPanelLayout.InnerRectangle.Y,
+                Math.Min(gridPanelLayout.InnerRectangle.Width, cellsArrayLengthX * CELLWIDTH),
+                Math.Min(gridPanelLayout.InnerRectangle.Height, Automatone.PIANO_SIZE * CELLHEIGHT)
             );
         }
 
-        public static FramedBounds GridPanelBounds
+        private float GetHorizontalSliderThumbSize()
         {
-            get
-            {
-                Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width - RIGHT_SCROLLBAR_THICKNESS, Automatone.Instance.Window.ClientBounds.Height - CONTROLS_AND_GRID_DIVISION - BOTTOM_SCROLLBAR_THICKNESS);
-                Rectangle innerRectangle = new Rectangle(outerRectangle.X + LEFT_BORDER_THICKNESS, outerRectangle.Y + TOP_BORDER_THICKNESS, outerRectangle.Width - LEFT_BORDER_THICKNESS - RIGHT_BORDER_THICKNESS, outerRectangle.Height - TOP_BORDER_THICKNESS - BOTTOM_BORDER_THICKNESS);
-                return new FramedBounds(outerRectangle, innerRectangle);
-            }
+            return Math.Min(1, (float)GridCellsClickableArea.Width / (cellsArrayLengthX * CELLWIDTH));
         }
 
-        public static UniRectangle NavigatorBounds
+        private float GetVerticalSliderThumbSize()
         {
-            get
-            {
-                return new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
-            }
+            return Math.Min(1, (float)GridCellsClickableArea.Height / (cellsArrayLengthY * CELLHEIGHT));
         }
 
-        public static UniRectangle NavHorizontalScrollBarBounds
+        private class FrameLayout
         {
-            get
-            {
-                FramedBounds gridPanelBounds = GridPanelBounds;
-                return new UniRectangle(gridPanelBounds.InnerRectangle.Left, gridPanelBounds.OuterRectangle.Height, gridPanelBounds.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
-            }
-        }
+            private Rectangle topRectangle;
+            public Rectangle TopRectangle { get { return topRectangle; } }
 
-        public static UniRectangle NavVerticalScrollBarBounds
-        {
-            get
-            {
-                FramedBounds gridPanelBounds = GridPanelBounds;
-                return new UniRectangle(gridPanelBounds.OuterRectangle.Width, gridPanelBounds.InnerRectangle.Top, RIGHT_SCROLLBAR_THICKNESS, gridPanelBounds.InnerRectangle.Height);
-            }
-        }
+            private Rectangle bottomRectangle;
+            public Rectangle BottomRectangle { get { return bottomRectangle; } }
 
-        public static float GetHorizontalSliderThumbSize(int songCellsWidth)
-        {
-            return Math.Min(1, (float)GridPanelBounds.InnerRectangle.Width / (songCellsWidth * CELLWIDTH));
+            private Rectangle leftRectangle;
+            public Rectangle LeftRectangle { get { return leftRectangle; } }
+
+            private Rectangle rightRectangle;
+            public Rectangle RightRectangle { get { return rightRectangle; } }
+
+            private Rectangle centerRectangle;
+            public Rectangle CenterRectangle { get { return centerRectangle; } }
+            public Rectangle InnerRectangle { get { return centerRectangle; } }
+
+            private Rectangle outerRectangle;
+            public Rectangle OuterRectangle { get { return outerRectangle; } }
+
+            public FrameLayout(Rectangle outerRectangle, Rectangle innerRectangle)
+            {
+                centerRectangle = innerRectangle;
+                this.outerRectangle = outerRectangle;
+                topRectangle = new Rectangle(outerRectangle.Left, outerRectangle.Top, outerRectangle.Width, innerRectangle.Top - outerRectangle.Top);
+                bottomRectangle = new Rectangle(outerRectangle.Left, innerRectangle.Bottom, outerRectangle.Width, outerRectangle.Bottom - innerRectangle.Bottom);
+                leftRectangle = new Rectangle(outerRectangle.Left, innerRectangle.Top, innerRectangle.Left - outerRectangle.Left, innerRectangle.Height);
+                rightRectangle = new Rectangle(innerRectangle.Right, innerRectangle.Top, outerRectangle.Right - innerRectangle.Right, innerRectangle.Height);
+            }
         }
     }
 }

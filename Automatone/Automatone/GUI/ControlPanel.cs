@@ -14,23 +14,6 @@ namespace Automatone.GUI
 {
     public class ControlPanel : WindowControl
     {
-        private static ControlPanel instance;
-        public static ControlPanel Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new ControlPanel();
-                return instance;
-            }
-        }
-
-        private ControlPanel() : base()
-        {
-            InitializeComponent();
-            Automatone.Instance.Window.ClientSizeChanged += delegate { Bounds = LayoutManager.ControlPanelBounds; };
-        }
-
         private SkinNamedButtonControl generateSongButton;
         private OptionControl playPauseButton;
         private SkinNamedButtonControl stopButton;
@@ -44,10 +27,40 @@ namespace Automatone.GUI
         private SkinNamedButtonControl redoButton;
         private SkinNamedButtonControl removeCellsButton;
         private SkinNamedButtonControl undoButton;
-        
+
+        public UniRectangle GenerateSongButtonBounds { set { generateSongButton.Bounds = value; } }
+        public UniRectangle PlayPauseButtonBounds { set { playPauseButton.Bounds = value; } }
+        public UniRectangle StopButtonBounds { set { stopButton.Bounds = value; } }
+        public UniRectangle SaveButtonBounds { set { saveButton.Bounds = value; } }
+        public UniRectangle OpenButtonBounds { set { openButton.Bounds = value; } }
+        public UniRectangle NewButtonBounds { set { newButton.Bounds = value; } }
+        public UniRectangle AddCellsButtonBounds { set { addCellsButton.Bounds = value; } }
+        public UniRectangle CopyButtonBounds { set { copyButton.Bounds = value; } }
+        public UniRectangle CutButtonBounds { set { cutButton.Bounds = value; } }
+        public UniRectangle PasteButtonBounds { set { pasteButton.Bounds = value; } }
+        public UniRectangle RedoButtonBounds { set { redoButton.Bounds = value; } }
+        public UniRectangle RemoveCellsButtonBounds { set { removeCellsButton.Bounds = value; } }
+        public UniRectangle UndoButtonBounds { set { undoButton.Bounds = value; } }
+
+        private ControlPanel() : base()
+        {
+            InitializeComponent();
+        }
+
+        private static ControlPanel instance;
+        public static ControlPanel Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new ControlPanel();
+                return instance;
+            }
+        }
+
         private void InitializeComponent()
         {
-            Bounds = LayoutManager.ControlPanelBounds;
+            Bounds = LayoutManager.Instance.ControlPanelBounds;
             EnableDragging = false;
 
             // Construct children
@@ -68,92 +81,92 @@ namespace Automatone.GUI
             //
             // playPauseButton
             //
-            playPauseButton.Bounds = LayoutManager.PlayPauseButtonBounds;
+            playPauseButton.Bounds = LayoutManager.Instance.PlayPauseButtonBounds;
             playPauseButton.Changed += new EventHandler(PlayPauseButtonToggled);
             playPauseButton.Selected = false;
 
             //
             // stopButton
             //
-            stopButton.Bounds = LayoutManager.StopButtonBounds;
+            stopButton.Bounds = LayoutManager.Instance.StopButtonBounds;
             stopButton.Pressed += new EventHandler(StopButtonPressed);
             stopButton.SkinName = "stop";
 
             //
             // newButton
             //
-            newButton.Bounds = LayoutManager.NewButtonBounds;
+            newButton.Bounds = LayoutManager.Instance.NewButtonBounds;
             newButton.Pressed += new EventHandler(NewButtonPressed);
             newButton.SkinName = "new";
 
             //
             // openButton
             //
-            openButton.Bounds = LayoutManager.OpenButtonBounds;
+            openButton.Bounds = LayoutManager.Instance.OpenButtonBounds;
             openButton.Pressed += new EventHandler(OpenButtonPressed);
             openButton.SkinName = "open";
 
             //
             // saveButton
             //
-            saveButton.Bounds = LayoutManager.SaveButtonBounds;
+            saveButton.Bounds = LayoutManager.Instance.SaveButtonBounds;
             saveButton.Pressed += new EventHandler(SaveButtonPressed);
             saveButton.SkinName = "save";
 
             //
             // cutButton
             //
-            cutButton.Bounds = LayoutManager.CutButtonBounds;
+            cutButton.Bounds = LayoutManager.Instance.CutButtonBounds;
             cutButton.Pressed += new EventHandler(CutButtonPressed);
             cutButton.SkinName = "cut";
             
             //
             // copyButton
             //
-            copyButton.Bounds = LayoutManager.CopyButtonBounds;
+            copyButton.Bounds = LayoutManager.Instance.CopyButtonBounds;
             copyButton.Pressed += new EventHandler(CopyButtonPressed);
             copyButton.SkinName = "copy";
             
             //
             // pasteButton
             //
-            pasteButton.Bounds = LayoutManager.PasteButtonBounds;
+            pasteButton.Bounds = LayoutManager.Instance.PasteButtonBounds;
             pasteButton.Pressed += new EventHandler(PasteButtonPressed);
             pasteButton.SkinName = "paste";
 
             //
             // undoButton
             //
-            undoButton.Bounds = LayoutManager.UndoButtonBounds;
+            undoButton.Bounds = LayoutManager.Instance.UndoButtonBounds;
             undoButton.Pressed += new EventHandler(UndoButtonPressed);
             undoButton.SkinName = "undo";
             
             //
             // redoButton
             //
-            redoButton.Bounds = LayoutManager.RedoButtonBounds;
+            redoButton.Bounds = LayoutManager.Instance.RedoButtonBounds;
             redoButton.Pressed += new EventHandler(RedoButtonPressed);
             redoButton.SkinName = "redo";
 
             //
             // addButton
             //
-            addCellsButton.Bounds = LayoutManager.AddButtonBounds;
-            addCellsButton.Pressed += new EventHandler(AddButtonPressed);
+            addCellsButton.Bounds = LayoutManager.Instance.AddCellsButtonBounds;
+            addCellsButton.Pressed += new EventHandler(AddCellsButtonPressed);
             addCellsButton.SkinName = "add.cells";
 
             //
             // removeButton
             //
-            removeCellsButton.Bounds = LayoutManager.RemoveButtonBounds;
-            removeCellsButton.Pressed += new EventHandler(RemoveButtonPressed);
+            removeCellsButton.Bounds = LayoutManager.Instance.RemoveCellsButtonBounds;
+            removeCellsButton.Pressed += new EventHandler(RemoveCellsButtonPressed);
             removeCellsButton.SkinName = "remove.cells";
 
             //
             // generateSongButton
             //
-            generateSongButton.Bounds = LayoutManager.GenerateSongButtonBounds;
-            generateSongButton.Pressed += new EventHandler(RandomizeButtonPressed);
+            generateSongButton.Bounds = LayoutManager.Instance.GenerateSongButtonBounds;
+            generateSongButton.Pressed += new EventHandler(GenerateSongButtonPressed);
             generateSongButton.SkinName = "generate.song";
 
             //
@@ -212,7 +225,7 @@ namespace Automatone.GUI
             Automatone.Instance.StopSongPlaying();
             Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
             GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
-            GridPanel.Instance.ResetGridView();
+            NavigatorPanel.Instance.ResetGridDrawOffset();
         }
 
         private void OpenButtonPressed(object sender, EventArgs e)
@@ -236,7 +249,7 @@ namespace Automatone.GUI
                 }
             }
 
-            GridPanel.Instance.ResetGridView();
+            NavigatorPanel.Instance.ResetGridDrawOffset();
         }
 
         private void SaveButtonPressed(object sender, EventArgs e)
@@ -286,17 +299,17 @@ namespace Automatone.GUI
 
         }
         
-        private void AddButtonPressed(object sender, EventArgs e)
+        private void AddCellsButtonPressed(object sender, EventArgs e)
         {
 
         }
 
-        private void RemoveButtonPressed(object sender, EventArgs e)
+        private void RemoveCellsButtonPressed(object sender, EventArgs e)
         {
 
         }
 
-        private void RandomizeButtonPressed(object sender, EventArgs e)
+        private void GenerateSongButtonPressed(object sender, EventArgs e)
         {
             Automatone.Instance.StopSongPlaying();
             GetUserInput();
@@ -306,7 +319,7 @@ namespace Automatone.GUI
 #else
             GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
 #endif      
-            GridPanel.Instance.ResetGridView();
+            NavigatorPanel.Instance.ResetGridDrawOffset();
         }
 
         private void GetUserInput()

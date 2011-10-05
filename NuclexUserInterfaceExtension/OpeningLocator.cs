@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NuclexUserInterfaceExtension
 {
-
     /// <summary>
     ///   Locates the opening between characters in a string that is nearest
     ///   to a user-defined location
@@ -27,7 +26,6 @@ namespace NuclexUserInterfaceExtension
     /// </remarks>
     internal class OpeningLocator
     {
-
         /// <summary>Initializes a new text opening locator</summary>
         public OpeningLocator()
         {
@@ -44,7 +42,6 @@ namespace NuclexUserInterfaceExtension
         /// <returns>The opening closest to the specified X coordinate</returns>
         public int FindClosestOpening(SpriteFont font, string text, float x)
         {
-
             // Measure the size of the whole string
             this.textBuilder.Remove(0, this.textBuilder.Length);
             this.textBuilder.Append(text);
@@ -55,9 +52,8 @@ namespace NuclexUserInterfaceExtension
             float leftX = 0.0f;
             int right = text.Length;
             float rightX = textSize.X;
-            for (; ; )
+            while(true)
             {
-
                 // Is the provided coordinate outside of our search range?
                 // -> Opening is to the far left or to the far right.
                 if (x <= leftX)
@@ -102,9 +98,7 @@ namespace NuclexUserInterfaceExtension
                     left = middle;
                     leftX = textSize.X;
                 }
-
             }
-
         }
 
         /// <summary>Used by GetClosestOpening() to avoid garbage production</summary>
@@ -112,4 +106,4 @@ namespace NuclexUserInterfaceExtension
 
     }
 
-} // namespace Nuclex.UserInterface.Visuals.Flat
+}
