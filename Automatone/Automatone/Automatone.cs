@@ -63,7 +63,7 @@ namespace Automatone
         public const int PIANO_SIZE = 61;
         public const int LOWEST_NOTE_CHROMATIC_NUMBER = 6;
 
-        public const int NEW_SONG_LENGTH = 45;
+        public const int NEW_SONG_LENGTH = 15;
 
         private static Automatone instance;
         public static Automatone Instance

@@ -272,7 +272,6 @@ namespace Automatone.GUI
                 {
                     for (int j = NavigatorPanel.Instance.HorizontalClippingStartIndex; j <= NavigatorPanel.Instance.HorizontalClippingEndIndex; j++)
                     {
-
                         Rectangle drawRectangle = new Rectangle((int)(j * LayoutManager.CELLWIDTH + NavigatorPanel.Instance.GridDrawOffsetX), (int)((GridPanel.Instance.SongCells.GetLength(DimensionY) - 1 - i) * LayoutManager.CELLHEIGHT + NavigatorPanel.Instance.GridDrawOffsetY), LayoutManager.CELLWIDTH, LayoutManager.CELLHEIGHT);
                         Color drawColor = GridPanel.Instance.GetChromaticColor(i);
 
@@ -504,22 +503,18 @@ namespace Automatone.GUI
             private Texture2D startCursorHead;
             private Texture2D endCursorHead;
             private Texture2D playCursor;
-            private Rectangle topBar;
+
             private const int CURSORHEIGHT = 20;
             private const int CURSORWIDTH = 20;
 
-            public int StartIndex { get { return startDraw / LayoutManager.CELLWIDTH; } }
-            public int EndIndex { get { return endDraw / LayoutManager.CELLWIDTH; } }
+            private int startIndex;
+            private int endIndex;
 
-            private int startDrag;
-            private int endDrag;
-            private int startDraw;
-            private int endDraw;
+            public int StartIndex { get { return Math.Min(startIndex, endIndex); } }
+            public int EndIndex { get { return Math.Max(endIndex, startIndex); } }
 
-            public Cursors()
-            {
-                topBar = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, LayoutManager.DEFAULT_WINDOW_WIDTH, LayoutManager.TOP_BORDER_THICKNESS);
-            }
+            private Rectangle startDrawRectangle;
+            private Rectangle endDrawRectangle;
 
             public void LoadContent()
             {
@@ -541,39 +536,37 @@ namespace Automatone.GUI
                     && Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED
                     && (GridPanel.Instance.newMouseState.LeftButton != ButtonState.Released
                         || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
-                    && topBar.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
+                    && LayoutManager.Instance.GridCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
                 {
-                    if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
+                    if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed)
                     {
-                        startDrag = GridPanel.Instance.newMouseState.X - (int)NavigatorPanel.Instance.GridDrawOffsetX;
-
+                        if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
+                        {
+                            startIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                        }
+                        endIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                        System.Console.WriteLine(StartIndex + " " + EndIndex);
                     }
-                    else if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Released && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        endDrag = GridPanel.Instance.newMouseState.X - (int)NavigatorPanel.Instance.GridDrawOffsetX;
-                        startDrag = (int)MathHelper.Clamp(startDrag, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) * LayoutManager.CELLWIDTH);
-                        startDrag = (int)Math.Round(startDrag / (double)LayoutManager.CELLWIDTH) * LayoutManager.CELLWIDTH;
-                        endDrag = (int)MathHelper.Clamp(endDrag, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) * LayoutManager.CELLWIDTH);
-                        endDrag = (int)Math.Round(endDrag / (double)LayoutManager.CELLWIDTH) * LayoutManager.CELLWIDTH;
-                    }
-                    else if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        endDrag = GridPanel.Instance.newMouseState.X - (int)NavigatorPanel.Instance.GridDrawOffsetX;
-                    }
-                    startDraw = Math.Min(startDrag, endDrag);
-                    endDraw = Math.Max(startDrag, endDrag);
                 }
             }
 
             public void Draw(GameTime gameTime)
             {
                 Automatone.Instance.SpriteBatch.Begin();
-                if (endDraw != startDraw)
+                if (StartIndex != EndIndex 
+                    && EndIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left) 
+                    && EndIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
-                    Automatone.Instance.SpriteBatch.Draw(endCursorHead, new Rectangle(endDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
+                    Automatone.Instance.SpriteBatch.Draw(endCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(EndIndex) - CURSORWIDTH / 2, LayoutManager.Instance.GridCursorsClickableArea.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
                 }
-                Automatone.Instance.SpriteBatch.Draw(startCursorHead, new Rectangle(startDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
-                if(Automatone.Instance.Sequencer.State != Sequencer.MidiPlayerState.STOPPED){
+                if(StartIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
+                    && StartIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                {
+                    Automatone.Instance.SpriteBatch.Draw(startCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(StartIndex) - CURSORWIDTH / 2, LayoutManager.Instance.GridCursorsClickableArea.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                }
+                
+                if(Automatone.Instance.Sequencer.State != Sequencer.MidiPlayerState.STOPPED)
+                {
                     Automatone.Instance.SpriteBatch.Draw(playCursor, new Rectangle((int)(NavigatorPanel.Instance.GridDrawOffsetX - NavigatorPanel.Instance.PlayOffset - 32), LayoutManager.Instance.GridCellsClickableArea.Y, 32, LayoutManager.Instance.GridCellsClickableArea.Height), Color.AliceBlue);
                 }
                 Automatone.Instance.SpriteBatch.End();
