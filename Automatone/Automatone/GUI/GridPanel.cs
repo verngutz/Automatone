@@ -152,6 +152,16 @@ namespace Automatone.GUI
             return Color.White;
         }
 
+        public int GridToScreenCoordinatesX(int x)
+        {
+            return (x * LayoutManager.CELLWIDTH + (int)NavigatorPanel.Instance.GridDrawOffsetX);
+        }
+
+        public int GridToScreenCoordinatesY(int y)
+        {
+            return ((int)NavigatorPanel.Instance.GridDrawOffsetY - (LayoutManager.CELLHEIGHT * (y - SongCells.GetLength(DimensionY) + 1)));
+        }
+
         public int ScreenToGridCoordinatesX(int x)
         {
             return ((int)-NavigatorPanel.Instance.GridDrawOffsetX + x) / LayoutManager.CELLWIDTH;
@@ -175,7 +185,6 @@ namespace Automatone.GUI
             private static Texture2D holdCell;
             private static Texture2D holdCellEnd;
             private static Texture2D gridPanelBackground;
-            private static Texture2D cursor;
 
             private int? gridInputStartXIndex;
             private int? gridInputEndXIndex;
@@ -188,7 +197,6 @@ namespace Automatone.GUI
                 holdCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdboxend");
                 silentCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Darkbox");
                 gridPanelBackground = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Bg_Gridpanel");
-                cursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor");
             }
 
             public void Dispose()
@@ -198,7 +206,6 @@ namespace Automatone.GUI
                 if (holdCell != null) holdCell.Dispose();
                 if (holdCellEnd != null) holdCellEnd.Dispose();
                 if (gridPanelBackground != null) gridPanelBackground.Dispose();
-                if (cursor != null) cursor.Dispose();
             }
 
             public void Update(GameTime gameTime)
@@ -288,7 +295,6 @@ namespace Automatone.GUI
                         }
                     }
                 }
-                Automatone.Instance.SpriteBatch.Draw(cursor, new Rectangle((int)(NavigatorPanel.Instance.GridDrawOffsetX-NavigatorPanel.Instance.PlayOffset-LayoutManager.CELLWIDTH-LayoutManager.LEFT_BORDER_THICKNESS), LayoutManager.Instance.GridCellsClickableArea.Y, 32, LayoutManager.Instance.GridCellsClickableArea.Height), Color.AliceBlue);
                 Automatone.Instance.SpriteBatch.End();
             }
 
@@ -318,6 +324,7 @@ namespace Automatone.GUI
         {
             private Texture2D labelsBackground;
             private SpriteFont labelFont;
+            private const bool sharpLabels = true;
 
             public void LoadContent()
             {
@@ -343,8 +350,6 @@ namespace Automatone.GUI
 
             private void DrawPitchLabel()
             {
-                bool sharpLabels = true;
-
                 Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridLeftBorderBounds, Color.White);
 
                 for (int i = NavigatorPanel.Instance.VerticalClippingStartIndex; i <= NavigatorPanel.Instance.VerticalClippingEndIndex; i++)
@@ -418,6 +423,16 @@ namespace Automatone.GUI
             private void DrawRightBorder()
             {
                 Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridRightBorderBounds, Color.White);
+                for (int i = 0; i < (Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / MusicTheory.OCTAVE_SIZE + 1; i++)
+                {
+                    if ((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER > NavigatorPanel.Instance.VerticalClippingStartIndex && i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER < NavigatorPanel.Instance.VerticalClippingEndIndex)
+                    {
+                        int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER));
+                        int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER));
+                        Vector2 loc = new Vector2(LayoutManager.Instance.GridRightBorderBounds.Left + 2, (upperBound + lowerBound) / 2);
+                        Automatone.Instance.SpriteBatch.DrawString(labelFont, i + "", loc, Color.White);
+                    }
+                }
             }
 
             private void DrawBottomBorder()
@@ -486,8 +501,9 @@ namespace Automatone.GUI
         /// </summary>
         private class Cursors
         {
-            private Texture2D startCursor;
-            private Texture2D endCursor;
+            private Texture2D startCursorHead;
+            private Texture2D endCursorHead;
+            private Texture2D playCursor;
             private Rectangle topBar;
             private const int CURSORHEIGHT = 20;
             private const int CURSORWIDTH = 20;
@@ -500,17 +516,24 @@ namespace Automatone.GUI
             private int startDraw;
             private int endDraw;
 
+            public Cursors()
+            {
+                topBar = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, LayoutManager.DEFAULT_WINDOW_WIDTH, LayoutManager.TOP_BORDER_THICKNESS);
+            }
+
             public void LoadContent()
             {
-                startCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
-                endCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
-                topBar = new Rectangle(0, LayoutManager.CONTROLS_AND_GRID_DIVISION, LayoutManager.DEFAULT_WINDOW_WIDTH, LayoutManager.TOP_BORDER_THICKNESS);
+                startCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
+                endCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
+                playCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor");
+                
             }
 
             public void Dispose()
             {
-                if (startCursor != null) startCursor.Dispose();
-                if (endCursor != null) endCursor.Dispose();
+                if (startCursorHead != null) startCursorHead.Dispose();
+                if (endCursorHead != null) endCursorHead.Dispose();
+                if (playCursor != null) playCursor.Dispose();
             }
 
             public void Update(GameTime gameTime)
@@ -548,9 +571,12 @@ namespace Automatone.GUI
                 Automatone.Instance.SpriteBatch.Begin();
                 if (endDraw != startDraw)
                 {
-                    Automatone.Instance.SpriteBatch.Draw(endCursor, new Rectangle(endDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
+                    Automatone.Instance.SpriteBatch.Draw(endCursorHead, new Rectangle(endDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
                 }
-                Automatone.Instance.SpriteBatch.Draw(startCursor, new Rectangle(startDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                Automatone.Instance.SpriteBatch.Draw(startCursorHead, new Rectangle(startDraw + (int)NavigatorPanel.Instance.GridDrawOffsetX - CURSORWIDTH / 2, topBar.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                if(Automatone.Instance.Sequencer.State != Sequencer.MidiPlayerState.STOPPED){
+                    Automatone.Instance.SpriteBatch.Draw(playCursor, new Rectangle((int)(NavigatorPanel.Instance.GridDrawOffsetX - NavigatorPanel.Instance.PlayOffset - 32), LayoutManager.Instance.GridCellsClickableArea.Y, 32, LayoutManager.Instance.GridCellsClickableArea.Height), Color.AliceBlue);
+                }
                 Automatone.Instance.SpriteBatch.End();
             }
         }
