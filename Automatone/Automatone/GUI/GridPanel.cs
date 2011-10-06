@@ -15,6 +15,7 @@ namespace Automatone.GUI
 {
     public class GridPanel : DrawableGameComponent
     {
+        public bool HasUnsavedChanges { set; get; }
         public bool ScrollWithMidi { set; get; }
 
         private MouseState oldMouseState;
@@ -73,6 +74,7 @@ namespace Automatone.GUI
             cells = new Cells();
             labels = new Labels();
             cursors = new Cursors();
+            HasUnsavedChanges = true;
         }
 
         public void ResetCursors()
@@ -226,6 +228,7 @@ namespace Automatone.GUI
                 {
                     if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
                     {
+                        GridPanel.Instance.HasUnsavedChanges = true;
                         gridInputStartXIndex = Math.Min(GridPanel.Instance.SongCells.GetLength(DimensionX) - 1, GridPanel.Instance.ScreenToGridCoordinatesX(Mouse.GetState().X));
                         gridInputEndXIndex = Math.Min(GridPanel.Instance.SongCells.GetLength(DimensionX) - 1, GridPanel.Instance.ScreenToGridCoordinatesX(Mouse.GetState().X));
                         gridInputYIndex = GridPanel.Instance.ScreenToGridCoordinatesY(Mouse.GetState().Y);
@@ -237,6 +240,7 @@ namespace Automatone.GUI
                         {
                             GridPanel.Instance.SongCells[gridInputYIndex.Value, gridInputStartXIndex.Value] = CellState.SILENT;
                         }
+
                     }
                     else if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Released && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
                     {

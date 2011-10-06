@@ -25,8 +25,6 @@ namespace Automatone.GUI
         public const byte BOTTOM_SCROLLBAR_THICKNESS = 50;
         public const byte RIGHT_SCROLLBAR_THICKNESS = 50;
 
-        public const short PARAMETERS_PANEL_HEIGHT = 400;
-
         public const int CONTROL_ARROW_WIDTH = 32;
         public const int CONTROL_ARROW_HEIGHT = 96;
         public const int CONTROL_BUTTON_WIDTH = 64;
@@ -186,9 +184,9 @@ namespace Automatone.GUI
             verticalScrollBarBounds = new UniRectangle(gridPanelLayout.OuterRectangle.Width, gridPanelLayout.InnerRectangle.Top - CONTROLS_AND_GRID_DIVISION, RIGHT_SCROLLBAR_THICKNESS, gridPanelLayout.InnerRectangle.Height);
 
             if (parametersPanelBounds.Top == 0)
-                parametersPanelBounds = new UniRectangle(CONTROL_BUTTON_SPACING, CONTROLS_AND_GRID_DIVISION - PARAMETERS_PANEL_HEIGHT, windowWidth - 2 * CONTROL_BUTTON_SPACING, PARAMETERS_PANEL_HEIGHT);
+                parametersPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION - windowHeight, windowWidth, windowHeight - CONTROLS_AND_GRID_DIVISION);
             else
-                parametersPanelBounds = new UniRectangle(CONTROL_BUTTON_SPACING, ParametersPanel.Instance.Bounds.Top, windowWidth - 2 * CONTROL_BUTTON_SPACING, PARAMETERS_PANEL_HEIGHT);
+                parametersPanelBounds = new UniRectangle(0, ParametersPanel.Instance.Bounds.Top, windowWidth, windowHeight - CONTROLS_AND_GRID_DIVISION);
 
             globalRandomizeButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING * 3 - PARAMETERS_BUTTON_WIDTH * 3), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
             okButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING * 2 - PARAMETERS_BUTTON_WIDTH * 2), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);

@@ -172,7 +172,7 @@ namespace Automatone
             synthesizer.Update(gameTime);
             if (previousSequencerState == Sequencer.MidiPlayerState.PLAYING && sequencer.State == Sequencer.MidiPlayerState.STOPPED)
             {
-                StopSongPlaying();
+                ControlPanel.Instance.StopSongPlaying();
             }
             previousSequencerState = sequencer.State;
             ParametersPanel.Instance.BringToFront();
@@ -221,11 +221,8 @@ namespace Automatone
             while(!Sequencer.LoadMidi("sample.mid"));
         }
 
-        public void StopSongPlaying()
+        public void PauseSongPlaying()
         {
-            Sequencer.StopMidi();
-            NavigatorPanel.Instance.ResetScrolling();
-            ControlPanel.Instance.ResetPlayButton();
         }
     }
 }

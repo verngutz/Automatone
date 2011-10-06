@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Windows.Forms;
 
 using Microsoft.Xna.Framework;
 using Nuclex.UserInterface;
@@ -15,23 +16,26 @@ namespace Automatone.GUI
 {
     public class ParametersPanel : SkinNamedWindowControl
     {
-        private const byte SLIDE_MOVESPEED = 5;
+        private const byte SLIDE_MOVESPEED = 10;
         private short slideMoveVelocity;
 
         private SkinNamedButtonControl globalRandomizeButton;
         private SkinNamedButtonControl okButton;
         private SkinNamedButtonControl cancelButton;
 
-        private Dictionary<SkinNamedHorizontalSliderControl, PropertyInfo> parametersSliders;
+        private Dictionary<SkinNamedHorizontalSliderControl, PropertyInfo> slidersHookUp;
 
         public UniRectangle GlobalRandomizeButtonBounds { set { globalRandomizeButton.Bounds = value; } }
         public UniRectangle OkButtonBounds { set { okButton.Bounds = value; } }
         public UniRectangle CancelButtonBounds { set { cancelButton.Bounds = value; } }
 
+        private bool slidersHaveBeenMoved;
+
         private ParametersPanel() : base()
         {
             slideMoveVelocity = 0;
-            parametersSliders = new Dictionary<SkinNamedHorizontalSliderControl, PropertyInfo>();
+            slidersHookUp = new Dictionary<SkinNamedHorizontalSliderControl, PropertyInfo>();
+            slidersHaveBeenMoved = false;
             InitializeComponent();
         }
 
@@ -92,29 +96,29 @@ namespace Automatone.GUI
             //
             foreach (PropertyInfo p in typeof(InputParameters).GetProperties())
             {
-                // Do nothing if the current parameter isn't a ZeroOneParameter<T>, where T implements ZeroOneParameter
-                if(!p.PropertyType.IsGenericType
-                    || p.PropertyType.GetGenericArguments()[0].GetInterfaces().Length == 0
-                    || p.PropertyType.GetGenericArguments()[0].GetInterfaces()[0] != typeof(ZeroOneParameter))
+                // Do something only if the current parameter is a ParameterWrapper<T>, where T implements ZeroOneParameter
+                if (p.PropertyType.IsGenericType
+                    && p.PropertyType.GetGenericArguments()[0].GetInterfaces().Length != 0
+                    && p.PropertyType.GetGenericArguments()[0].GetInterfaces()[0] == typeof(ZeroOneParameter))
                 {
-                    continue;
+
+                    SkinNamedHorizontalSliderControl parameterSlider = new SkinNamedHorizontalSliderControl();
+
+                    if (p.PropertyType == typeof(ParameterWrapper<SongParameter>))
+                    {
+                        System.Console.WriteLine("hahaha");
+                    }
+
+                    parameterSlider.SkinName = "navigator";
+                    Children.Add(parameterSlider);
+                    slidersHookUp.Add(parameterSlider, p);
                 }
-
-                SkinNamedHorizontalSliderControl parameterSlider = new SkinNamedHorizontalSliderControl();
-
-                if (p.PropertyType == typeof(ParameterWrapper<SongParameter>))
-                {
-                    double d = (ParameterWrapper<SongParameter>)p.GetValue(InputParameters.Instance, null);
-                    System.Console.WriteLine(d);
-                }
-
-                parametersSliders.Add(parameterSlider, p);
             }
         }
 
         public void Update()
         {
-            Bounds.Location.Y = new UniScalar(MathHelper.Clamp(Bounds.Location.Y.Offset + slideMoveVelocity, LayoutManager.CONTROLS_AND_GRID_DIVISION - LayoutManager.PARAMETERS_PANEL_HEIGHT, LayoutManager.CONTROLS_AND_GRID_DIVISION));
+            Bounds.Location.Y = new UniScalar(MathHelper.Clamp(Bounds.Location.Y.Offset + slideMoveVelocity, LayoutManager.CONTROLS_AND_GRID_DIVISION - Automatone.Instance.Window.ClientBounds.Height, LayoutManager.CONTROLS_AND_GRID_DIVISION));
         }
 
         public void Toggle()
@@ -138,35 +142,68 @@ namespace Automatone.GUI
         private void GlobalRandomizeButtonPressed(object sender, EventArgs e)
         {
             Random rand = new Random();
-            foreach (PropertyInfo p in parametersSliders.Values)
+
+            // Randomize sliders only, don't change underlying input parameter yet
+            foreach (SkinNamedHorizontalSliderControl slider in slidersHookUp.Keys)
             {
-                MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.WrapperMethodName).MakeGenericMethod(p.PropertyType.GetGenericArguments()[0]);
-                p.GetSetMethod().Invoke(InputParameters.Instance, new object[] { method.Invoke(null, new object[]{ rand.NextDouble() }) });
+                slider.ThumbPosition = (float)rand.NextDouble();
             }
+
+            slidersHaveBeenMoved = true;
         }
 
         private void OkButtonPressed(object sender, EventArgs e)
         {
-            Automatone.Instance.StopSongPlaying();
+            if (ControlPanel.Instance.ShowSaveConfirmation() != DialogResult.Cancel)
+            {
+                ControlPanel.Instance.StopSongPlaying();
+
+                //synchronize all the input parameters based on the slider parameters
+                foreach (KeyValuePair<SkinNamedHorizontalSliderControl, PropertyInfo> sliderParamPair in slidersHookUp)
+                {
+                    PropertyInfo propertyInfo = sliderParamPair.Value;
+                    MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.WrapperMethodName).MakeGenericMethod(propertyInfo.PropertyType.GetGenericArguments()[0]);
+                    propertyInfo.GetSetMethod().Invoke(InputParameters.Instance, new object[] { method.Invoke(null, new object[] { sliderParamPair.Key.ThumbPosition }) });
+                }
 
 #if USESEED
-            GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(SEED), new ClassicalTheory());
+                GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(SEED), new ClassicalTheory());
 #else
-            GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
+                GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
 #endif
-            GridPanel.Instance.ResetCursors();
-            NavigatorPanel.Instance.ResetGridDrawOffset();
-            SlideUp();
-
-            foreach (PropertyInfo p in parametersSliders.Values)
-            {
-                MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.DoubleMethodName).MakeGenericMethod(p.PropertyType.GetGenericArguments()[0]);
-                System.Console.WriteLine((double)method.Invoke(null, new object[] { p.GetGetMethod().Invoke(InputParameters.Instance, null) }));
+                GridPanel.Instance.HasUnsavedChanges = true;
+                GridPanel.Instance.ResetCursors();
+                NavigatorPanel.Instance.ResetGridDrawOffset();
+                SlideUp();
             }
         }
 
         private void CancelButtonPressed(object sender, EventArgs e)
         {
+            if (slidersHaveBeenMoved)
+            {
+                if (MessageBox.Show(
+                    "Sliders will be reverted back to their old values. Proceed?",
+                    "Confirmation",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2)
+                    == DialogResult.OK)
+                {
+                    //reset all the sliders to the previous (unchanged) values of the underlying input parameters
+                    foreach (PropertyInfo p in slidersHookUp.Values)
+                    {
+                        MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.DoubleMethodName).MakeGenericMethod(p.PropertyType.GetGenericArguments()[0]);
+                        System.Console.WriteLine((double)method.Invoke(null, new object[] { p.GetGetMethod().Invoke(InputParameters.Instance, null) }));
+                    }
+                    slidersHaveBeenMoved = false;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
             SlideUp();
         }
     }
