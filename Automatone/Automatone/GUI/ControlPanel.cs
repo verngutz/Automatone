@@ -318,27 +318,55 @@ namespace Automatone.GUI
                     GridPanel.Instance.HasUnsavedChanges = false;
                 }
             }
+            else
+            {
+                MessageBox.Show("Nothing to save!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ExportButtonPressed(object sender, EventArgs e)
         {
+            if (GridPanel.Instance.SongCells != null)
+            {
+                Automatone.Instance.RewriteSong();
+                SaveFileDialog projectSaveDialog = new SaveFileDialog();
+                projectSaveDialog.Filter = "MIDI File (*.mid)|*.mid";
+                projectSaveDialog.RestoreDirectory = true;
 
+                Stream saveStream;
+
+                if (projectSaveDialog.ShowDialog() == DialogResult.OK && (saveStream = projectSaveDialog.OpenFile()) != null)
+                {
+                    saveStream.Close();
+                    File.Delete(projectSaveDialog.FileName);
+                    File.Copy("sample.mid", projectSaveDialog.FileName);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nothing to export!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CutButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.CopySelectedCells();
-            GridPanel.Instance.DeleteSelectedCells();
+            if (GridPanel.Instance.SongCells != null)
+            {
+                GridPanel.Instance.CopySelectedCells();
+                GridPanel.Instance.DeleteSelectedCells();
+            }
         }
 
         private void CopyButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.CopySelectedCells();
+            if (GridPanel.Instance.SongCells != null)
+                GridPanel.Instance.CopySelectedCells();
         }
 
         private void PasteButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.PasteToSelectedCells();
+            if (GridPanel.Instance.SongCells != null)
+                GridPanel.Instance.PasteToSelectedCells();
         }
 
         private void UndoButtonPressed(object sender, EventArgs e)
@@ -355,12 +383,14 @@ namespace Automatone.GUI
         
         private void AddCellsButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.InsertCells();
+            if (GridPanel.Instance.SongCells != null)
+                GridPanel.Instance.InsertCells();
         }
 
         private void RemoveCellsButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.RemoveCells();
+            if (GridPanel.Instance.SongCells != null)
+                GridPanel.Instance.RemoveCells();
         }
     }
 }
