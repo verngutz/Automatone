@@ -35,13 +35,13 @@ namespace Automatone.Music
             this.measureLength = measureLength;
 
             //Set rhythm crowdedness based on input parameters
-            rhythmCrowdedness = inputParameters.meanPartRhythmCrowdedness + (inputParameters.meanPartRhythmCrowdedness * (rand.NextDouble() - 0.5) * inputParameters.partRhythmCrowdednessVariance);
+            rhythmCrowdedness = inputParameters.MeanPartRhythmCrowdedness + (inputParameters.MeanPartRhythmCrowdedness * (rand.NextDouble() - 0.5) * inputParameters.PartRhythmCrowdednessVariance);
 
             //Set note length adjustment based on input parameters
-            noteLengthAdjustment = 0.5 + (0.5 * (rand.NextDouble() - 0.5) * inputParameters.partNoteLengthVariance);
+            noteLengthAdjustment = 0.5 + (0.5 * (rand.NextDouble() - 0.5) * inputParameters.PartNoteLengthVariance);
 
             //Set octave range based on input parameters
-            octaveRange = (int)Math.Round((theory.PART_OCTAVE_RANGE * inputParameters.meanPartOctaveRange) + ((theory.PART_OCTAVE_RANGE * inputParameters.meanPartOctaveRange) * (rand.NextDouble() - 0.5) * inputParameters.partOctaveRangeVariance));
+            octaveRange = (int)Math.Round((theory.PART_OCTAVE_RANGE * inputParameters.MeanPartOctaveRange) + ((theory.PART_OCTAVE_RANGE * inputParameters.MeanPartOctaveRange) * (rand.NextDouble() - 0.5) * inputParameters.PartOctaveRangeVariance));
             
             //Set random lower pitch limit
             lowerPitchLimit = rand.Next(Automatone.PIANO_SIZE - (octaveRange * MusicTheory.OCTAVE_SIZE)) + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER;
@@ -51,7 +51,7 @@ namespace Automatone.Music
 
             //Set regularity based on input parameters
             regularity = 0;
-            if (rand.NextDouble() < inputParameters.beatDefinition)
+            if (rand.NextDouble() < inputParameters.BeatDefinition)
             {
                 forceChord = true;
                 regularity = rand.NextDouble();
@@ -96,7 +96,7 @@ namespace Automatone.Music
             regulars.Sort();
 
             //set mean note length
-            double noteLength = theory.NOTE_LENGTHINESS * inputParameters.meanNoteLength;
+            double noteLength = theory.NOTE_LENGTHINESS * inputParameters.MeanNoteLength;
             noteLength += noteLength * (noteLengthAdjustment - 0.5);
             noteLength += noteLength * (regularity - 0.5) * 0.2;
 
@@ -113,7 +113,7 @@ namespace Automatone.Music
                 
                 //Adjust note length
                 double currNoteLength = noteLength;
-                currNoteLength += currNoteLength * ((randomRhythm.NextDouble() - 0.5) * inputParameters.noteLengthVariance);
+                currNoteLength += currNoteLength * ((randomRhythm.NextDouble() - 0.5) * inputParameters.NoteLengthVariance);
                 currNoteLength = Math.Pow(0.5, Math.Round(Math.Log(currNoteLength) / Math.Log(0.5)));
 
                 //Adjust pitch based on melody bias

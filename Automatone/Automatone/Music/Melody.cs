@@ -11,9 +11,9 @@
         {
             melodyBias = new double[2];
             double[] melodyBiasSample = theory.MELODY_BIAS_SAMPLE;
-            melodyBias[0] = melodyBiasSample[0] + (InputParameters.Instance.chordalityObedience - 1) * (melodyBiasSample[0] - 0.5);
-            melodyBias[1] = melodyBiasSample[1] + (InputParameters.Instance.tonalityObedience - 1) * (melodyBiasSample[1] - 0.5);
-            pitchContiguity = theory.PITCH_CONTIGUITY * InputParameters.Instance.meanPitchContiguity;
+            melodyBias[0] = melodyBiasSample[0] + (InputParameters.Instance.ChordalityObedience - 1) * (melodyBiasSample[0] - 0.5);
+            melodyBias[1] = melodyBiasSample[1] + (InputParameters.Instance.TonalityObedience - 1) * (melodyBiasSample[1] - 0.5);
+            pitchContiguity = theory.PITCH_CONTIGUITY * InputParameters.Instance.MeanPitchContiguity;
         }
     }
 }

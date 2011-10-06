@@ -27,14 +27,14 @@ namespace Automatone.Music
 
             //Determine curve sizes
             int oldCount = rhythmCurveSample.Count;
-            int newCount = (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * 2 / (double)InputParameters.Instance.timeSignatureD);
+            int newCount = (int)(Automatone.SUBBEATS_PER_WHOLE_NOTE * 2 / (double)InputParameters.Instance.TimeSignatureD);
 
             //Create adjusted rhythm curve
             rhythmCurve = new double[newCount];
             for (int i = 0; i < newCount; i++)
             {
                 double sampleValue = rhythmCurveSample.ElementAt<double>(i * oldCount / newCount);
-                sampleValue += (InputParameters.Instance.rhythmObedience - 1) * (sampleValue - 0.5);
+                sampleValue += (InputParameters.Instance.RhythmObedience - 1) * (sampleValue - 0.5);
                 rhythmCurve[i] = sampleValue;
                 rhythmCurveSample.RemoveAt(i * oldCount / newCount);
                 rhythmCurveSample.Insert(i * oldCount / newCount, 0.0);

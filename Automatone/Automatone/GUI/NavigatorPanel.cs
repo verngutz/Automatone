@@ -18,7 +18,7 @@ namespace Automatone.GUI
     /// and communicating with the layout manager to change which Cells should
     /// be drawn at the current time.
     /// </summary>
-    public class NavigatorPanel : WindowControl
+    public class NavigatorPanel : SkinNamedWindowControl
     {
         private Vector2 gridDrawOffset;
 
@@ -109,6 +109,7 @@ namespace Automatone.GUI
         {
             Bounds = LayoutManager.Instance.NavigatorPanelBounds;
             EnableDragging = false;
+            SkinName = "navigator.panel";
 
             //Contruct Children
             horizontalSlider = new SkinNamedHorizontalSliderControl();
@@ -233,7 +234,7 @@ namespace Automatone.GUI
         private void HandlePlayScrolling()
         {
             gridMoveVelocityX = 0;
-            playOffset -= InputParameters.Instance.tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * LayoutManager.CELLWIDTH;
+            playOffset -= InputParameters.Instance.Tempo * Automatone.SUBBEATS_PER_WHOLE_NOTE / SCROLL_SPEED_DIVISOR * LayoutManager.CELLWIDTH;
             GridDrawOffsetX = Math.Min(playOffset + CURSOR_OFFSET, 0);
             ClampGridOffsetX();
             CalculateHorizontalClipping();

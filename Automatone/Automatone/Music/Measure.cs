@@ -18,12 +18,12 @@ namespace Automatone.Music
 
             //Select seeds for rhythm and melody
             List<int> selectedRhythmSeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.measureRhythmVariance * (parts.Count); i++)
+            for (int i = 0; i < 1 + inputParameters.MeasureRhythmVariance * (parts.Count); i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
             List<int> selectedMelodySeeds = new List<int>();
-            for (int i = 0; i < 1 + inputParameters.measureMelodyVariance * (parts.Count); i++)
+            for (int i = 0; i < 1 + inputParameters.MeasureMelodyVariance * (parts.Count); i++)
             {
                 selectedMelodySeeds.Add(melodySeeds.ElementAt<int>(rand.Next(melodySeeds.Count)));
             }

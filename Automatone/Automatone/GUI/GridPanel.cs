@@ -75,6 +75,11 @@ namespace Automatone.GUI
             cursors = new Cursors();
         }
 
+        public void ResetCursors()
+        {
+            cursors.ResetIndices();
+        }
+
         protected override void LoadContent()
         {
             base.LoadContent();
@@ -513,8 +518,11 @@ namespace Automatone.GUI
             public int StartIndex { get { return Math.Min(startIndex, endIndex); } }
             public int EndIndex { get { return Math.Max(endIndex, startIndex); } }
 
-            private Rectangle startDrawRectangle;
-            private Rectangle endDrawRectangle;
+            public void ResetIndices()
+            {
+                startIndex = 0;
+                endIndex = 0;
+            }
 
             public void LoadContent()
             {
@@ -545,7 +553,6 @@ namespace Automatone.GUI
                             startIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
                         }
                         endIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
-                        System.Console.WriteLine(StartIndex + " " + EndIndex);
                     }
                 }
             }

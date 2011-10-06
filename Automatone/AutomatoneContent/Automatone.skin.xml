@@ -84,11 +84,24 @@
 	  <frames>
 	
 	    <!--
-	      Frame used to draw a normal window
+	      Frame used to draw the control panel
 	    -->
-	    <frame name="window">
+	    <frame name="control.panel.window">
         <region source="controlpanel" hplacement ="stretch" vplacement="stretch" x="0" y="0" w="800" h="150" />
 	    </frame>
+
+      <!--
+	      Frame used to draw the navigator panel
+	    -->
+      <frame name="navigator.panel.window">
+      </frame>
+
+      <!--
+	      Frame used to draw a parameters panel
+	    -->
+      <frame name="parameters.panel.window">
+        <region source="controlpanel" hplacement ="stretch" vplacement="stretch" x="0" y="0" w="800" h="150" />
+      </frame>
 	
 	    <!--
 	      Frame used for a label
