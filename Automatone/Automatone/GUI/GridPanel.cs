@@ -326,24 +326,24 @@ namespace Automatone.GUI
         /// </summary>
         private class Labels
         {
-            private Texture2D labelsBackground;
-            private Texture2D labelsBackground2;
+            private Texture2D labelsBackgroundVert;
+            private Texture2D labelsBackgroundHori;
             private SpriteFont labelFont;
             private const bool sharpLabels = true;
 
             public void LoadContent()
             {
-                labelsBackground = Automatone.Instance.Content.Load<Texture2D>("holdbox");
-                labelsBackground2 = Automatone.Instance.Content.Load<Texture2D>("darkbox");
+                labelsBackgroundVert = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Bar_Border_Vert");
+                labelsBackgroundHori = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Bar_Border_Hori");
                 labelFont = Automatone.Instance.Content.Load<SpriteFont>("LabelFont");
             }
 
             public void Dispose()
             {
-                if (labelsBackground != null)
-                    labelsBackground.Dispose();
-                if (labelsBackground2 != null)
-                    labelsBackground2.Dispose();
+                if (labelsBackgroundVert != null)
+                    labelsBackgroundVert.Dispose();
+                if (labelsBackgroundHori != null)
+                    labelsBackgroundHori.Dispose();
             }
 
             public void Draw(GameTime gameTime)
@@ -364,13 +364,13 @@ namespace Automatone.GUI
                     {
                         int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
                         int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
-                        Automatone.Instance.SpriteBatch.Draw((i % 2 == 0 ? labelsBackground : labelsBackground2), new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Left, upperBound, LayoutManager.Instance.GridRightBorderBounds.Width, lowerBound - upperBound), Color.White);
+                        Automatone.Instance.SpriteBatch.Draw(labelsBackgroundVert, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Left, upperBound, LayoutManager.Instance.GridRightBorderBounds.Width, lowerBound - upperBound), (i % 2 == 0 ? Color.White : Color.Gray));
                     }
                 }
 
                 for (int i = NavigatorPanel.Instance.VerticalClippingStartIndex; i <= NavigatorPanel.Instance.VerticalClippingEndIndex; i++)
                 {
-                    Vector2 loc = new Vector2(2, (int)((GridPanel.Instance.SongCells.GetLength(DimensionY) - 1 - i) * LayoutManager.CELLHEIGHT + NavigatorPanel.Instance.GridDrawOffsetY));
+                    Vector2 loc = new Vector2(5, (int)((GridPanel.Instance.SongCells.GetLength(DimensionY) - 1 - i) * LayoutManager.CELLHEIGHT + NavigatorPanel.Instance.GridDrawOffsetY));
                     string letter = "";
                     switch ((i - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER + MusicTheory.OCTAVE_SIZE) % MusicTheory.OCTAVE_SIZE)
                     {
@@ -411,25 +411,25 @@ namespace Automatone.GUI
                             letter = "B";
                             break;
                     }
-                    Automatone.Instance.SpriteBatch.DrawString(labelFont, letter, loc, Color.White);
+                    Automatone.Instance.SpriteBatch.DrawString(labelFont, letter, loc, Color.LightGray);
                 }
             }
 
             private void DrawTimeLabel()
             {
-                Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridTopBorderBounds, Color.White);
+                Automatone.Instance.SpriteBatch.Draw(labelsBackgroundHori, LayoutManager.Instance.GridTopBorderBounds, Color.White);
                 for (int j = NavigatorPanel.Instance.HorizontalClippingStartIndex; j <= NavigatorPanel.Instance.HorizontalClippingEndIndex; j++)
                 {
-                    Vector2 loc = new Vector2((int)(j * LayoutManager.CELLWIDTH + NavigatorPanel.Instance.GridDrawOffsetX), 2 + LayoutManager.CONTROLS_AND_GRID_DIVISION);
+                    Vector2 loc = new Vector2((int)(j * LayoutManager.CELLWIDTH + NavigatorPanel.Instance.GridDrawOffsetX - 2), 5 + LayoutManager.CONTROLS_AND_GRID_DIVISION);
                     if (j % Automatone.Instance.MeasureLength == 0)
                     {
-                        Automatone.Instance.SpriteBatch.DrawString(labelFont, "" + (j / Automatone.Instance.MeasureLength + 1), loc, Color.White);
+                        Automatone.Instance.SpriteBatch.DrawString(labelFont, "" + (j / Automatone.Instance.MeasureLength + 1), loc, Color.LightGray);
                     }
                     for (int k = 1; k < Automatone.Instance.MeasureLength / (Automatone.SUBBEATS_PER_WHOLE_NOTE / 4); k++)
                     {
                         if (j % Automatone.Instance.MeasureLength == k * Automatone.SUBBEATS_PER_WHOLE_NOTE / 4)
                         {
-                            Automatone.Instance.SpriteBatch.DrawString(labelFont, "♩", loc, Color.Navy);
+                            Automatone.Instance.SpriteBatch.DrawString(labelFont, "♩", loc, Color.Gray);
                         }
                     }
                 }
@@ -443,7 +443,7 @@ namespace Automatone.GUI
                     {
                         int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
                         int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
-                        Automatone.Instance.SpriteBatch.Draw((i % 2 == 0 ? labelsBackground : labelsBackground2), new Rectangle(LayoutManager.Instance.GridRightBorderBounds.Left, upperBound, LayoutManager.Instance.GridRightBorderBounds.Width, lowerBound - upperBound), Color.White);
+                        Automatone.Instance.SpriteBatch.Draw(labelsBackgroundVert, new Rectangle(LayoutManager.Instance.GridRightBorderBounds.Left, upperBound, LayoutManager.Instance.GridRightBorderBounds.Width, lowerBound - upperBound), (i % 2 == 0 ? Color.White : Color.Gray));
                     }
                 }
                 for (int i = 0; i < (Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / MusicTheory.OCTAVE_SIZE + 1; i++)
@@ -452,15 +452,15 @@ namespace Automatone.GUI
                     {
                         int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER));
                         int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER));
-                        Vector2 loc = new Vector2(LayoutManager.Instance.GridRightBorderBounds.Left + 2, (upperBound + lowerBound) / 2);
-                        Automatone.Instance.SpriteBatch.DrawString(labelFont, i + "", loc, Color.White);
+                        Vector2 loc = new Vector2(LayoutManager.Instance.GridRightBorderBounds.Left + 10, (upperBound + lowerBound) / 2);
+                        Automatone.Instance.SpriteBatch.DrawString(labelFont, i + "", loc, Color.LightGray);
                     }
                 }
             }
 
             private void DrawBottomBorder()
             {
-                Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridBottomBorderBounds, Color.White);
+                Automatone.Instance.SpriteBatch.Draw(labelsBackgroundHori, LayoutManager.Instance.GridBottomBorderBounds, Color.White);
             }
         }
 

@@ -11,6 +11,7 @@ using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
 using NuclexUserInterfaceExtension;
 using Automatone.Theories;
+using Microsoft.Xna.Framework;
 
 namespace Automatone.GUI
 {
@@ -223,6 +224,7 @@ namespace Automatone.GUI
 
         public void ResetButtonsetBounds()
         {
+            firstButton = (int)MathHelper.Clamp(firstButton, 0, buttonsetBounds.Count - LayoutManager.Instance.VisibleButtonCount);
             buttonsetBounds = LayoutManager.Instance.GetButtonsetBounds(buttonsetBounds.Count, firstButton);
             playPauseButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(0);
             stopButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(1);
@@ -243,13 +245,13 @@ namespace Automatone.GUI
 
         private void ArrowLeftPressed(object sender, EventArgs e)
         {
-            firstButton = Math.Max(0, firstButton - 1);
+            firstButton--;
             ResetButtonsetBounds();
         }
 
         private void ArrowRightPressed(object sender, EventArgs e)
         {
-            firstButton = Math.Min(buttonsetBounds.Count - 1, firstButton + 1);
+            firstButton++;
             ResetButtonsetBounds();
         }
 

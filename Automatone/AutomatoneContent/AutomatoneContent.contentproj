@@ -687,6 +687,58 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Bar_Border_Hori.png">
+      <Name>Bar_Border_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_Border_Vert.png">
+      <Name>Bar_Border_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollBar_Hori.png">
+      <Name>Bar_ScrollBar_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollBar_Vert.png">
+      <Name>Bar_ScrollBar_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Hori.png">
+      <Name>Bar_ScrollHandle_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Hori_Clicked.png">
+      <Name>Bar_ScrollHandle_Hori_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Hori_Hovered.png">
+      <Name>Bar_ScrollHandle_Hori_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Vert.png">
+      <Name>Bar_ScrollHandle_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Vert_Clicked.png">
+      <Name>Bar_ScrollHandle_Vert_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Vert_Hovered.png">
+      <Name>Bar_ScrollHandle_Vert_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

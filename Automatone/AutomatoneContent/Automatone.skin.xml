@@ -81,11 +81,16 @@
       <bitmap name="generate" contentPath="Control Panel/Btn_Generate"/>
       <bitmap name="generateClicked" contentPath="Control Panel/Btn_Generate_Clicked"/>
       <bitmap name="generateHovered" contentPath="Control Panel/Btn_Generate_Hovered"/>
+
+      <bitmap name="navigatorHorizontalRail" contentPath="Grid Panel/Bar_ScrollBar_Hori"/>
+      <bitmap name="navigatorHorizontalThumb" contentPath="Grid Panel/Bar_ScrollHandle_Hori"/>
+      <bitmap name="navigatorHorizontalThumbHover" contentPath="Grid Panel/Bar_ScrollHandle_Hori_Hovered"/>
+      <bitmap name="navigatorHorizontalThumbClicked" contentPath="Grid Panel/Bar_ScrollHandle_Hori_Clicked"/>
       
-      <bitmap name="navigatorHorizontalRail" contentPath="holdbox"/>
-      <bitmap name="navigatorThumb" contentPath="lightbox"/>
-      <bitmap name="navigatorThumbHover" contentPath="darkbox"/>
-      <bitmap name="navigatorThumbClicked" contentPath="holdbox"/>
+      <bitmap name="navigatorVerticalRail" contentPath="Grid Panel/Bar_ScrollBar_Vert"/>
+      <bitmap name="navigatorVerticalThumb" contentPath="Grid Panel/Bar_ScrollHandle_Vert"/>
+      <bitmap name="navigatorVerticalThumbHover" contentPath="Grid Panel/Bar_ScrollHandle_Vert_Hovered"/>
+      <bitmap name="navigatorVerticalThumbClicked" contentPath="Grid Panel/Bar_ScrollHandle_Vert_Clicked"/>
 	  </resources>
 	
 	  <!--
@@ -641,28 +646,28 @@
 	      Frame used to draw a vertical rail for a scroll bar
 	    -->
 	    <frame name="navigator.rail.vertical">
-        <region source="navigatorHorizontalRail" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorVerticalRail" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw a vertical slider on a scroll bar in its normal state
 	    -->
 	    <frame name="navigator.slider.vertical.normal">
-        <region source="navigatorThumb" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorVerticalThumb" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw a vertical slider on a scroll bar in its highlighted state
 	    -->
 	    <frame name="navigator.slider.vertical.highlighted">
-        <region source="navigatorThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorVerticalThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw a vertical slider on a scroll bar in its depressed state
 	    -->
 	    <frame name="navigator.slider.vertical.depressed">
-        <region source="navigatorThumbClicked" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorVerticalThumbClicked" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
@@ -676,21 +681,21 @@
 	      Frame used to draw the navigator's horizontal slider in its normal state
 	    -->
 	    <frame name="navigator.slider.horizontal.normal">
-        <region source="navigatorThumb" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorHorizontalThumb" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw the navigator's horizontal slider in its highlighted state
 	    -->
 	    <frame name="navigator.slider.horizontal.highlighted">
-        <region source="navigatorThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorHorizontalThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw the navigator's horizontal slider in its depressed state
 	    -->
 	    <frame name="navigator.slider.horizontal.depressed">
-        <region source="navigatorThumbClicked" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
+        <region source="navigatorHorizontalThumbClicked" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 
 	    <!--

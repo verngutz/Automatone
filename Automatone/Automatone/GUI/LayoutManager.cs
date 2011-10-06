@@ -97,6 +97,14 @@ namespace Automatone.GUI
             }
         }
 
+        public int VisibleButtonCount
+        {
+            get
+            {
+                return ((windowWidth - CONTROL_BUTTON_SPACING * 3 - CONTROL_ARROW_WIDTH * 2) / (CONTROL_BUTTON_WIDTH + CONTROL_BUTTON_SPACING));
+            }
+        }
+
         private LayoutManager() 
         {
             windowWidth = DEFAULT_WINDOW_WIDTH;
@@ -135,7 +143,7 @@ namespace Automatone.GUI
                     buttonsetBounds.Add(new UniRectangle(windowWidth + CONTROL_BUTTON_WIDTH, (CONTROLS_AND_GRID_DIVISION - CONTROL_BUTTON_HEIGHT) / 2, CONTROL_BUTTON_WIDTH, CONTROL_BUTTON_HEIGHT));
                     excessButtonsLeft = true;
                 }
-                else if ((i - firstButton + 1) * (CONTROL_BUTTON_WIDTH + CONTROL_BUTTON_SPACING) < windowWidth - CONTROL_BUTTON_SPACING * 3 - CONTROL_ARROW_WIDTH * 2)
+                else if ( i < firstButton + VisibleButtonCount)
                 {
                     buttonsetBounds.Add(new UniRectangle(CONTROL_ARROW_WIDTH + CONTROL_BUTTON_SPACING * (2 + i - firstButton) + CONTROL_BUTTON_WIDTH * (i - firstButton), (CONTROLS_AND_GRID_DIVISION - CONTROL_BUTTON_HEIGHT) / 2, CONTROL_BUTTON_WIDTH, CONTROL_BUTTON_HEIGHT));
                 }
