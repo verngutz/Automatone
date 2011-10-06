@@ -314,15 +314,6 @@ namespace Automatone.GUI
 
         private void GenerateSongButtonPressed(object sender, EventArgs e)
         {
-            Automatone.Instance.StopSongPlaying();
-
-#if USESEED
-            GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(SEED), new ClassicalTheory());
-#else
-            GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
-#endif      
-            GridPanel.Instance.ResetCursors();
-            NavigatorPanel.Instance.ResetGridDrawOffset();
             ParametersPanel.Instance.Toggle();
         }
     }

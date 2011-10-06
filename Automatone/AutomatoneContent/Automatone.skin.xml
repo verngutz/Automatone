@@ -176,6 +176,87 @@
 	    </frame>
 
       <!--
+	      Frame used for a disabled global randomize button
+	    -->
+      <frame name="global.randomize.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a global randomize button in its normal state
+	    -->
+      <frame name="global.randomize.button.normal">
+        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a global randomize button when it is depressed
+	    -->
+      <frame name="global.randomize.button.depressed">
+        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a global randomize button when it is highlighted
+	    -->
+      <frame name="global.randomize.button.highlighted">
+        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled ok button
+	    -->
+      <frame name="ok.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a ok button in its normal state
+	    -->
+      <frame name="ok.button.normal">
+        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a ok button when it is depressed
+	    -->
+      <frame name="ok.button.depressed">
+        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a ok button when it is highlighted
+	    -->
+      <frame name="ok.button.highlighted">
+        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled cancel button
+	    -->
+      <frame name="cancel.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a cancel button in its normal state
+	    -->
+      <frame name="cancel.button.normal">
+        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a cancel button when it is depressed
+	    -->
+      <frame name="cancel.button.depressed">
+        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
+	      Frame used for a cancel button when it is highlighted
+	    -->
+      <frame name="cancel.button.highlighted">
+        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+      </frame>
+
+      <!--
 	      Frame used for a disabled stop button
 	    -->
       <frame name="stop.button.disabled">

@@ -12,54 +12,54 @@ namespace Automatone
         public double TimeSignature { get { return (TimeSignatureN / (double)TimeSignatureD); } }
         
         //Song Parameters
-        public MusicParameter<SongParameter> MeanSongLength { set; get; }
-        public MusicParameter<SongParameter> StructuralVariance { set; get; }
-        public MusicParameter<SongParameter> SongRhythmVariance { set; get; }
-        public MusicParameter<SongParameter> SongMelodyVariance { set; get; }
-        public MusicParameter<SongParameter> SongLengthVariance { set; get; }
+        public ParameterWrapper<SongParameter> MeanSongLength { set; get; }
+        public ParameterWrapper<SongParameter> StructuralVariance { set; get; }
+        public ParameterWrapper<SongParameter> SongRhythmVariance { set; get; }
+        public ParameterWrapper<SongParameter> SongMelodyVariance { set; get; }
+        public ParameterWrapper<SongParameter> SongLengthVariance { set; get; }
 
         //Verse Parameters
-        public MusicParameter<VerseParameter> MeanVerseLength { set; get; }
-        public MusicParameter<VerseParameter> VerseLengthVariance { set; get; }
-        public MusicParameter<VerseParameter> VerseRhythmVariance { set; get; }
-        public MusicParameter<VerseParameter> VerseMelodyVariance { set; get; }
+        public ParameterWrapper<VerseParameter> MeanVerseLength { set; get; }
+        public ParameterWrapper<VerseParameter> VerseLengthVariance { set; get; }
+        public ParameterWrapper<VerseParameter> VerseRhythmVariance { set; get; }
+        public ParameterWrapper<VerseParameter> VerseMelodyVariance { set; get; }
 
         //Phrase Parameters
-        public MusicParameter<PhraseParameter> MeanPhraseLength { set; get; }
-        public MusicParameter<PhraseParameter> PhraseLengthVariance { set; get; }
-        public MusicParameter<PhraseParameter> PhraseRhythmVariance { set; get; }
-        public MusicParameter<PhraseParameter> PhraseMelodyVariance { set; get; }
+        public ParameterWrapper<PhraseParameter> MeanPhraseLength { set; get; }
+        public ParameterWrapper<PhraseParameter> PhraseLengthVariance { set; get; }
+        public ParameterWrapper<PhraseParameter> PhraseRhythmVariance { set; get; }
+        public ParameterWrapper<PhraseParameter> PhraseMelodyVariance { set; get; }
 
         //Measure Parameters
-        public MusicParameter<MeasureParameter> MeasureRhythmVariance { set; get; }
-        public MusicParameter<MeasureParameter> MeasureMelodyVariance { set; get; }
+        public ParameterWrapper<MeasureParameter> MeasureRhythmVariance { set; get; }
+        public ParameterWrapper<MeasureParameter> MeasureMelodyVariance { set; get; }
 
         //Part Parameters
-        public MusicParameter<PartParameter> Homophony { set; get; }
-        public MusicParameter<PartParameter> Polyphony { set; get; }
-        public MusicParameter<PartParameter> BeatDefinition { set; get; }
+        public ParameterWrapper<PartParameter> Homophony { set; get; }
+        public ParameterWrapper<PartParameter> Polyphony { set; get; }
+        public ParameterWrapper<PartParameter> BeatDefinition { set; get; }
 
         //Per-part Parameters
-        public MusicParameter<PerPartParameter> MeanPartRhythmCrowdedness { set; get; }
-        public MusicParameter<PerPartParameter> PartRhythmCrowdednessVariance { set; get; }
-        public MusicParameter<PerPartParameter> PartNoteLengthVariance { set; get; }
-        public MusicParameter<PerPartParameter> MeanPartOctaveRange { set; get; }
-        public MusicParameter<PerPartParameter> PartOctaveRangeVariance { set; get; }
+        public ParameterWrapper<PerPartParameter> MeanPartRhythmCrowdedness { set; get; }
+        public ParameterWrapper<PerPartParameter> PartRhythmCrowdednessVariance { set; get; }
+        public ParameterWrapper<PerPartParameter> PartNoteLengthVariance { set; get; }
+        public ParameterWrapper<PerPartParameter> MeanPartOctaveRange { set; get; }
+        public ParameterWrapper<PerPartParameter> PartOctaveRangeVariance { set; get; }
 
         //Note Parameters
-        public MusicParameter<NoteParameter> MeanNoteLength { set; get; }
-        public MusicParameter<NoteParameter> NoteLengthVariance { set; get; }
+        public ParameterWrapper<NoteParameter> MeanNoteLength { set; get; }
+        public ParameterWrapper<NoteParameter> NoteLengthVariance { set; get; }
 
         //Rhythm
-        public MusicParameter<RhythmParameter> RhythmObedience { set; get; }
+        public ParameterWrapper<RhythmParameter> RhythmObedience { set; get; }
         
         //Melody
-        public MusicParameter<MelodyParameter> ChordalityObedience { set; get; }
-        public MusicParameter<MelodyParameter> TonalityObedience { set; get; }
-        public MusicParameter<MelodyParameter> MeanPitchContiguity { set; get; }
+        public ParameterWrapper<MelodyParameter> ChordalityObedience { set; get; }
+        public ParameterWrapper<MelodyParameter> TonalityObedience { set; get; }
+        public ParameterWrapper<MelodyParameter> MeanPitchContiguity { set; get; }
 
         //Harmony
-        public MusicParameter<HarmonyParameter> SeventhChordProbability { set; get; }
+        public ParameterWrapper<HarmonyParameter> SeventhChordProbability { set; get; }
 
         private InputParameters() 
         {
@@ -138,34 +138,53 @@ namespace Automatone
     }
 
     // Used for reflection
-    public interface MusicParameter { }
-    public struct MusicParameter<T> where T : MusicParameter
+    public interface ZeroOneParameter { }
+
+    [Serializable]
+    public struct ParameterWrapper<T> where T : ZeroOneParameter
     {
         private double value;
-        private MusicParameter(double value)
+        public double Value { get { return value; } }
+        public ParameterWrapper(double value)
         {
             this.value = value;
         }
 
-        public static implicit operator MusicParameter<T>(double value)
+        public static implicit operator ParameterWrapper<T>(double value)
         {
-            return new MusicParameter<T>(value);
+            return new ParameterWrapper<T>(value);
         }
 
-        public static implicit operator double(MusicParameter<T> parameter)
+        public static implicit operator double(ParameterWrapper<T> parameter)
         {
             return parameter.value;
         }
     }
 
-    public interface SongParameter : MusicParameter { }
-    public interface VerseParameter : MusicParameter { }
-    public interface PhraseParameter : MusicParameter { }
-    public interface MeasureParameter : MusicParameter { }
-    public interface PartParameter : MusicParameter { }
-    public interface PerPartParameter : MusicParameter { }
-    public interface NoteParameter : MusicParameter { }
-    public interface RhythmParameter : MusicParameter { }
-    public interface MelodyParameter : MusicParameter { }
-    public interface HarmonyParameter : MusicParameter { }
+    public static class ParameterWrapperFactory
+    {
+        public static string WrapperMethodName { get { return "MakeWrapper"; } }
+        public static string DoubleMethodName { get { return "MakeDouble"; } }
+
+        public static object MakeWrapper<T>(double value) where T : ZeroOneParameter
+        {
+            return new ParameterWrapper<T>(value);
+        }
+
+        public static object MakeDouble<T>(ParameterWrapper<T> parameter) where T : ZeroOneParameter
+        {
+            return parameter.Value;
+        }
+    }
+
+    public interface SongParameter : ZeroOneParameter { }
+    public interface VerseParameter : ZeroOneParameter { }
+    public interface PhraseParameter : ZeroOneParameter { }
+    public interface MeasureParameter : ZeroOneParameter { }
+    public interface PartParameter : ZeroOneParameter { }
+    public interface PerPartParameter : ZeroOneParameter { }
+    public interface NoteParameter : ZeroOneParameter { }
+    public interface RhythmParameter : ZeroOneParameter { }
+    public interface MelodyParameter : ZeroOneParameter { }
+    public interface HarmonyParameter : ZeroOneParameter { }
 }

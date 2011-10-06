@@ -84,11 +84,6 @@ namespace Automatone.GUI
         public UniRectangle HorizontalScrollBarBounds { get { return horizontalScrollBarBounds; } }
         public UniRectangle VerticalScrollBarBounds { get { return verticalScrollBarBounds; } }
 
-        private UniRectangle parametersPanelBounds;
-
-        public UniRectangle ParametersPanelBounds { get { return parametersPanelBounds; } }
-
-
         public float HorizontalSliderThumbSize
         {
             get
@@ -104,6 +99,16 @@ namespace Automatone.GUI
                 return Math.Min(1, (float)GridCellsClickableArea.Height / (cellsArrayLengthY * CELLHEIGHT));
             }
         }
+
+        private UniRectangle parametersPanelBounds;
+        private UniRectangle globalRandomizeButtonBounds;
+        private UniRectangle okButtonBounds;
+        private UniRectangle cancelButtonBounds;
+
+        public UniRectangle ParametersPanelBounds { get { return parametersPanelBounds; } }
+        public UniRectangle GlobalRandomizeButtonBounds { get { return globalRandomizeButtonBounds; } }
+        public UniRectangle OkButtonBounds { get { return okButtonBounds; } }
+        public UniRectangle CancelButtonBounds { get { return cancelButtonBounds; } }
 
         private LayoutManager() 
         {
@@ -154,14 +159,18 @@ namespace Automatone.GUI
             RefreshGridCellsClickableArea();
             RefreshGridCursorsClickableArea();
 
-            navigatorPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
+            navigatorPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, windowWidth, windowHeight);
             horizontalScrollBarBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height, gridPanelLayout.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
             verticalScrollBarBounds = new UniRectangle(gridPanelLayout.OuterRectangle.Width, gridPanelLayout.InnerRectangle.Top - CONTROLS_AND_GRID_DIVISION, RIGHT_SCROLLBAR_THICKNESS, gridPanelLayout.InnerRectangle.Height);
 
             if(parametersPanelBounds.Top == 0)
                 parametersPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION - PARAMETERS_PANEL_HEIGHT, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
             else
-                parametersPanelBounds = new UniRectangle(0, parametersPanelBounds.Top, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
+                parametersPanelBounds = new UniRectangle(0, ParametersPanel.Instance.Bounds.Top, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
+
+            globalRandomizeButtonBounds = new UniRectangle(new UniScalar(0.5f, -32), 10, 64, 64);
+            okButtonBounds = new UniRectangle(new UniScalar(0.33f, -32), new UniScalar(1, -74), 64, 64);
+            cancelButtonBounds = new UniRectangle(new UniScalar(0.66f, -32), new UniScalar(1, -74), 64, 64);
         }
 
         private void RespondToWindowResize(int windowWidth, int windowHeight)
@@ -194,6 +203,9 @@ namespace Automatone.GUI
             NavigatorPanel.Instance.CalculateGridClipping();
 
             ParametersPanel.Instance.Bounds = ParametersPanelBounds;
+            ParametersPanel.Instance.GlobalRandomizeButtonBounds = GlobalRandomizeButtonBounds;
+            ParametersPanel.Instance.OkButtonBounds = OkButtonBounds;
+            ParametersPanel.Instance.CancelButtonBounds = CancelButtonBounds;
         }
 
         private void RespondToGridResize(int cellsArrayLengthX, int cellsArrayLengthY)
