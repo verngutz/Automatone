@@ -22,33 +22,20 @@ namespace Automatone.GUI
         private SkinNamedButtonControl generateSongButton;
         private OptionControl playPauseButton;
         private SkinNamedButtonControl stopButton;
-        private SkinNamedButtonControl saveButton;
-        private SkinNamedButtonControl openButton;
         private SkinNamedButtonControl newButton;
-        private SkinNamedButtonControl addCellsButton;
-        private SkinNamedButtonControl copyButton;
+        private SkinNamedButtonControl openButton;
+        private SkinNamedButtonControl saveButton;
+        private SkinNamedButtonControl exportButton;
         private SkinNamedButtonControl cutButton;
+        private SkinNamedButtonControl copyButton;
         private SkinNamedButtonControl pasteButton;
-        private SkinNamedButtonControl redoButton;
-        private SkinNamedButtonControl removeCellsButton;
         private SkinNamedButtonControl undoButton;
+        private SkinNamedButtonControl redoButton;
+        private SkinNamedButtonControl addCellsButton;
+        private SkinNamedButtonControl removeCellsButton;
 
         public UniRectangle ArrowLeftBounds { set { arrowLeftButton.Bounds = value; } }
         public UniRectangle ArrowRightBounds { set { arrowRightButton.Bounds = value; } }
-        /*
-        public UniRectangle GenerateSongButtonBounds { set { generateSongButton.Bounds = value; } }
-        public UniRectangle PlayPauseButtonBounds { set { playPauseButton.Bounds = value; } }
-        public UniRectangle StopButtonBounds { set { stopButton.Bounds = value; } }
-        public UniRectangle SaveButtonBounds { set { saveButton.Bounds = value; } }
-        public UniRectangle OpenButtonBounds { set { openButton.Bounds = value; } }
-        public UniRectangle NewButtonBounds { set { newButton.Bounds = value; } }
-        public UniRectangle AddCellsButtonBounds { set { addCellsButton.Bounds = value; } }
-        public UniRectangle CopyButtonBounds { set { copyButton.Bounds = value; } }
-        public UniRectangle CutButtonBounds { set { cutButton.Bounds = value; } }
-        public UniRectangle PasteButtonBounds { set { pasteButton.Bounds = value; } }
-        public UniRectangle RedoButtonBounds { set { redoButton.Bounds = value; } }
-        public UniRectangle RemoveCellsButtonBounds { set { removeCellsButton.Bounds = value; } }
-        public UniRectangle UndoButtonBounds { set { undoButton.Bounds = value; } }*/
 
         private List<UniRectangle> buttonsetBounds;
 
@@ -79,21 +66,22 @@ namespace Automatone.GUI
             // Construct children
             arrowLeftButton = new SkinNamedButtonControl();
             arrowRightButton = new SkinNamedButtonControl();
+            generateSongButton = new SkinNamedButtonControl();
             playPauseButton = new OptionControl();
             stopButton = new SkinNamedButtonControl();
             newButton = new SkinNamedButtonControl();
             openButton = new SkinNamedButtonControl();
-            cutButton = new SkinNamedButtonControl();
             saveButton = new SkinNamedButtonControl();
+            exportButton = new SkinNamedButtonControl();
+            cutButton = new SkinNamedButtonControl();
             copyButton = new SkinNamedButtonControl();
             pasteButton = new SkinNamedButtonControl();
             undoButton = new SkinNamedButtonControl();
             redoButton = new SkinNamedButtonControl();
             addCellsButton = new SkinNamedButtonControl();
             removeCellsButton = new SkinNamedButtonControl();
-            generateSongButton = new SkinNamedButtonControl();
 
-            buttonsetBounds = LayoutManager.Instance.GetButtonsetBounds(13, 0);
+            buttonsetBounds = LayoutManager.Instance.GetButtonsetBounds(14, 0);
             ResetButtonsetBounds();
 
             //
@@ -111,95 +99,88 @@ namespace Automatone.GUI
             arrowRightButton.SkinName = "arrow.right";
 
             //
+            // generateSongButton
+            //
+            generateSongButton.Pressed += new EventHandler(GenerateSongButtonPressed);
+            generateSongButton.SkinName = "generate.song";
+
+            //
             // playPauseButton
             //
-            //playPauseButton.Bounds = LayoutManager.Instance.PlayPauseButtonBounds;
             playPauseButton.Changed += new EventHandler(PlayPauseButtonToggled);
             playPauseButton.Selected = false;
 
             //
             // stopButton
             //
-            //stopButton.Bounds = LayoutManager.Instance.StopButtonBounds;
             stopButton.Pressed += new EventHandler(StopButtonPressed);
             stopButton.SkinName = "stop";
 
             //
             // newButton
             //
-            //newButton.Bounds = LayoutManager.Instance.NewButtonBounds;
             newButton.Pressed += new EventHandler(NewButtonPressed);
             newButton.SkinName = "new";
 
             //
             // openButton
             //
-            //openButton.Bounds = LayoutManager.Instance.OpenButtonBounds;
             openButton.Pressed += new EventHandler(OpenButtonPressed);
             openButton.SkinName = "open";
 
             //
             // saveButton
             //
-            //saveButton.Bounds = LayoutManager.Instance.SaveButtonBounds;
             saveButton.Pressed += new EventHandler(SaveButtonPressed);
             saveButton.SkinName = "save";
 
             //
+            // exportButton
+            //
+            exportButton.Pressed += new EventHandler(ExportButtonPressed);
+            exportButton.SkinName = "export";
+
+            //
             // cutButton
             //
-            //cutButton.Bounds = LayoutManager.Instance.CutButtonBounds;
             cutButton.Pressed += new EventHandler(CutButtonPressed);
             cutButton.SkinName = "cut";
             
             //
             // copyButton
             //
-            //copyButton.Bounds = LayoutManager.Instance.CopyButtonBounds;
             copyButton.Pressed += new EventHandler(CopyButtonPressed);
             copyButton.SkinName = "copy";
             
             //
             // pasteButton
             //
-            //pasteButton.Bounds = LayoutManager.Instance.PasteButtonBounds;
             pasteButton.Pressed += new EventHandler(PasteButtonPressed);
             pasteButton.SkinName = "paste";
 
             //
             // undoButton
             //
-            //undoButton.Bounds = LayoutManager.Instance.UndoButtonBounds;
             undoButton.Pressed += new EventHandler(UndoButtonPressed);
             undoButton.SkinName = "undo";
             
             //
             // redoButton
             //
-            //redoButton.Bounds = LayoutManager.Instance.RedoButtonBounds;
             redoButton.Pressed += new EventHandler(RedoButtonPressed);
             redoButton.SkinName = "redo";
 
             //
             // addButton
             //
-            //addCellsButton.Bounds = LayoutManager.Instance.AddCellsButtonBounds;
             addCellsButton.Pressed += new EventHandler(AddCellsButtonPressed);
             addCellsButton.SkinName = "add.cells";
 
             //
             // removeButton
             //
-            //removeCellsButton.Bounds = LayoutManager.Instance.RemoveCellsButtonBounds;
             removeCellsButton.Pressed += new EventHandler(RemoveCellsButtonPressed);
             removeCellsButton.SkinName = "remove.cells";
-
-            //
-            // generateSongButton
-            //
-            //generateSongButton.Bounds = LayoutManager.Instance.GenerateSongButtonBounds;
-            generateSongButton.Pressed += new EventHandler(GenerateSongButtonPressed);
-            generateSongButton.SkinName = "generate.song";
 
             //
             // Add Children
@@ -207,11 +188,13 @@ namespace Automatone.GUI
             Children.Add(arrowLeftButton);
             Children.Add(arrowRightButton);
 
+            Children.Add(generateSongButton);
             Children.Add(playPauseButton);
             Children.Add(stopButton);
             Children.Add(newButton);
             Children.Add(openButton);
             Children.Add(saveButton);
+            Children.Add(exportButton);
             Children.Add(cutButton);
             Children.Add(copyButton);
             Children.Add(pasteButton);
@@ -219,7 +202,6 @@ namespace Automatone.GUI
             Children.Add(redoButton);
             Children.Add(addCellsButton);
             Children.Add(removeCellsButton);
-            Children.Add(generateSongButton);
         }
 
         public void ResetButtonsetBounds()
@@ -232,13 +214,14 @@ namespace Automatone.GUI
             newButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(3);
             openButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(4);
             saveButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(5);
-            cutButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(6);
-            copyButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(7);
-            pasteButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(8);
-            undoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(9);
-            redoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(10);
-            addCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(11);
-            removeCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(12);
+            exportButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(6);
+            cutButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(7);
+            copyButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(8);
+            pasteButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(9);
+            undoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(10);
+            redoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(11);
+            addCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(12);
+            removeCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(13);
             arrowLeftButton.Enabled = LayoutManager.Instance.ExcessButtonsLeft;
             arrowRightButton.Enabled = LayoutManager.Instance.ExcessButtonsRight;
         }
@@ -253,6 +236,13 @@ namespace Automatone.GUI
         {
             firstButton++;
             ResetButtonsetBounds();
+        }
+
+        private void GenerateSongButtonPressed(object sender, EventArgs e)
+        {
+            playPauseButton.Selected = false;
+            PlayPauseButtonToggled(sender, e);
+            ParametersPanel.Instance.Toggle();
         }
 
         public void ResetPlayButton()
@@ -344,6 +334,11 @@ namespace Automatone.GUI
             }
         }
 
+        private void ExportButtonPressed(object sender, EventArgs e)
+        {
+
+        }
+
         private void CutButtonPressed(object sender, EventArgs e)
         {
 
@@ -377,13 +372,6 @@ namespace Automatone.GUI
         private void RemoveCellsButtonPressed(object sender, EventArgs e)
         {
 
-        }
-
-        private void GenerateSongButtonPressed(object sender, EventArgs e)
-        {
-            playPauseButton.Selected = false;
-            PlayPauseButtonToggled(sender, e);
-            ParametersPanel.Instance.Toggle();
         }
     }
 }

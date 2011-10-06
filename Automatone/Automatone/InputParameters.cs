@@ -63,7 +63,7 @@ namespace Automatone
 
         private InputParameters() 
         {
-            Tempo = 120;
+            Tempo = 60;
             TimeSignatureN = 4;
             TimeSignatureD = 4;
             

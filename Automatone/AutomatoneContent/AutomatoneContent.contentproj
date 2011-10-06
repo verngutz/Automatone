@@ -620,18 +620,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grid Panel\Cell_Holdbox2.png">
-      <Name>Cell_Holdbox2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Grid Panel\Cell_Lightbox2.png">
-      <Name>Cell_Lightbox2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Grid Panel\Itm_TopCursorHead.png">
       <Name>Itm_TopCursorHead</Name>
       <Importer>TextureImporter</Importer>
@@ -757,6 +745,84 @@
   <ItemGroup>
     <Compile Include="Grid Panel\Itm_LeftCursorHead.png">
       <Name>Itm_LeftCursorHead</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Cell_Lightboxend.png">
+      <Name>Cell_Lightboxend</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Parameters Panel\Btn_Cancel.png">
+      <Name>Btn_Cancel</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Cancel_Clicked.png">
+      <Name>Btn_Cancel_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Cancel_Hovered.png">
+      <Name>Btn_Cancel_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Dice.png">
+      <Name>Btn_Dice</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Dice_Clicked.png">
+      <Name>Btn_Dice_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Dice_Hovered.png">
+      <Name>Btn_Dice_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Okay.png">
+      <Name>Btn_Okay</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Okay_Clicked.png">
+      <Name>Btn_Okay_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Parameters Panel\Btn_Okay_Hovered.png">
+      <Name>Btn_Okay_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Parameters Panel\Bg_Parampanel.png">
+      <Name>Bg_Parampanel</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Control Panel\Btn_Export.png">
+      <Name>Btn_Export</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Export_Clicked.png">
+      <Name>Btn_Export_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Btn_Export_Hovered.png">
+      <Name>Btn_Export_Hovered</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

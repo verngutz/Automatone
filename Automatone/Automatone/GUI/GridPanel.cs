@@ -187,6 +187,7 @@ namespace Automatone.GUI
         {
             private static Texture2D silentCell;
             private static Texture2D startCell;
+            private static Texture2D startCellEnd;
             private static Texture2D holdCell;
             private static Texture2D holdCellEnd;
             private static Texture2D gridPanelBackground;
@@ -197,6 +198,7 @@ namespace Automatone.GUI
 
             public void LoadContent()
             {
+                startCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightboxend");
                 startCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox");
                 holdCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox");
                 holdCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdboxend");
@@ -208,6 +210,7 @@ namespace Automatone.GUI
             {
                 if (silentCell != null) silentCell.Dispose();
                 if (startCell != null) startCell.Dispose();
+                if (startCellEnd != null) startCellEnd.Dispose();
                 if (holdCell != null) holdCell.Dispose();
                 if (holdCellEnd != null) holdCellEnd.Dispose();
                 if (gridPanelBackground != null) gridPanelBackground.Dispose();
@@ -307,6 +310,8 @@ namespace Automatone.GUI
                 switch (GridPanel.Instance.SongCells[i, j])
                 {
                     case CellState.START:
+                        if (j + 1 >= GridPanel.Instance.SongCells.GetLength(DimensionX) || GridPanel.Instance.SongCells[i, j + 1] != CellState.HOLD)
+                            return startCellEnd;
                         return startCell;
                     case CellState.HOLD:
                         if (j + 1 >= GridPanel.Instance.SongCells.GetLength(DimensionX) || GridPanel.Instance.SongCells[i, j+1] != CellState.HOLD)

@@ -33,6 +33,10 @@ namespace Automatone.GUI
         public const int CONTROL_BUTTON_HEIGHT = 96;
         public const int CONTROL_BUTTON_SPACING = 10;
 
+        public const int PARAMETERS_BUTTON_WIDTH = 64;
+        public const int PARAMETERS_BUTTON_HEIGHT = 64;
+        public const int PARAMETERS_BUTTON_SPACING = 10;
+
         private int cellsArrayLengthX;
         private int cellsArrayLengthY;
 
@@ -186,9 +190,9 @@ namespace Automatone.GUI
             else
                 parametersPanelBounds = new UniRectangle(CONTROL_BUTTON_SPACING, ParametersPanel.Instance.Bounds.Top, windowWidth - 2 * CONTROL_BUTTON_SPACING, PARAMETERS_PANEL_HEIGHT);
 
-            globalRandomizeButtonBounds = new UniRectangle(new UniScalar(0.5f, -32), 10, 64, 64);
-            okButtonBounds = new UniRectangle(new UniScalar(0.33f, -32), new UniScalar(1, -74), 64, 64);
-            cancelButtonBounds = new UniRectangle(new UniScalar(0.66f, -32), new UniScalar(1, -74), 64, 64);
+            globalRandomizeButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING * 3 - PARAMETERS_BUTTON_WIDTH * 3), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
+            okButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING * 2 - PARAMETERS_BUTTON_WIDTH * 2), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
+            cancelButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_WIDTH), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
         }
 
         private void RespondToWindowResize(int windowWidth, int windowHeight)
