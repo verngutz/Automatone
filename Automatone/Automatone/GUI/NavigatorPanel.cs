@@ -164,6 +164,8 @@ namespace Automatone.GUI
                     maxGridDrawOffset.Y
                 )
             );
+            ClampGridOffsetX();
+            ClampGridOffsetY();
         }
 
         public void CalculateGridClipping()

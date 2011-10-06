@@ -389,17 +389,18 @@ namespace Automatone.GUI
 
         private void CutButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.CopySelectedCells();
+            GridPanel.Instance.DeleteSelectedCells();
         }
 
         private void CopyButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.CopySelectedCells();
         }
 
         private void PasteButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.PasteToSelectedCells();
         }
 
         private void UndoButtonPressed(object sender, EventArgs e)
@@ -414,12 +415,12 @@ namespace Automatone.GUI
         
         private void AddCellsButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.InsertCells();
         }
 
         private void RemoveCellsButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.RemoveCells();
         }
     }
 }
