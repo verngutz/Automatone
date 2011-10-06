@@ -70,10 +70,12 @@
       <bitmap name="undo" contentPath="Control Panel/Btn_Undo"/>
       <bitmap name="undoClicked" contentPath="Control Panel/Btn_Undo_Clicked"/>
       <bitmap name="undoHovered" contentPath="Control Panel/Btn_Undo_Hovered"/>
+      <bitmap name="undoDisabled" contentPath="Control Panel/Btn_Undo"/>
 
       <bitmap name="redo" contentPath="Control Panel/Btn_Redo"/>
       <bitmap name="redoClicked" contentPath="Control Panel/Btn_Redo_Clicked"/>
       <bitmap name="redoHovered" contentPath="Control Panel/Btn_Redo_Hovered"/>
+      <bitmap name="redoDisabled" contentPath="Control Panel/Btn_Redo"/>
       
       <bitmap name="add" contentPath="Control Panel/Btn_Add"/>
       <bitmap name="addClicked" contentPath="Control Panel/Btn_Add_Clicked"/>
@@ -564,6 +566,7 @@
 	      Frame used for a disabled undo button
 	    -->
       <frame name="undo.button.disabled">
+        <region source="undoDisabled" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 
       <!--
@@ -591,6 +594,7 @@
 	      Frame used for a disabled redo button
 	    -->
       <frame name="redo.button.disabled">
+        <region source="redoDisabled" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 
       <!--

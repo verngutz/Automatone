@@ -186,6 +186,14 @@ namespace Automatone.GUI
             Children.Add(removeCellsButton);
         }
 
+        public void ResetButtonsetStatuses()
+        {
+            arrowLeftButton.Enabled = LayoutManager.Instance.ExcessButtonsLeft;
+            arrowRightButton.Enabled = LayoutManager.Instance.ExcessButtonsRight;
+            undoButton.Enabled = Memento.Instance.CanUndo;
+            redoButton.Enabled = Memento.Instance.CanRedo;
+        }
+
         public void ResetButtonsetBounds()
         {
             firstButton = (int)MathHelper.Clamp(firstButton, 0, buttonsetBounds.Count - LayoutManager.Instance.VisibleButtonCount);
@@ -202,8 +210,7 @@ namespace Automatone.GUI
             redoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(9);
             addCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(10);
             removeCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(11);
-            arrowLeftButton.Enabled = LayoutManager.Instance.ExcessButtonsLeft;
-            arrowRightButton.Enabled = LayoutManager.Instance.ExcessButtonsRight;
+            ResetButtonsetStatuses();
         }
 
         private void ArrowLeftPressed(object sender, EventArgs e)
@@ -259,6 +266,8 @@ namespace Automatone.GUI
                 GridPanel.Instance.HasUnsavedChanges = false;
                 ParametersPanel.Instance.SlideUp();
             }
+            Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+            ResetButtonsetStatuses();
         }
 
         private void OpenButtonPressed(object sender, EventArgs e)
@@ -285,6 +294,8 @@ namespace Automatone.GUI
                     ParametersPanel.Instance.SlideUp();
                 }
             }
+            Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+            ResetButtonsetStatuses();
         }
 
         private void SaveButtonPressed(object sender, EventArgs e)
@@ -332,12 +343,14 @@ namespace Automatone.GUI
 
         private void UndoButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.SongCells = Memento.Instance.UndoAction(GridPanel.Instance.SongCells);
+            ResetButtonsetStatuses();
         }
 
         private void RedoButtonPressed(object sender, EventArgs e)
         {
-
+            GridPanel.Instance.SongCells = Memento.Instance.RedoAction();
+            ResetButtonsetStatuses();
         }
         
         private void AddCellsButtonPressed(object sender, EventArgs e)
