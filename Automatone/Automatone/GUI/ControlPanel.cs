@@ -35,20 +35,6 @@ namespace Automatone.GUI
 
         public UniRectangle ArrowLeftBounds { set { arrowLeftButton.Bounds = value; } }
         public UniRectangle ArrowRightBounds { set { arrowRightButton.Bounds = value; } }
-        /*
-        public UniRectangle GenerateSongButtonBounds { set { generateSongButton.Bounds = value; } }
-        public UniRectangle PlayPauseButtonBounds { set { playPauseButton.Bounds = value; } }
-        public UniRectangle StopButtonBounds { set { stopButton.Bounds = value; } }
-        public UniRectangle SaveButtonBounds { set { saveButton.Bounds = value; } }
-        public UniRectangle OpenButtonBounds { set { openButton.Bounds = value; } }
-        public UniRectangle NewButtonBounds { set { newButton.Bounds = value; } }
-        public UniRectangle AddCellsButtonBounds { set { addCellsButton.Bounds = value; } }
-        public UniRectangle CopyButtonBounds { set { copyButton.Bounds = value; } }
-        public UniRectangle CutButtonBounds { set { cutButton.Bounds = value; } }
-        public UniRectangle PasteButtonBounds { set { pasteButton.Bounds = value; } }
-        public UniRectangle RedoButtonBounds { set { redoButton.Bounds = value; } }
-        public UniRectangle RemoveCellsButtonBounds { set { removeCellsButton.Bounds = value; } }
-        public UniRectangle UndoButtonBounds { set { undoButton.Bounds = value; } }*/
 
         private List<UniRectangle> buttonsetBounds;
 
@@ -243,6 +229,22 @@ namespace Automatone.GUI
             arrowRightButton.Enabled = LayoutManager.Instance.ExcessButtonsRight;
         }
 
+        public void StopSongPlaying()
+        {
+            Automatone.Instance.Sequencer.StopMidi();
+            NavigatorPanel.Instance.ResetScrolling();
+            playPauseButton.Selected = false;
+        }
+
+        public void PauseSongPlaying()
+        {
+            if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.PLAYING)
+            {
+                playPauseButton.Selected = false;
+                PlayPauseButtonToggled(this, EventArgs.Empty);
+            }
+        }
+
         private void ArrowLeftPressed(object sender, EventArgs e)
         {
             firstButton--;
@@ -253,11 +255,6 @@ namespace Automatone.GUI
         {
             firstButton++;
             ResetButtonsetBounds();
-        }
-
-        public void ResetPlayButton()
-        {
-            playPauseButton.Selected = false;
         }
 
         private void PlayPauseButtonToggled(object sender, EventArgs e)
@@ -281,56 +278,87 @@ namespace Automatone.GUI
             {
                 playPauseButton.Selected = false;
             }
+
+            ParametersPanel.Instance.SlideUp();
         }
 
         private void StopButtonPressed(object sender, EventArgs e)
         {
-            Automatone.Instance.StopSongPlaying();
+            StopSongPlaying();
+        }
+
+        public DialogResult ShowSaveConfirmation()
+        {
+            DialogResult result = DialogResult.No;
+
+            if (GridPanel.Instance.SongCells != null && GridPanel.Instance.HasUnsavedChanges)
+            {
+                System.Console.WriteLine(GridPanel.Instance.HasUnsavedChanges);
+                PauseSongPlaying();
+                result = MessageBox.Show(
+                    "Save changes to current project?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button3);
+                if (result == DialogResult.Yes)
+                {
+                    SaveButtonPressed(this, EventArgs.Empty);
+                }
+            }
+
+            return result;
         }
 
         public void NewButtonPressed(object sender, EventArgs e)
         {
-            Automatone.Instance.StopSongPlaying();
-            Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
-            GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
-            GridPanel.Instance.ResetCursors();
-            NavigatorPanel.Instance.ResetGridDrawOffset();
+            if (ShowSaveConfirmation() != DialogResult.Cancel)
+            {
+                StopSongPlaying();
+                Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
+                GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
+                GridPanel.Instance.ResetCursors();
+                NavigatorPanel.Instance.ResetGridDrawOffset();
+                GridPanel.Instance.HasUnsavedChanges = false;
+                ParametersPanel.Instance.SlideUp();
+            }
         }
 
         private void OpenButtonPressed(object sender, EventArgs e)
         {
-            Automatone.Instance.StopSongPlaying();
-            Stream loadStream;
-            OpenFileDialog projectLoadDialog = new OpenFileDialog();
-
-            projectLoadDialog.Filter = "Automatone Project (*.aut)|*.aut";
-            projectLoadDialog.RestoreDirectory = true;
-
-            if (projectLoadDialog.ShowDialog() == DialogResult.OK)
+            if (ShowSaveConfirmation() != DialogResult.Cancel)
             {
-                if ((loadStream = projectLoadDialog.OpenFile()) != null)
+                OpenFileDialog projectLoadDialog = new OpenFileDialog();
+                projectLoadDialog.Filter = "Automatone Project (*.aut)|*.aut";
+                projectLoadDialog.RestoreDirectory = true;
+
+                Stream loadStream;
+
+                if (projectLoadDialog.ShowDialog() == DialogResult.OK && (loadStream = projectLoadDialog.OpenFile()) != null)
                 {
+                    StopSongPlaying();
                     BinaryFormatter formatter = new BinaryFormatter();
                     InputParameters.LoadInstance((InputParameters)formatter.Deserialize(loadStream));
                     Automatone.Instance.MeasureLength = (int)formatter.Deserialize(loadStream);
                     GridPanel.Instance.SongCells = (CellState[,])formatter.Deserialize(loadStream);
                     loadStream.Close();
+                    GridPanel.Instance.ResetCursors();
+                    NavigatorPanel.Instance.ResetGridDrawOffset();
+                    GridPanel.Instance.HasUnsavedChanges = false;
+                    ParametersPanel.Instance.SlideUp();
                 }
             }
-
-            GridPanel.Instance.ResetCursors();
-            NavigatorPanel.Instance.ResetGridDrawOffset();
         }
 
         private void SaveButtonPressed(object sender, EventArgs e)
         {
-            if (Automatone.Instance.Song != null)
+            if (GridPanel.Instance.SongCells != null)
             {
-                Stream saveStream;
                 SaveFileDialog projectSaveDialog = new SaveFileDialog();
-
                 projectSaveDialog.Filter = "Automatone Project (*.aut)|*.aut";
                 projectSaveDialog.RestoreDirectory = true;
+
+                Stream saveStream;
 
                 if (projectSaveDialog.ShowDialog() == DialogResult.OK && (saveStream = projectSaveDialog.OpenFile()) != null)
                 {
@@ -340,6 +368,7 @@ namespace Automatone.GUI
                     Automatone.Instance.RewriteSong();
                     formatter.Serialize(saveStream, GridPanel.Instance.SongCells);
                     saveStream.Close();
+                    GridPanel.Instance.HasUnsavedChanges = false;
                 }
             }
         }
@@ -381,8 +410,7 @@ namespace Automatone.GUI
 
         private void GenerateSongButtonPressed(object sender, EventArgs e)
         {
-            playPauseButton.Selected = false;
-            PlayPauseButtonToggled(sender, e);
+            PauseSongPlaying();
             ParametersPanel.Instance.Toggle();
         }
     }
