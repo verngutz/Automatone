@@ -84,11 +84,17 @@ namespace Automatone.GUI
         private SkinNamedButtonControl stopButton;
         private SkinNamedHorizontalSliderControl horizontalSlider;
         private SkinNamedVerticalSliderControl verticalSlider;
+        private SkinNamedLabelControl tempoLabel;
+        private SkinNamedLabelControl timeSignatureNLabel;
+        private SkinNamedLabelControl timeSignatureDLabel;
 
         public UniRectangle PlayPauseButtonBounds { set { playPauseButton.Bounds = value; } }
         public UniRectangle StopButtonBounds { set { stopButton.Bounds = value; } }
         public UniRectangle HorizontalScrollBarBounds { set { horizontalSlider.Bounds = value; } }
         public UniRectangle VerticalScrollBarBounds { set { verticalSlider.Bounds = value; } }
+        public UniRectangle TempoLabelBounds { set { tempoLabel.Bounds = value; } }
+        public UniRectangle TimeSignatureNLabelBounds { set { timeSignatureNLabel.Bounds = value; } }
+        public UniRectangle TimeSignatureDLabelBounds { set { timeSignatureDLabel.Bounds = value; } }
         public float HorizontalScrollBarThumbSize { set { horizontalSlider.ThumbSize = value; } }
         public float VerticalScrollBarThumbSize { set { verticalSlider.ThumbSize = value; } }
 
@@ -122,6 +128,9 @@ namespace Automatone.GUI
             verticalSlider = new SkinNamedVerticalSliderControl();
             playPauseButton = new OptionControl();
             stopButton = new SkinNamedButtonControl();
+            tempoLabel = new SkinNamedLabelControl();
+            timeSignatureNLabel = new SkinNamedLabelControl();
+            timeSignatureDLabel = new SkinNamedLabelControl();
 
             //
             // playPauseButton
@@ -153,11 +162,35 @@ namespace Automatone.GUI
             verticalSlider.Moved += new EventHandler(VerticalSliderMoved);
             verticalSlider.SkinName = "navigator";
 
+            //
+            // tempoLabel
+            //
+            tempoLabel.Bounds = LayoutManager.Instance.TempoLabelBounds;
+            tempoLabel.Text = "Tempo: " + InputParameters.Instance.Tempo.ToString();
+            tempoLabel.SkinName = "settings";
+
+            //
+            // timeSignatureNLabel
+            //
+            timeSignatureNLabel.Bounds = LayoutManager.Instance.TimeSignatureNLabelBounds;
+            timeSignatureNLabel.Text = "Time Signature: " + InputParameters.Instance.TimeSignatureN.ToString();
+            timeSignatureNLabel.SkinName = "settings";
+
+            //
+            // timeSignatureDLabel
+            //
+            timeSignatureDLabel.Bounds = LayoutManager.Instance.TimeSignatureDLabelBounds;
+            timeSignatureDLabel.Text = InputParameters.Instance.TimeSignatureD.ToString();
+            timeSignatureDLabel.SkinName = "settings";
+
             //Add Children
             Children.Add(playPauseButton);
             Children.Add(stopButton);
             Children.Add(horizontalSlider);
             Children.Add(verticalSlider);
+            Children.Add(tempoLabel);
+            Children.Add(timeSignatureNLabel);
+            Children.Add(timeSignatureDLabel);
         }
 
         public void StopSongPlaying()
@@ -292,6 +325,10 @@ namespace Automatone.GUI
 
         public void Update(GameTime gameTime)
         {
+            tempoLabel.Text = "Tempo: " + InputParameters.Instance.Tempo.ToString();
+            timeSignatureNLabel.Text = "Time Signature: " + InputParameters.Instance.TimeSignatureN.ToString();
+            timeSignatureDLabel.Text = InputParameters.Instance.TimeSignatureD.ToString();
+
             newKeyboardState = Keyboard.GetState();
             if (GridPanel.Instance.ScrollWithMidi)
             {

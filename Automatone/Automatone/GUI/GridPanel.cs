@@ -659,9 +659,9 @@ namespace Automatone.GUI
         {
 
             private ParticleSystem<NoteHitParticle> particleSystem;
-            private const int PARTICLE_SPAWN_DENSITY = 4;
-            private const int PARTICLE_SPAWN_CYCLE = 50;
-            private int currentCycle;
+            private const byte PARTICLE_SPAWN_DENSITY = 4;
+            private const byte PARTICLE_SPAWN_CYCLE = 50;
+            private byte currentCycle;
 
             public Particles()
             {
@@ -703,6 +703,126 @@ namespace Automatone.GUI
                     //Automatone.Instance.SpriteBatch.Draw(startCell, new Rectangle((int)particle.Position.X, (int)particle.Position.Y, 2, 2), particle.Color);
                 }
             }
+
+            private struct NoteHitParticle
+            {
+                private static Random rand = new Random();
+
+                private Vector3 position;
+                public Vector3 Position
+                {
+                    set { position = value; }
+                    get { return position; }
+                }
+
+                private Vector3 velocity;
+                public Vector3 Velocity
+                {
+                    set { velocity = value; }
+                    get { return velocity; }
+                }
+
+                private const int MAX_TIMER = 3;
+                private int timer;
+                public int Timer
+                {
+                    set { timer = value; }
+                    get { return timer; }
+                }
+
+                private Color color;
+                public Color Color
+                {
+                    set { color = value; }
+                    get { return color; }
+                }
+
+                public NoteHitParticle(Vector3 position, Vector3 velocity, Color color)
+                {
+                    this.position = position;
+                    this.velocity = velocity;
+                    this.timer = NewTime();
+                    this.color = color;
+                }
+
+                public static bool IsAlive(ref NoteHitParticle particle)
+                {
+                    if (particle.Timer-- < 0)
+                    {
+                        particle.Timer = NewTime();
+                        return false;
+                    }
+                    return true;
+                }
+
+                private static int NewTime()
+                {
+                    return (int)(rand.NextDouble() * MAX_TIMER);
+                }
+            }
+
+            private class NoteHitParticleModifier : IParticleModifier<NoteHitParticle>
+            {
+                public bool HasVelocity { get { return true; } }
+                public bool HasWeight { get { return false; } }
+
+                public void GetPosition(ref NoteHitParticle particle, out Vector3 position)
+                {
+                    position = particle.Position;
+                }
+
+                public void GetVelocity(ref NoteHitParticle particle, out Vector3 velocity)
+                {
+                    velocity = particle.Velocity;
+                }
+
+                public float GetWeight(ref NoteHitParticle particle)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void SetPosition(ref NoteHitParticle particle, ref Vector3 position)
+                {
+                    position = particle.Position;
+                }
+
+                public void SetVelocity(ref NoteHitParticle particle, ref Vector3 velocity)
+                {
+                    velocity = particle.Velocity;
+                }
+
+                public void SetWeight(ref NoteHitParticle particle, float weight)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void AddScaledVelocityToPosition(NoteHitParticle[] particles, int start, int count, float scale)
+                {
+                    int end = start + count;
+                    for (int i = start; i < end; i++)
+                    {
+                        particles[i].Position += particles[i].Velocity * scale;
+                    }
+                }
+
+                public void AddToVelocity(NoteHitParticle[] particles, int start, int count, ref Vector3 velocityAdjustment)
+                {
+                    int end = start + count;
+                    for (int i = start; i < end; i++)
+                    {
+                        particles[i].Velocity += velocityAdjustment;
+                    }
+                }
+
+                public void AddVelocityToPosition(NoteHitParticle[] particles, int start, int count)
+                {
+                    int end = start + count;
+                    for (int i = start; i < end; i++)
+                    {
+                        particles[i].Position += particles[i].Velocity;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -717,13 +837,6 @@ namespace Automatone.GUI
             private Texture2D cursorHori;
             private Texture2D cursorVert;
             private Texture2D cursorHighlight;
-
-            private const int TOP_CURSOR_HEAD_HEIGHT = 20;
-            private const int TOP_CURSOR_HEAD_WIDTH = 20;
-            private const int LEFT_CURSOR_HEAD_HEIGHT = 20;
-            private const int LEFT_CURSOR_HEAD_WIDTH = 20;
-            private const int HORIZONTAL_CURSOR_HEIGHT = 20;
-            private const int VERTICAL_CURSOR_WIDTH = 20;
 
             private int topStartIndex;
             private int topEndIndex;
@@ -863,28 +976,28 @@ namespace Automatone.GUI
                     && TopEndIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
                     && TopEndIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
-                    Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, TOP_CURSOR_HEAD_WIDTH, TOP_CURSOR_HEAD_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - LayoutManager.VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, LayoutManager.VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - LayoutManager.TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, LayoutManager.TOP_CURSOR_HEAD_WIDTH, LayoutManager.TOP_CURSOR_HEAD_HEIGHT), Color.White);
                 }
                 if (TopStartIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
                     && TopStartIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
-                    Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, TOP_CURSOR_HEAD_WIDTH, TOP_CURSOR_HEAD_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - LayoutManager.VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, LayoutManager.VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - LayoutManager.TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, LayoutManager.TOP_CURSOR_HEAD_WIDTH, LayoutManager.TOP_CURSOR_HEAD_HEIGHT), Color.White);
                 }
 
                 if (LeftStartIndex != LeftEndIndex
                     && LeftEndIndex < GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
                     && LeftEndIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
                 {
-                    Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, HORIZONTAL_CURSOR_HEIGHT), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LEFT_CURSOR_HEAD_HEIGHT / 2, LEFT_CURSOR_HEAD_WIDTH, LEFT_CURSOR_HEAD_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LayoutManager.HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, LayoutManager.HORIZONTAL_CURSOR_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LayoutManager.LEFT_CURSOR_HEAD_HEIGHT / 2, LayoutManager.LEFT_CURSOR_HEAD_WIDTH, LayoutManager.LEFT_CURSOR_HEAD_HEIGHT), Color.White);
                 }
                 if (LeftStartIndex < GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
                     && LeftStartIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
                 {
-                    Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, HORIZONTAL_CURSOR_HEIGHT), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LEFT_CURSOR_HEAD_HEIGHT / 2, LEFT_CURSOR_HEAD_WIDTH, LEFT_CURSOR_HEAD_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LayoutManager.HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, LayoutManager.HORIZONTAL_CURSOR_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LayoutManager.LEFT_CURSOR_HEAD_HEIGHT / 2, LayoutManager.LEFT_CURSOR_HEAD_WIDTH, LayoutManager.LEFT_CURSOR_HEAD_HEIGHT), Color.White);
                 }
                 
                 if(Automatone.Instance.Sequencer.State != Sequencer.MidiPlayerState.STOPPED)

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Microsoft.Xna.Framework;
 using Nuclex.UserInterface;
+using Nuclex.UserInterface.Controls;
 using Nuclex.UserInterface.Controls.Desktop;
 using NuclexUserInterfaceExtension;
 
@@ -33,7 +34,7 @@ namespace Automatone.GUI
 
         private ParametersPanel() : base()
         {
-            slideMoveVelocity = 0;
+            slideMoveVelocity = -SLIDE_MOVESPEED;
             slidersHookUp = new Dictionary<SkinNamedHorizontalSliderControl, PropertyInfo>();
             slidersHaveBeenMoved = false;
             InitializeComponent();
@@ -91,7 +92,6 @@ namespace Automatone.GUI
             Children.Add(okButton);
             Children.Add(cancelButton);
 
-            int x = 0;
             //
             // Dynamically create sliders for each of the input parameters that needs to be hooked up to a slider
             //
@@ -105,25 +105,27 @@ namespace Automatone.GUI
                     MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.DoubleMethodName).MakeGenericMethod(inputParameterInfo.PropertyType.GetGenericArguments()[0]);
 
                     SkinNamedHorizontalSliderControl parameterSlider = new SkinNamedHorizontalSliderControl();
-                    parameterSlider.Bounds = new UniRectangle(0, x * 50, 100, 30);
+                    LayoutManager.Instance.Register(parameterSlider);
                     parameterSlider.ThumbSize = 0.1f;
                     parameterSlider.ThumbPosition = (float)(double)method.Invoke(null, new object[] { inputParameterInfo.GetGetMethod().Invoke(InputParameters.Instance, null) });
                     parameterSlider.Moved += new EventHandler(ParameterSliderMoved);
                     parameterSlider.SkinName = "navigator";
+
+                    SkinNamedLabelControl sliderLabel = new SkinNamedLabelControl();
+                    LayoutManager.Instance.Register(sliderLabel);
+                    sliderLabel.Text = inputParameterInfo.Name;
+                    sliderLabel.SkinName = "parameter";
+
                     Children.Add(parameterSlider);
+                    Children.Add(sliderLabel);
                     slidersHookUp.Add(parameterSlider, inputParameterInfo);
-                    x++;
                 }
             }
         }
 
         private void ParameterSliderMoved(object sender, EventArgs e)
         {
-            PropertyInfo inputParameterInfo;
-            if (slidersHookUp.TryGetValue((SkinNamedHorizontalSliderControl)sender, out inputParameterInfo))
-            {
-                
-            }
+            slidersHaveBeenMoved = true;
         }
 
         public void Update()

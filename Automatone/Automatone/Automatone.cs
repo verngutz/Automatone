@@ -104,6 +104,10 @@ namespace Automatone
             graphics.PreferredBackBufferHeight = LayoutManager.DEFAULT_WINDOW_HEIGHT;
             graphics.ApplyChanges();
 
+            // Set Minimum Window Size
+            System.Windows.Forms.Form.FromHandle(Window.Handle).MinimumSize
+                = new System.Drawing.Size(LayoutManager.MINIMUM_WINDOW_WIDTH, LayoutManager.MINIMUM_WINDOW_HEIGHT);
+
             // Initialize Input Handler
             inputManager = new InputManager(Services);
             Components.Add(inputManager);
@@ -178,10 +182,11 @@ namespace Automatone
                 NavigatorPanel.Instance.StopSongPlaying();
             }
             previousSequencerState = sequencer.State;
+            base.Update(gameTime);
+
             ParametersPanel.Instance.BringToFront();
             ControlPanel.Instance.BringToFront();
             ParametersPanel.Instance.Update();
-            base.Update(gameTime);
         }
 
         /// <summary>
