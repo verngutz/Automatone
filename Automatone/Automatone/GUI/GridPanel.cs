@@ -196,6 +196,8 @@ namespace Automatone.GUI
                         newSongCells[i, j] = songCells[i, j];
                     }
                 }
+                Memento.Instance.DoAction(songCells);
+                ControlPanel.Instance.ResetButtonsetStatuses();
                 SongCells = newSongCells;
             }
         }
@@ -221,6 +223,8 @@ namespace Automatone.GUI
                     newSongCells[i, j] = songCells[i, j - endIndex + cursors.TopStartIndex];
                 }
             }
+            Memento.Instance.DoAction(songCells);
+            ControlPanel.Instance.ResetButtonsetStatuses();
             SongCells = newSongCells;
         }
 
@@ -244,6 +248,8 @@ namespace Automatone.GUI
                     newSongCells[i, j] = songCells[i, j - cursors.TopStartIndex + cursors.TopEndIndex];
                 }
             }
+            Memento.Instance.DoAction(songCells);
+            ControlPanel.Instance.ResetButtonsetStatuses();
             SongCells = newSongCells;
             cursors.TopEndIndex = cursors.TopStartIndex;
         }
@@ -277,6 +283,8 @@ namespace Automatone.GUI
         {
             if (cursors.TopStartIndex != cursors.TopEndIndex && cursors.LeftStartIndex != cursors.LeftEndIndex)
             {
+                Memento.Instance.DoAction(songCells);
+                ControlPanel.Instance.ResetButtonsetStatuses();
                 for (int i = cursors.LeftStartIndex + 1; i <= cursors.LeftEndIndex; i++)
                 {
                     for (int j = cursors.TopStartIndex; j < cursors.TopEndIndex; j++)
@@ -289,7 +297,7 @@ namespace Automatone.GUI
                         songCells[i, tail] = CellState.SILENT;
                         tail++;
                     }
-                } 
+                }
             }
         }
 
@@ -298,6 +306,8 @@ namespace Automatone.GUI
             CellState[,] cellsToPaste = GetCellsFromClipboard();
             if (cellsToPaste != null)
             {
+                Memento.Instance.DoAction(songCells);
+                ControlPanel.Instance.ResetButtonsetStatuses();
                 AddCells(cellsToPaste.GetLength(1) - (songCells.GetLength(1) - cursors.TopStartIndex));
                 for (int i = cursors.LeftEndIndex + 1 - cellsToPaste.GetLength(0); i <= cursors.LeftEndIndex; i++)
                 {
@@ -357,6 +367,8 @@ namespace Automatone.GUI
             private int? gridInputEndXIndex;
             private int? gridInputYIndex;
 
+            private bool storeAction = true;
+
             public void LoadContent()
             {
                 startCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightboxend");
@@ -385,6 +397,12 @@ namespace Automatone.GUI
                         || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
                     && LayoutManager.Instance.GridCellsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
                 {
+                    if (storeAction)
+                    {
+                        Memento.Instance.DoAction(GridPanel.Instance.SongCells);
+                        ControlPanel.Instance.ResetButtonsetStatuses();
+                        storeAction = false;
+                    }
                     if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
                     {
                         GridPanel.Instance.HasUnsavedChanges = true;
@@ -406,6 +424,7 @@ namespace Automatone.GUI
                         gridInputStartXIndex = null;
                         gridInputEndXIndex = null;
                         gridInputYIndex = null;
+                        storeAction = true;
                     }
                     else if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed && GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Pressed)
                     {

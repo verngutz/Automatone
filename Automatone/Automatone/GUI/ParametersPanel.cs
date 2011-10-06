@@ -188,6 +188,8 @@ namespace Automatone.GUI
                 NavigatorPanel.Instance.ResetGridDrawOffset();
                 SlideUp();
             }
+            Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+            ControlPanel.Instance.ResetButtonsetStatuses();
         }
 
         private void CancelButtonPressed(object sender, EventArgs e)
