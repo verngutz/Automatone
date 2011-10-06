@@ -27,6 +27,12 @@ namespace Automatone.GUI
 
         public const short PARAMETERS_PANEL_HEIGHT = 400;
 
+        public const int CONTROL_ARROW_WIDTH = 32;
+        public const int CONTROL_ARROW_HEIGHT = 96;
+        public const int CONTROL_BUTTON_WIDTH = 64;
+        public const int CONTROL_BUTTON_HEIGHT = 96;
+        public const int CONTROL_BUTTON_SPACING = 10;
+
         private int cellsArrayLengthX;
         private int cellsArrayLengthY;
 
@@ -34,34 +40,20 @@ namespace Automatone.GUI
         private int windowHeight;
 
         private UniRectangle controlPanelBounds;
-        private UniRectangle playPauseButtonBounds;
-        private UniRectangle stopButtonBounds;
-        private UniRectangle newButtonBounds;
-        private UniRectangle openButtonBounds;
-        private UniRectangle saveButtonBounds;
-        private UniRectangle cutButtonBounds;
-        private UniRectangle copyButtonBounds;
-        private UniRectangle pasteButtonBounds;
-        private UniRectangle undoButtonBounds;
-        private UniRectangle redoButtonBounds;
-        private UniRectangle addCellsButtonBounds;
-        private UniRectangle removeCellsButtonBounds;
-        private UniRectangle generateSongButtonBounds;
 
         public UniRectangle ControlPanelBounds { get { return controlPanelBounds; } }
-        public UniRectangle PlayPauseButtonBounds { get { return playPauseButtonBounds; } }
-        public UniRectangle StopButtonBounds { get { return stopButtonBounds; } }
-        public UniRectangle NewButtonBounds { get { return newButtonBounds; } }
-        public UniRectangle OpenButtonBounds { get { return openButtonBounds; } }
-        public UniRectangle SaveButtonBounds { get { return saveButtonBounds; } }
-        public UniRectangle CutButtonBounds { get { return cutButtonBounds; } }
-        public UniRectangle CopyButtonBounds { get { return copyButtonBounds; } }
-        public UniRectangle PasteButtonBounds { get { return pasteButtonBounds; } }
-        public UniRectangle UndoButtonBounds { get { return undoButtonBounds; } }
-        public UniRectangle RedoButtonBounds { get { return redoButtonBounds; } }
-        public UniRectangle AddCellsButtonBounds { get { return addCellsButtonBounds; } }
-        public UniRectangle RemoveCellsButtonBounds { get { return removeCellsButtonBounds; } }
-        public UniRectangle GenerateSongButtonBounds { get { return generateSongButtonBounds; } }
+
+        private UniRectangle controlArrowLeftBounds;
+        private UniRectangle controlArrowRightBounds;
+
+        public UniRectangle ControlArrowLeftBounds { get { return controlArrowLeftBounds; } }
+        public UniRectangle ControlArrowRightBounds { get { return controlArrowRightBounds; } }
+
+        private bool excessButtonsLeft;
+        private bool excessButtonsRight;
+
+        public bool ExcessButtonsLeft { get { return excessButtonsLeft; } }
+        public bool ExcessButtonsRight { get { return excessButtonsRight; } }
 
         private FrameLayout gridPanelLayout;
         private Rectangle gridCellsClickableArea;
@@ -131,22 +123,37 @@ namespace Automatone.GUI
             }
         }
 
+        public List<UniRectangle> GetButtonsetBounds(int buttonCount, int firstButton)
+        {
+            List<UniRectangle> buttonsetBounds = new List<UniRectangle>();
+            excessButtonsLeft = false;
+            excessButtonsRight = false;
+            for (int i = 0; i < buttonCount; i++)
+            {
+                if (i < firstButton)
+                {
+                    buttonsetBounds.Add(new UniRectangle(windowWidth + CONTROL_BUTTON_WIDTH, (CONTROLS_AND_GRID_DIVISION - CONTROL_BUTTON_HEIGHT) / 2, CONTROL_BUTTON_WIDTH, CONTROL_BUTTON_HEIGHT));
+                    excessButtonsLeft = true;
+                }
+                else if ((i - firstButton + 1) * (CONTROL_BUTTON_WIDTH + CONTROL_BUTTON_SPACING) < windowWidth - CONTROL_BUTTON_SPACING * 3 - CONTROL_ARROW_WIDTH * 2)
+                {
+                    buttonsetBounds.Add(new UniRectangle(CONTROL_ARROW_WIDTH + CONTROL_BUTTON_SPACING * (2 + i - firstButton) + CONTROL_BUTTON_WIDTH * (i - firstButton), (CONTROLS_AND_GRID_DIVISION - CONTROL_BUTTON_HEIGHT) / 2, CONTROL_BUTTON_WIDTH, CONTROL_BUTTON_HEIGHT));
+                }
+                else
+                {
+                    buttonsetBounds.Add(new UniRectangle(windowWidth + CONTROL_BUTTON_WIDTH, (CONTROLS_AND_GRID_DIVISION - CONTROL_BUTTON_HEIGHT) / 2, CONTROL_BUTTON_WIDTH, CONTROL_BUTTON_HEIGHT));
+                    excessButtonsRight = true;
+                }
+            }
+            return buttonsetBounds;
+        }
+
         private void CalculateBounds()
         {
             controlPanelBounds = new UniRectangle(0, 0, windowWidth, CONTROLS_AND_GRID_DIVISION);
-            playPauseButtonBounds = new UniRectangle(10, 26, 64, 64);
-            stopButtonBounds = new UniRectangle(84, 26, 64, 64);
-            newButtonBounds = new UniRectangle(158, 10, 64, 96);
-            openButtonBounds = new UniRectangle(232, 10, 64, 96);
-            saveButtonBounds = new UniRectangle(306, 10, 64, 96);
-            cutButtonBounds = new UniRectangle(380, 10, 64, 96);
-            copyButtonBounds = new UniRectangle(454, 10, 64, 96);
-            pasteButtonBounds = new UniRectangle(528, 10, 64, 96);
-            undoButtonBounds = new UniRectangle(602, 10, 64, 96);
-            redoButtonBounds = new UniRectangle(676, 10, 64, 96);
-            addCellsButtonBounds = new UniRectangle(750, 10, 64, 96);
-            removeCellsButtonBounds = new UniRectangle(824, 10, 64, 96);
-            generateSongButtonBounds = new UniRectangle(898, 10, 64, 96);
+
+            controlArrowLeftBounds = new UniRectangle(CONTROL_BUTTON_SPACING, (CONTROLS_AND_GRID_DIVISION - CONTROL_ARROW_HEIGHT) / 2, CONTROL_ARROW_WIDTH, CONTROL_ARROW_HEIGHT);
+            controlArrowRightBounds = new UniRectangle(windowWidth - CONTROL_BUTTON_SPACING - CONTROL_ARROW_WIDTH, (CONTROLS_AND_GRID_DIVISION - CONTROL_ARROW_HEIGHT) / 2, CONTROL_ARROW_WIDTH, CONTROL_ARROW_HEIGHT);
 
             Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, windowWidth - RIGHT_SCROLLBAR_THICKNESS, windowHeight - CONTROLS_AND_GRID_DIVISION - BOTTOM_SCROLLBAR_THICKNESS);
             Rectangle innerRectangle = new Rectangle(outerRectangle.X + LEFT_BORDER_THICKNESS, outerRectangle.Y + TOP_BORDER_THICKNESS, outerRectangle.Width - LEFT_BORDER_THICKNESS - RIGHT_BORDER_THICKNESS, outerRectangle.Height - TOP_BORDER_THICKNESS - BOTTOM_BORDER_THICKNESS);
@@ -158,10 +165,10 @@ namespace Automatone.GUI
             horizontalScrollBarBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height, gridPanelLayout.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
             verticalScrollBarBounds = new UniRectangle(gridPanelLayout.OuterRectangle.Width, gridPanelLayout.InnerRectangle.Top - CONTROLS_AND_GRID_DIVISION, RIGHT_SCROLLBAR_THICKNESS, gridPanelLayout.InnerRectangle.Height);
 
-            if(parametersPanelBounds.Top == 0)
-                parametersPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION - PARAMETERS_PANEL_HEIGHT, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
+            if (parametersPanelBounds.Top == 0)
+                parametersPanelBounds = new UniRectangle(CONTROL_BUTTON_SPACING, CONTROLS_AND_GRID_DIVISION - PARAMETERS_PANEL_HEIGHT, windowWidth - 2 * CONTROL_BUTTON_SPACING, PARAMETERS_PANEL_HEIGHT);
             else
-                parametersPanelBounds = new UniRectangle(0, parametersPanelBounds.Top, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
+                parametersPanelBounds = new UniRectangle(CONTROL_BUTTON_SPACING, parametersPanelBounds.Top, windowWidth - 2 * CONTROL_BUTTON_SPACING, PARAMETERS_PANEL_HEIGHT);
         }
 
         private void RespondToWindowResize(int windowWidth, int windowHeight)
@@ -172,18 +179,10 @@ namespace Automatone.GUI
             CalculateBounds();
 
             ControlPanel.Instance.Bounds = ControlPanelBounds;
-            ControlPanel.Instance.PlayPauseButtonBounds = PlayPauseButtonBounds;
-            ControlPanel.Instance.StopButtonBounds = StopButtonBounds;
-            ControlPanel.Instance.NewButtonBounds = NewButtonBounds;
-            ControlPanel.Instance.OpenButtonBounds = OpenButtonBounds;
-            ControlPanel.Instance.CutButtonBounds = CutButtonBounds;
-            ControlPanel.Instance.CopyButtonBounds = CopyButtonBounds;
-            ControlPanel.Instance.PasteButtonBounds = PasteButtonBounds;
-            ControlPanel.Instance.UndoButtonBounds = UndoButtonBounds;
-            ControlPanel.Instance.RedoButtonBounds = RedoButtonBounds;
-            ControlPanel.Instance.AddCellsButtonBounds = AddCellsButtonBounds;
-            ControlPanel.Instance.RemoveCellsButtonBounds = RemoveCellsButtonBounds;
-            ControlPanel.Instance.GenerateSongButtonBounds = GenerateSongButtonBounds;
+
+            ControlPanel.Instance.ArrowLeftBounds = ControlArrowLeftBounds;
+            ControlPanel.Instance.ArrowRightBounds = controlArrowRightBounds;
+            ControlPanel.Instance.ResetButtonsetBounds();
 
             NavigatorPanel.Instance.Bounds = NavigatorPanelBounds;
             NavigatorPanel.Instance.HorizontalScrollBarBounds = HorizontalScrollBarBounds;

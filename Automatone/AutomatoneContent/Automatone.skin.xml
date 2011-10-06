@@ -16,6 +16,16 @@
 
       <bitmap name="controlpanel" contentPath="Control Panel/Bg_Controlpanel"/>
 
+      <bitmap name="arrowLeft" contentPath="Control Panel/Arr_Left"/>
+      <bitmap name="arrowLeftClicked" contentPath="Control Panel/Arr_Left_Clicked"/>
+      <bitmap name="arrowLeftHovered" contentPath="Control Panel/Arr_Left_Hovered"/>
+      <bitmap name="arrowLeftDisabled" contentPath="Control Panel/Arr_Left_Disabled"/>
+      
+      <bitmap name="arrowRight" contentPath="Control Panel/Arr_Right"/>
+      <bitmap name="arrowRightClicked" contentPath="Control Panel/Arr_Right_Clicked"/>
+      <bitmap name="arrowRightHovered" contentPath="Control Panel/Arr_Right_Hovered"/>
+      <bitmap name="arrowRightDisabled" contentPath="Control Panel/Arr_Right_Disabled"/>
+      
       <bitmap name="play" contentPath="Music Controls/Ctrl_Play"/>
       <bitmap name="playClicked" contentPath="Music Controls/Ctrl_Play_Clicked"/>
       <bitmap name="playHovered" contentPath="Music Controls/Ctrl_Play_Hovered"/>
@@ -122,58 +132,114 @@
 	    </frame>
 	
 	    <!--
-	      Frame used for a disabled play/pause button that is toggled off
+	      Frame used for a disabled checkbox that is toggled off
 	    -->
 	    <frame name="check.off.disabled">
 	    </frame>
 	
 	    <!--
-	      Frame used for a normal play/pause button that is toggled off
+	      Frame used for a normal checkbox that is toggled off
 	    -->
 	    <frame name="check.off.normal">
         <region source="play" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
 	    </frame>
 	
 	    <!--
-	      Frame used for a depressed play/pause button that is toggled off
+	      Frame used for a depressed checkbox that is toggled off
 	    -->
 	    <frame name="check.off.depressed">
         <region source="playClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
 	    </frame>
 	
 	    <!--
-	      Frame used for a highlighted play/pause button that is toggled off
+	      Frame used for a highlighted checkbox that is toggled off
 	    -->
 	    <frame name="check.off.highlighted">
         <region source="playHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
 	    </frame>
 	
 	    <!--
-	      Frame used for a disabled play/pause button that is toggled on
+	      Frame used for a disabled checkbox that is toggled on
 	    -->
 	    <frame name="check.on.disabled">
 	    </frame>
 	
 	    <!--
-	      Frame used for a normal play/pause button that is toggled on
+	      Frame used for a normal checkbox that is toggled on
 	    -->
 	    <frame name="check.on.normal">
         <region source="pause" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
 	    </frame>
 	
 	    <!--
-	      Frame used for a depressed play/pause button that is toggled on
+	      Frame used for a depressed checkbox that is toggled on
 	    -->
 	    <frame name="check.on.depressed">
         <region source="pauseClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
 	    </frame>
 	
 	    <!--
-	      Frame used for a highlighted play/pause button that is toggled on
+	      Frame used for a highlighted checkbox that is toggled on
 	    -->
 	    <frame name="check.on.highlighted">
         <region source="pauseHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
 	    </frame>
+
+      <!--
+	      Frame used for a disabled leftArrow button
+	    -->
+      <frame name="arrow.left.button.disabled">
+        <region source="arrowLeftDisabled" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a leftArrow button in its normal state
+	    -->
+      <frame name="arrow.left.button.normal">
+        <region source="arrowLeft" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a leftArrow button when it is depressed
+	    -->
+      <frame name="arrow.left.button.depressed">
+        <region source="arrowLeftClicked" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a leftArrow button when it is highlighted
+	    -->
+      <frame name="arrow.left.button.highlighted">
+        <region source="arrowLeftHovered" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled rightArrow button
+	    -->
+      <frame name="arrow.right.button.disabled">
+        <region source="arrowRightDisabled" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a rightArrow button in its normal state
+	    -->
+      <frame name="arrow.right.button.normal">
+        <region source="arrowRight" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a rightArrow button when it is depressed
+	    -->
+      <frame name="arrow.right.button.depressed">
+        <region source="arrowRightClicked" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a rightArrow button when it is highlighted
+	    -->
+      <frame name="arrow.right.button.highlighted">
+        <region source="arrowRightHovered" hplacement ="left" vplacement="top" x="0" y="0" w="32" h="96" />
+      </frame>
 
       <!--
 	      Frame used for a disabled stop button
