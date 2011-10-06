@@ -307,6 +307,12 @@ namespace Automatone.GUI
                         {
                             songCells[i, j] = cellsToPaste[i - (cursors.LeftEndIndex + 1 - cellsToPaste.GetLength(0)), j - cursors.TopStartIndex];
                         }
+                        int tail = cursors.TopStartIndex + cellsToPaste.GetLength(1);
+                        while (tail < songCells.GetLength(1) && songCells[i, tail] == CellState.HOLD)
+                        {
+                            songCells[i, tail] = CellState.SILENT;
+                            tail++;
+                        }
                     }
                 }
                 cursors.LeftStartIndex = cursors.LeftEndIndex - cellsToPaste.GetLength(0);
