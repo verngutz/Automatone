@@ -259,15 +259,19 @@ namespace Automatone.GUI
             if (ShowSaveConfirmation() != DialogResult.Cancel)
             {
                 NavigatorPanel.Instance.StopSongPlaying();
+                InputParameters.Instance.Tempo = 120;
+                InputParameters.Instance.TimeSignatureN = 4;
+                InputParameters.Instance.TimeSignatureD = 4;
                 Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
                 GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
                 GridPanel.Instance.ResetCursors();
                 NavigatorPanel.Instance.ResetGridDrawOffset();
                 GridPanel.Instance.HasUnsavedChanges = false;
                 ParametersPanel.Instance.SlideUp();
+
+                Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+                ResetButtonsetStatuses();
             }
-            Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
-            ResetButtonsetStatuses();
         }
 
         private void OpenButtonPressed(object sender, EventArgs e)
@@ -293,9 +297,10 @@ namespace Automatone.GUI
                     GridPanel.Instance.HasUnsavedChanges = false;
                     ParametersPanel.Instance.SlideUp();
                 }
+
+                Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+                ResetButtonsetStatuses();
             }
-            Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
-            ResetButtonsetStatuses();
         }
 
         private void SaveButtonPressed(object sender, EventArgs e)
