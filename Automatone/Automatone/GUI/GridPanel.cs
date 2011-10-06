@@ -322,34 +322,46 @@ namespace Automatone.GUI
         private class Labels
         {
             private Texture2D labelsBackground;
+            private Texture2D labelsBackground2;
             private SpriteFont labelFont;
             private const bool sharpLabels = true;
 
             public void LoadContent()
             {
-                labelsBackground = Automatone.Instance.Content.Load<Texture2D>("BlackPixel");
+                labelsBackground = Automatone.Instance.Content.Load<Texture2D>("holdbox");
+                labelsBackground2 = Automatone.Instance.Content.Load<Texture2D>("darkbox");
                 labelFont = Automatone.Instance.Content.Load<SpriteFont>("LabelFont");
             }
 
             public void Dispose()
             {
-                if (labelsBackground != null) 
+                if (labelsBackground != null)
                     labelsBackground.Dispose();
+                if (labelsBackground2 != null)
+                    labelsBackground2.Dispose();
             }
 
             public void Draw(GameTime gameTime)
             {
                 Automatone.Instance.SpriteBatch.Begin();
                 DrawPitchLabel();
-                DrawTimeLabel();
                 DrawRightBorder();
+                DrawTimeLabel();
                 DrawBottomBorder();
                 Automatone.Instance.SpriteBatch.End();
             }
 
             private void DrawPitchLabel()
             {
-                Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridLeftBorderBounds, Color.White);
+                for (int i = 0; i < (Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / MusicTheory.OCTAVE_SIZE + 1; i++)
+                {
+                    if ((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER >= NavigatorPanel.Instance.VerticalClippingStartIndex && i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER <= NavigatorPanel.Instance.VerticalClippingEndIndex)
+                    {
+                        int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
+                        int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
+                        Automatone.Instance.SpriteBatch.Draw((i % 2 == 0 ? labelsBackground : labelsBackground2), new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Left, upperBound, LayoutManager.Instance.GridRightBorderBounds.Width, lowerBound - upperBound), Color.White);
+                    }
+                }
 
                 for (int i = NavigatorPanel.Instance.VerticalClippingStartIndex; i <= NavigatorPanel.Instance.VerticalClippingEndIndex; i++)
                 {
@@ -401,7 +413,6 @@ namespace Automatone.GUI
             private void DrawTimeLabel()
             {
                 Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridTopBorderBounds, Color.White);
-
                 for (int j = NavigatorPanel.Instance.HorizontalClippingStartIndex; j <= NavigatorPanel.Instance.HorizontalClippingEndIndex; j++)
                 {
                     Vector2 loc = new Vector2((int)(j * LayoutManager.CELLWIDTH + NavigatorPanel.Instance.GridDrawOffsetX), 2 + LayoutManager.CONTROLS_AND_GRID_DIVISION);
@@ -421,10 +432,18 @@ namespace Automatone.GUI
 
             private void DrawRightBorder()
             {
-                Automatone.Instance.SpriteBatch.Draw(labelsBackground, LayoutManager.Instance.GridRightBorderBounds, Color.White);
                 for (int i = 0; i < (Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / MusicTheory.OCTAVE_SIZE + 1; i++)
                 {
-                    if ((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER > NavigatorPanel.Instance.VerticalClippingStartIndex && i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER < NavigatorPanel.Instance.VerticalClippingEndIndex)
+                    if ((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER >= NavigatorPanel.Instance.VerticalClippingStartIndex && i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER <= NavigatorPanel.Instance.VerticalClippingEndIndex)
+                    {
+                        int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
+                        int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1));
+                        Automatone.Instance.SpriteBatch.Draw((i % 2 == 0 ? labelsBackground : labelsBackground2), new Rectangle(LayoutManager.Instance.GridRightBorderBounds.Left, upperBound, LayoutManager.Instance.GridRightBorderBounds.Width, lowerBound - upperBound), Color.White);
+                    }
+                }
+                for (int i = 0; i < (Automatone.PIANO_SIZE + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER) / MusicTheory.OCTAVE_SIZE + 1; i++)
+                {
+                    if ((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER > NavigatorPanel.Instance.VerticalClippingStartIndex && i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER - 1 < NavigatorPanel.Instance.VerticalClippingEndIndex)
                     {
                         int upperBound = Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY((i + 1) * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER));
                         int lowerBound = Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(i * MusicTheory.OCTAVE_SIZE - Automatone.LOWEST_NOTE_CHROMATIC_NUMBER));
