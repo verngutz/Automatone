@@ -108,6 +108,9 @@
       <bitmap name="navigatorVerticalThumb" contentPath="Grid Panel/Bar_ScrollHandle_Vert"/>
       <bitmap name="navigatorVerticalThumbHover" contentPath="Grid Panel/Bar_ScrollHandle_Vert_Hovered"/>
       <bitmap name="navigatorVerticalThumbClicked" contentPath="Grid Panel/Bar_ScrollHandle_Vert_Clicked"/>
+
+      <font name ="parameterFont" contentPath="ParameterFont"/>
+      <font name ="labelFont" contentPath="LabelFont"/>
 	  </resources>
 	
 	  <!--
@@ -126,6 +129,7 @@
 	      Frame used to draw the navigator panel
 	    -->
       <frame name="navigator.panel.window">
+        <region source="controlpanel" hplacement ="stretch" vplacement="bottom" x="0" y="0" w="800" h="180" />
       </frame>
 
       <!--
@@ -136,10 +140,18 @@
       </frame>
 	
 	    <!--
+	      Frame used for a parameter
+	    -->
+	    <frame name="parameter.label">
+        <text font="parameterFont" hplacement="left" vplacement="top" yoffset="0" color="#000000" />
+	    </frame>
+
+      <!--
 	      Frame used for a label
 	    -->
-	    <frame name="label">
-	    </frame>
+      <frame name="settings.label">
+        <text font="labelFont" hplacement="right" vplacement="top" yoffset="0" color="#000000" />
+      </frame>
 	
 	    <!--
 	      Frame used for a progress bar
@@ -827,12 +839,14 @@
 	      Frame used to draw an input box
 	    -->
 	    <frame name="input.normal">
+        <region source="navigatorHorizontalRail" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--
 	      Frame used to draw an input box when the mouse is hovering over it
 	    -->
 	    <frame name="input.highlighted">
+        <region source="navigatorHorizontalThumbHover" hplacement="stretch" vplacement="stretch" x="0" y="0" w="32" h="32"/>
 	    </frame>
 	
 	    <!--

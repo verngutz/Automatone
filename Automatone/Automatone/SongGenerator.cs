@@ -16,6 +16,9 @@ namespace Automatone
         }
 	    public static CellState[,] GenerateSong(Automatone automatone, Random random, MusicTheory theory)
         {
+            InputParameters.Instance.Tempo = (ushort)(theory.MIN_TEMPO + InputParameters.Instance.SongSpeed * (theory.MAX_TEMPO - theory.MIN_TEMPO));         
+            InputParameters.Instance.TimeSignatureN = (int)(2 + random.NextDouble() / 4 * (13 - 2));
+            InputParameters.Instance.TimeSignatureD = (int)Math.Pow(2, (int)(1 + random.NextDouble() * 2));
             Song s = new Song(theory, random);
 		    NoteThread thread = new NoteThread(s.Notes, InputParameters.Instance.TimeSignature);
             int gridWidth = s.MeasureCount * s.MeasureLength;

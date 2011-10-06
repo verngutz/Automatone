@@ -141,6 +141,7 @@ namespace NuclexUserInterfaceExtension
                 renderers.Add(typeof(SkinNamedHorizontalSliderControl), new ControlRendererAdapter<SkinNamedHorizontalSliderControl>(new SkinNamedHorizontalSliderControlRenderer()));
                 renderers.Add(typeof(SkinNamedVerticalSliderControl), new ControlRendererAdapter<SkinNamedVerticalSliderControl>(new SkinNamedVerticalSliderControlRenderer()));
                 renderers.Add(typeof(SkinNamedWindowControl), new ControlRendererAdapter<SkinNamedWindowControl>(new SkinNamedWindowControlRenderer()));
+                renderers.Add(typeof(SkinNamedLabelControl), new ControlRendererAdapter<SkinNamedLabelControl>(new SkinNamedLabelControlRenderer()));
             }
 
             /// <summary>Determines whether the type suites the employer's requirements</summary>

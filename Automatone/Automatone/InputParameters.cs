@@ -52,6 +52,7 @@ namespace Automatone
 
         //Rhythm
         public ParameterWrapper<RhythmParameter> RhythmObedience { set; get; }
+        public ParameterWrapper<RhythmParameter> SongSpeed { set; get; }
         
         //Melody
         public ParameterWrapper<MelodyParameter> ChordalityObedience { set; get; }
@@ -110,6 +111,7 @@ namespace Automatone
 
             //Rhythm
             RhythmObedience = 0.9;
+            SongSpeed = 0.5;
         
             //Melody
             ChordalityObedience = 0.9;

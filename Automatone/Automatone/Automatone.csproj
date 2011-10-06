@@ -109,6 +109,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
@@ -126,8 +127,6 @@
   <ItemGroup>
     <Compile Include="GUI\LayoutManager.cs" />
     <Compile Include="GUI\NavigatorPanel.cs" />
-    <Compile Include="GUI\NoteHitParticle.cs" />
-    <Compile Include="GUI\NoteHitParticleModifier.cs" />
     <Compile Include="GUI\ParametersPanel.cs" />
     <Compile Include="Music\Part.cs" />
     <Compile Include="Music\Melody.cs" />
