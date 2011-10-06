@@ -21,7 +21,7 @@ namespace Automatone.Music
             this.random = random;
             this.key = key;
             this.mode = mode;
-            this.seventhChordProbability = InputParameters.Instance.seventhChordProbability;
+            this.seventhChordProbability = InputParameters.Instance.SeventhChordProbability;
             diatonicScale = createDiatonicScale();
         }
 	

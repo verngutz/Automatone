@@ -24,23 +24,23 @@ namespace Automatone.Music
             phrase = new List<Measure>();
 
             //Calculate phrase length
-            phraseLength = (int)(theory.PHRASE_LENGTHINESS * inputParameters.meanPhraseLength);
-            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * inputParameters.phraseLengthVariance));
+            phraseLength = (int)(theory.PHRASE_LENGTHINESS * inputParameters.MeanPhraseLength);
+            phraseLength += (int)(phraseLength * ((rand.NextDouble() - 0.5) * inputParameters.PhraseLengthVariance));
             phraseLength = Math.Max(1, phraseLength);
             measureCount = phraseLength;
 
             System.Console.WriteLine(" length " + phraseLength); //remove later
 
             //Select seeds for rhythm and melody
-            double rhythmSeedLength = 1 + inputParameters.measureRhythmVariance * (parts.Count);
-            rhythmSeedLength += inputParameters.phraseRhythmVariance * (phraseLength * rhythmSeedLength);
+            double rhythmSeedLength = 1 + inputParameters.MeasureRhythmVariance * (parts.Count);
+            rhythmSeedLength += inputParameters.PhraseRhythmVariance * (phraseLength * rhythmSeedLength);
             List<int> selectedRhythmSeeds = new List<int>();
             for (int i = 0; i < rhythmSeedLength; i++)
             {
                 selectedRhythmSeeds.Add(rhythmSeeds.ElementAt<int>(rand.Next(rhythmSeeds.Count)));
             }
-            double melodySeedLength = 1 + inputParameters.measureMelodyVariance * (parts.Count);
-            melodySeedLength += inputParameters.phraseMelodyVariance * (phraseLength * melodySeedLength);
+            double melodySeedLength = 1 + inputParameters.MeasureMelodyVariance * (parts.Count);
+            melodySeedLength += inputParameters.PhraseMelodyVariance * (phraseLength * melodySeedLength);
             List<int> selectedMelodySeeds = new List<int>();
             for (int i = 0; i < melodySeedLength; i++)
             {

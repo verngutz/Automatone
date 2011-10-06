@@ -12,7 +12,7 @@ using Automatone.Theories;
 
 namespace Automatone.GUI
 {
-    public class ControlPanel : WindowControl
+    public class ControlPanel : SkinNamedWindowControl
     {
         private SkinNamedButtonControl generateSongButton;
         private OptionControl playPauseButton;
@@ -62,6 +62,7 @@ namespace Automatone.GUI
         {
             Bounds = LayoutManager.Instance.ControlPanelBounds;
             EnableDragging = false;
+            SkinName = "control.panel";
 
             // Construct children
             playPauseButton = new OptionControl();
@@ -225,6 +226,7 @@ namespace Automatone.GUI
             Automatone.Instance.StopSongPlaying();
             Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
             GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
+            GridPanel.Instance.ResetCursors();
             NavigatorPanel.Instance.ResetGridDrawOffset();
         }
 
@@ -249,6 +251,7 @@ namespace Automatone.GUI
                 }
             }
 
+            GridPanel.Instance.ResetCursors();
             NavigatorPanel.Instance.ResetGridDrawOffset();
         }
 
@@ -312,73 +315,15 @@ namespace Automatone.GUI
         private void GenerateSongButtonPressed(object sender, EventArgs e)
         {
             Automatone.Instance.StopSongPlaying();
-            GetUserInput();
 
 #if USESEED
             GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(SEED), new ClassicalTheory());
 #else
             GridPanel.Instance.SongCells = SongGenerator.GenerateSong(Automatone.Instance, new Random(), new ClassicalTheory());
 #endif      
+            GridPanel.Instance.ResetCursors();
             NavigatorPanel.Instance.ResetGridDrawOffset();
-        }
-
-        private void GetUserInput()
-        {
-            InputParameters inputParameters = InputParameters.Instance;
-
-            //Song Parameters
-            inputParameters.tempo = 120;
-            inputParameters.timeSignatureN = 4;
-            inputParameters.timeSignatureD = 4;
-
-            //Song Parameters
-            inputParameters.meanSongLength = 0.5;
-            inputParameters.structuralVariance = 0.5;
-            inputParameters.songRhythmVariance = 0.5;
-            inputParameters.songMelodyVariance = 0.5;
-            inputParameters.songLengthVariance = 0.5;
-
-            //Verse Parameters
-            inputParameters.meanVerseLength = 0.5;
-            inputParameters.verseLengthVariance = 0.5;
-            inputParameters.verseRhythmVariance = 0.5;
-            inputParameters.verseMelodyVariance = 0.5;
-
-            //Phrase Parameters
-            inputParameters.meanPhraseLength = 0.5;
-            inputParameters.phraseLengthVariance = 0.5;
-            inputParameters.phraseRhythmVariance = 0.5;
-            inputParameters.phraseMelodyVariance = 0.5;
-
-            //Measure Parameters
-            inputParameters.measureRhythmVariance = 0.5;
-            inputParameters.measureMelodyVariance = 0.5;
-            
-            //Part Parameters
-            inputParameters.homophony = 1;
-            inputParameters.polyphony = 0.4;
-            inputParameters.beatDefinition = 0.5;
-            //Per-part Parameters
-            inputParameters.meanPartRhythmCrowdedness = 0.5;
-            inputParameters.partRhythmCrowdednessVariance = 0.5;
-            inputParameters.partNoteLengthVariance = 0.5;
-            inputParameters.meanPartOctaveRange = 0.5;
-            inputParameters.partOctaveRangeVariance = 0.5;
-
-            //Note Parameters
-            inputParameters.meanNoteLength = 0.5;
-            inputParameters.noteLengthVariance = 0.5;
-
-            //Rhythm
-            inputParameters.rhythmObedience = 0.8;
-        
-            //Melody
-            inputParameters.chordalityObedience = 0.95;
-            inputParameters.tonalityObedience = 0.95;
-            inputParameters.meanPitchContiguity = 0.5;
-
-            //Harmony
-            inputParameters.seventhChordProbability = 0.1;
+            ParametersPanel.Instance.Toggle();
         }
     }
 }

@@ -106,13 +106,14 @@ namespace Automatone
             Components.Add(inputManager);
 
             // Initialize GUI
+            Components.Add(GridPanel.Instance);
             gui = new GuiManager(Services);
             Components.Add(gui);
             Screen screen = new Screen(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             gui.Screen = screen;
             screen.Desktop.Children.Add(ControlPanel.Instance);
+            screen.Desktop.Children.Add(ParametersPanel.Instance);
             screen.Desktop.Children.Add(NavigatorPanel.Instance);
-            Components.Add(GridPanel.Instance);
 
             // Start up core DUET services
             Duet.Global.Initialize(this);
@@ -174,6 +175,7 @@ namespace Automatone
                 StopSongPlaying();
             }
             previousSequencerState = sequencer.State;
+            ParametersPanel.Instance.Update();
             base.Update(gameTime);
         }
 
@@ -195,9 +197,9 @@ namespace Automatone
             StreamWriter sw = new StreamWriter("sample.mtx");
             sw.WriteLine("MFile 1 2 192");
             sw.WriteLine("MTrk");
-            sw.WriteLine("0 TimeSig " + InputParameters.Instance.timeSignatureN + "/" + InputParameters.Instance.timeSignatureD + " 24 8");
+            sw.WriteLine("0 TimeSig " + InputParameters.Instance.TimeSignatureN + "/" + InputParameters.Instance.TimeSignatureD + " 24 8");
             //sw.WriteLine("0 TimeSig 4/4 24 8");
-            sw.WriteLine("0 Tempo " + (TEMPO_DIVIDEND / InputParameters.Instance.tempo));
+            sw.WriteLine("0 Tempo " + (TEMPO_DIVIDEND / InputParameters.Instance.Tempo));
             //sw.WriteLine("0 KeySig 0 major");
             sw.WriteLine("0 Meta TrkEnd");
             sw.WriteLine("TrkEnd");

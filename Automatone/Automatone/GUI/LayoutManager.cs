@@ -25,6 +25,8 @@ namespace Automatone.GUI
         public const byte BOTTOM_SCROLLBAR_THICKNESS = 50;
         public const byte RIGHT_SCROLLBAR_THICKNESS = 50;
 
+        public const short PARAMETERS_PANEL_HEIGHT = 400;
+
         private int cellsArrayLengthX;
         private int cellsArrayLengthY;
 
@@ -81,6 +83,11 @@ namespace Automatone.GUI
         public UniRectangle NavigatorPanelBounds { get { return navigatorPanelBounds; } }
         public UniRectangle HorizontalScrollBarBounds { get { return horizontalScrollBarBounds; } }
         public UniRectangle VerticalScrollBarBounds { get { return verticalScrollBarBounds; } }
+
+        private UniRectangle parametersPanelBounds;
+
+        public UniRectangle ParametersPanelBounds { get { return parametersPanelBounds; } }
+
 
         public float HorizontalSliderThumbSize
         {
@@ -150,6 +157,11 @@ namespace Automatone.GUI
             navigatorPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
             horizontalScrollBarBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height, gridPanelLayout.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
             verticalScrollBarBounds = new UniRectangle(gridPanelLayout.OuterRectangle.Width, gridPanelLayout.InnerRectangle.Top - CONTROLS_AND_GRID_DIVISION, RIGHT_SCROLLBAR_THICKNESS, gridPanelLayout.InnerRectangle.Height);
+
+            if(parametersPanelBounds.Top == 0)
+                parametersPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION - PARAMETERS_PANEL_HEIGHT, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
+            else
+                parametersPanelBounds = new UniRectangle(0, parametersPanelBounds.Top, GenerateSongButtonBounds.Right, PARAMETERS_PANEL_HEIGHT);
         }
 
         private void RespondToWindowResize(int windowWidth, int windowHeight)
@@ -174,12 +186,14 @@ namespace Automatone.GUI
             ControlPanel.Instance.GenerateSongButtonBounds = GenerateSongButtonBounds;
 
             NavigatorPanel.Instance.Bounds = NavigatorPanelBounds;
-            NavigatorPanel.Instance.HorizontalScrollBarBounds = horizontalScrollBarBounds;
-            NavigatorPanel.Instance.VerticalScrollBarBounds = verticalScrollBarBounds;
+            NavigatorPanel.Instance.HorizontalScrollBarBounds = HorizontalScrollBarBounds;
+            NavigatorPanel.Instance.VerticalScrollBarBounds = VerticalScrollBarBounds;
             NavigatorPanel.Instance.HorizontalScrollBarThumbSize = HorizontalSliderThumbSize;
             NavigatorPanel.Instance.VerticalScrollBarThumbSize = VerticalSliderThumbSize;
             NavigatorPanel.Instance.CalculateGridOffsetBounds(cellsArrayLengthX);
             NavigatorPanel.Instance.CalculateGridClipping();
+
+            ParametersPanel.Instance.Bounds = ParametersPanelBounds;
         }
 
         private void RespondToGridResize(int cellsArrayLengthX, int cellsArrayLengthY)
