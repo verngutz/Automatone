@@ -31,6 +31,8 @@ namespace Automatone.GUI
         public const int CONTROL_BUTTON_HEIGHT = 96;
         public const int CONTROL_BUTTON_SPACING = 10;
 
+        public const byte MEDIA_BUTTON_HEIGHT = 64;
+
         private int cellsArrayLengthX;
         private int cellsArrayLengthY;
 
@@ -168,7 +170,7 @@ namespace Automatone.GUI
             controlArrowLeftBounds = new UniRectangle(CONTROL_BUTTON_SPACING, (CONTROLS_AND_GRID_DIVISION - CONTROL_ARROW_HEIGHT) / 2, CONTROL_ARROW_WIDTH, CONTROL_ARROW_HEIGHT);
             controlArrowRightBounds = new UniRectangle(windowWidth - CONTROL_BUTTON_SPACING - CONTROL_ARROW_WIDTH, (CONTROLS_AND_GRID_DIVISION - CONTROL_ARROW_HEIGHT) / 2, CONTROL_ARROW_WIDTH, CONTROL_ARROW_HEIGHT);
 
-            Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, windowWidth - RIGHT_SCROLLBAR_THICKNESS, windowHeight - CONTROLS_AND_GRID_DIVISION - BOTTOM_SCROLLBAR_THICKNESS);
+            Rectangle outerRectangle = new Rectangle(0, CONTROLS_AND_GRID_DIVISION, windowWidth - RIGHT_SCROLLBAR_THICKNESS, windowHeight - CONTROLS_AND_GRID_DIVISION - BOTTOM_SCROLLBAR_THICKNESS - MEDIA_BUTTON_HEIGHT);
             Rectangle innerRectangle = new Rectangle(outerRectangle.X + LEFT_BORDER_THICKNESS, outerRectangle.Y + TOP_BORDER_THICKNESS, outerRectangle.Width - LEFT_BORDER_THICKNESS - RIGHT_BORDER_THICKNESS, outerRectangle.Height - TOP_BORDER_THICKNESS - BOTTOM_BORDER_THICKNESS);
             gridPanelLayout = new FrameLayout(outerRectangle, innerRectangle);
             RefreshGridCellsClickableArea();

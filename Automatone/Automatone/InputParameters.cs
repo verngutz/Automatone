@@ -61,7 +61,9 @@ namespace Automatone
         //Harmony
         public ParameterWrapper<HarmonyParameter> SeventhChordProbability { set; get; }
 
-        private InputParameters() 
+        private InputParameters() { }
+
+        public void Initialize()
         {
             Tempo = 120;
             TimeSignatureN = 4;
