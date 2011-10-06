@@ -524,37 +524,57 @@ namespace Automatone.GUI
         /// </summary>
         private class Cursors
         {
-            private Texture2D startCursorHead;
-            private Texture2D endCursorHead;
+            private Texture2D topCursorHead;
+            private Texture2D leftCursorHead;
             private Texture2D playCursor;
+            private Texture2D cursorHori;
+            private Texture2D cursorVert;
+            private Texture2D cursorHighlight;
 
-            private const int CURSORHEIGHT = 20;
-            private const int CURSORWIDTH = 20;
+            private const int TOP_CURSOR_HEAD_HEIGHT = 20;
+            private const int TOP_CURSOR_HEAD_WIDTH = 20;
+            private const int LEFT_CURSOR_HEAD_HEIGHT = 20;
+            private const int LEFT_CURSOR_HEAD_WIDTH = 20;
+            private const int HORIZONTAL_CURSOR_HEIGHT = 20;
+            private const int VERTICAL_CURSOR_WIDTH = 20;
 
-            private int startIndex;
-            private int endIndex;
+            private int topStartIndex;
+            private int topEndIndex;
+            private int leftStartIndex;
+            private int leftEndIndex;
 
-            public int StartIndex { get { return Math.Min(startIndex, endIndex); } }
-            public int EndIndex { get { return Math.Max(endIndex, startIndex); } }
+            public int TopStartIndex { get { return Math.Min(topStartIndex, topEndIndex); } }
+            public int TopEndIndex { get { return Math.Max(topEndIndex, topStartIndex); } }
+
+            public int LeftStartIndex { get { return Math.Min(leftStartIndex, leftEndIndex); } }
+            public int LeftEndIndex { get { return Math.Max(leftEndIndex, leftStartIndex); } }
 
             public void ResetIndices()
             {
-                startIndex = 0;
-                endIndex = 0;
+                topStartIndex = 0;
+                topEndIndex = 0;
+                leftStartIndex = -1;
+                leftEndIndex = -1;
             }
 
             public void LoadContent()
             {
-                startCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
-                endCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_CursorHead");
-                playCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor");
+                topCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_TopCursorHead");
+                leftCursorHead = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_LeftCursorHead");
+                playCursor = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Play_Cursor");
+                cursorHori = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor_Hori");
+                cursorVert = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor_Vert");
+                cursorHighlight = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Itm_Cursor_Highlight");
             }
 
             public void Dispose()
             {
-                if (startCursorHead != null) startCursorHead.Dispose();
-                if (endCursorHead != null) endCursorHead.Dispose();
+                if (topCursorHead != null) topCursorHead.Dispose();
+                if (leftCursorHead != null) leftCursorHead.Dispose();
                 if (playCursor != null) playCursor.Dispose();
+                if (cursorHori != null) cursorHori.Dispose();
+                if (cursorVert != null) cursorVert.Dispose();
+                if (cursorHighlight != null) cursorHighlight.Dispose();
             }
 
             public void Update(GameTime gameTime)
@@ -563,15 +583,30 @@ namespace Automatone.GUI
                     && Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED
                     && (GridPanel.Instance.newMouseState.LeftButton != ButtonState.Released
                         || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
-                    && LayoutManager.Instance.GridCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
+                    && LayoutManager.Instance.GridTopCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
                 {
                     if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed)
                     {
                         if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
                         {
-                            startIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                            topStartIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
                         }
-                        endIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                        topEndIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                    }
+                }
+                if (Automatone.Instance.IsActive
+                    && Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED
+                    && (GridPanel.Instance.newMouseState.LeftButton != ButtonState.Released
+                        || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
+                    && LayoutManager.Instance.GridLeftCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
+                {
+                    if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
+                        {
+                            leftStartIndex = GridPanel.Instance.ScreenToGridCoordinatesY(GridPanel.Instance.newMouseState.Y + LayoutManager.CELLHEIGHT / 2);
+                        }
+                        leftEndIndex = GridPanel.Instance.ScreenToGridCoordinatesY(GridPanel.Instance.newMouseState.Y + LayoutManager.CELLHEIGHT / 2);
                     }
                 }
             }
@@ -579,16 +614,50 @@ namespace Automatone.GUI
             public void Draw(GameTime gameTime)
             {
                 Automatone.Instance.SpriteBatch.Begin();
-                if (StartIndex != EndIndex 
-                    && EndIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left) 
-                    && EndIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                if (TopStartIndex != TopEndIndex)
                 {
-                    Automatone.Instance.SpriteBatch.Draw(endCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(EndIndex) - CURSORWIDTH / 2, LayoutManager.Instance.GridCursorsClickableArea.Y, CURSORWIDTH, CURSORHEIGHT), Color.Red);
+                    Automatone.Instance.SpriteBatch.Draw(cursorHighlight,
+                        new Rectangle(Math.Max(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex)),
+                            LayoutManager.Instance.GridTopBorderBounds.Bottom,
+                            Math.Min(LayoutManager.Instance.GridRightBorderBounds.Left, GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex)) - Math.Max(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex)),
+                            LayoutManager.Instance.GridCellsClickableArea.Height),
+                        Color.White);
                 }
-                if(StartIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
-                    && StartIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                if (LeftStartIndex != LeftEndIndex)
                 {
-                    Automatone.Instance.SpriteBatch.Draw(startCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(StartIndex) - CURSORWIDTH / 2, LayoutManager.Instance.GridCursorsClickableArea.Y, CURSORWIDTH, CURSORHEIGHT), Color.Green);
+                    Automatone.Instance.SpriteBatch.Draw(cursorHighlight,
+                        new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right,
+                            Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex)),
+                            LayoutManager.Instance.GridCellsClickableArea.Width,
+                            Math.Min(LayoutManager.Instance.GridBottomBorderBounds.Top, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex)) - Math.Max(LayoutManager.Instance.GridTopBorderBounds.Bottom, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex))),
+                        Color.White);
+                }
+                if (TopStartIndex != TopEndIndex
+                    && TopEndIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
+                    && TopEndIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                {
+                    Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, TOP_CURSOR_HEAD_WIDTH, TOP_CURSOR_HEAD_HEIGHT), Color.Red);
+                }
+                if (TopStartIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
+                    && TopStartIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                {
+                    Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, TOP_CURSOR_HEAD_WIDTH, TOP_CURSOR_HEAD_HEIGHT), Color.Green);
+                }
+
+                if (LeftStartIndex != LeftEndIndex
+                    && LeftEndIndex <= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
+                    && LeftEndIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
+                {
+                    Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, HORIZONTAL_CURSOR_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LEFT_CURSOR_HEAD_HEIGHT / 2, LEFT_CURSOR_HEAD_WIDTH, LEFT_CURSOR_HEAD_HEIGHT), Color.Red);
+                }
+                if (LeftStartIndex <= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
+                    && LeftStartIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
+                {
+                    Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, HORIZONTAL_CURSOR_HEIGHT), Color.White);
+                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LEFT_CURSOR_HEAD_HEIGHT / 2, LEFT_CURSOR_HEAD_WIDTH, LEFT_CURSOR_HEAD_HEIGHT), Color.Green);
                 }
                 
                 if(Automatone.Instance.Sequencer.State != Sequencer.MidiPlayerState.STOPPED)

@@ -632,15 +632,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grid Panel\Itm_Cursor.png">
-      <Name>Itm_Cursor</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Grid Panel\Itm_CursorHead.png">
-      <Name>Itm_CursorHead</Name>
+    <Compile Include="Grid Panel\Itm_TopCursorHead.png">
+      <Name>Itm_TopCursorHead</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -735,6 +728,35 @@
     </Compile>
     <Compile Include="Grid Panel\Bar_ScrollHandle_Vert_Hovered.png">
       <Name>Bar_ScrollHandle_Vert_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Itm_Cursor_Highlight.png">
+      <Name>Itm_Cursor_Highlight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Itm_Cursor_Hori.png">
+      <Name>Itm_Cursor_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Itm_Cursor_Vert.png">
+      <Name>Itm_Cursor_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Itm_Play_Cursor.png">
+      <Name>Itm_Play_Cursor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Itm_LeftCursorHead.png">
+      <Name>Itm_LeftCursorHead</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

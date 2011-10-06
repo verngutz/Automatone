@@ -57,7 +57,8 @@ namespace Automatone.GUI
 
         private FrameLayout gridPanelLayout;
         private Rectangle gridCellsClickableArea;
-        private Rectangle gridCursorsClickableArea;
+        private Rectangle gridTopCursorsClickableArea;
+        private Rectangle gridLeftCursorsClickableArea;
 
         public Rectangle GridTopBorderBounds { get { return gridPanelLayout.TopRectangle; } }
         public Rectangle GridBottomBorderBounds { get { return gridPanelLayout.BottomRectangle; } }
@@ -66,7 +67,8 @@ namespace Automatone.GUI
         public Rectangle GridPanelBounds { get { return gridPanelLayout.OuterRectangle; } }
         public Rectangle GridCellsArea { get { return gridPanelLayout.InnerRectangle; } }
         public Rectangle GridCellsClickableArea { get { return gridCellsClickableArea; } }
-        public Rectangle GridCursorsClickableArea { get { return gridCursorsClickableArea; } }
+        public Rectangle GridTopCursorsClickableArea { get { return gridTopCursorsClickableArea; } }
+        public Rectangle GridLeftCursorsClickableArea { get { return gridLeftCursorsClickableArea; } }
 
         private UniRectangle navigatorPanelBounds;
         private UniRectangle horizontalScrollBarBounds;
@@ -167,7 +169,8 @@ namespace Automatone.GUI
             Rectangle innerRectangle = new Rectangle(outerRectangle.X + LEFT_BORDER_THICKNESS, outerRectangle.Y + TOP_BORDER_THICKNESS, outerRectangle.Width - LEFT_BORDER_THICKNESS - RIGHT_BORDER_THICKNESS, outerRectangle.Height - TOP_BORDER_THICKNESS - BOTTOM_BORDER_THICKNESS);
             gridPanelLayout = new FrameLayout(outerRectangle, innerRectangle);
             RefreshGridCellsClickableArea();
-            RefreshGridCursorsClickableArea();
+            RefreshGridTopCursorsClickableArea();
+            RefreshGridLeftCursorsClickableArea();
 
             navigatorPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, Automatone.Instance.Window.ClientBounds.Width, Automatone.Instance.Window.ClientBounds.Height);
             horizontalScrollBarBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height, gridPanelLayout.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
@@ -208,7 +211,8 @@ namespace Automatone.GUI
             this.cellsArrayLengthX = cellsArrayLengthX;
             this.cellsArrayLengthY = cellsArrayLengthY;
             RefreshGridCellsClickableArea();
-            RefreshGridCursorsClickableArea();
+            RefreshGridTopCursorsClickableArea();
+            RefreshGridLeftCursorsClickableArea();
 
             NavigatorPanel.Instance.HorizontalScrollBarThumbSize = HorizontalSliderThumbSize;
             NavigatorPanel.Instance.VerticalScrollBarThumbSize = VerticalSliderThumbSize;
@@ -227,14 +231,25 @@ namespace Automatone.GUI
             );
         }
 
-        private void RefreshGridCursorsClickableArea()
+        private void RefreshGridTopCursorsClickableArea()
         {
-            gridCursorsClickableArea = new Rectangle
+            gridTopCursorsClickableArea = new Rectangle
             (
                 gridPanelLayout.InnerRectangle.X,
                 gridPanelLayout.OuterRectangle.Y,
                 Math.Min(gridPanelLayout.InnerRectangle.Width, cellsArrayLengthX * CELLWIDTH),
                 TOP_BORDER_THICKNESS
+            );
+        }
+
+        private void RefreshGridLeftCursorsClickableArea()
+        {
+            gridLeftCursorsClickableArea = new Rectangle
+            (
+                0,
+                gridPanelLayout.InnerRectangle.Y,
+                LEFT_BORDER_THICKNESS,
+                Math.Min(gridPanelLayout.InnerRectangle.Height, cellsArrayLengthY * CELLHEIGHT)
             );
         }
         
