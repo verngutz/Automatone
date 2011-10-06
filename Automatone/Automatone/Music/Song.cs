@@ -23,7 +23,35 @@ namespace Automatone.Music
             //Set music properties
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * inputParameters.TimeSignature);
             NoteName key = new NoteName((byte)rand.Next(MusicTheory.OCTAVE_SIZE));
-            MusicTheory.SCALE_MODE mode = (inputParameters.Mood > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
+            MusicTheory.SCALE_MODE mode = MusicTheory.SCALE_MODE.MAJOR;
+            if (inputParameters.Mood < 1 / 7.0)
+            {
+                mode = MusicTheory.SCALE_MODE.PRHYGIAN;
+            }
+            else if (inputParameters.Mood < 2 / 7.0)
+            {
+                mode = MusicTheory.SCALE_MODE.DORIAN;
+            }
+            else if (inputParameters.Mood < 3 / 7.0)
+            {
+                mode = MusicTheory.SCALE_MODE.AEOLIAN;
+            }
+            else if (inputParameters.Mood < 4 / 7.0)
+            {
+                mode = MusicTheory.SCALE_MODE.LOCRIAN;
+            }
+            else if (inputParameters.Mood < 5 / 7.0)
+            {
+                mode = MusicTheory.SCALE_MODE.LYDIAN;
+            }
+            else if (inputParameters.Mood < 6 / 7.0)
+            {
+                mode = MusicTheory.SCALE_MODE.MIXOLYDIAN;
+            }
+            else
+            {
+                mode = MusicTheory.SCALE_MODE.IONIAN;
+            }
 
             //Calculate song length
             int songLength = (int)(inputParameters.MeanSongLength * theory.SONG_LENGTHINESS);
