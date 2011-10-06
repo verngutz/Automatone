@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using Duet.Audio_System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,6 +11,8 @@ using Nuclex.Graphics.SpecialEffects.Particles;
 using NuclexUserInterfaceExtension;
 
 using Automatone.Music;
+
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
 namespace Automatone.GUI
 {
@@ -23,6 +26,8 @@ namespace Automatone.GUI
 
         private const byte DimensionX = 1;
         private const byte DimensionY = 0;
+
+        public const string SONG_CELLS_FORMAT = "SONG_CELLS_FORMAT";
 
         public delegate void GridLengthChangedEvent(int newX, int newY);
         public event GridLengthChangedEvent SongCellsChanged;
@@ -178,6 +183,160 @@ namespace Automatone.GUI
         {
             return SongCells.GetLength(DimensionY) - 1 - ((int)-NavigatorPanel.Instance.GridDrawOffsetY + y) / LayoutManager.CELLHEIGHT;
         }
+
+        public void AddCells(int columns)
+        {
+            if (columns > 0)
+            {
+                CellState[,] newSongCells = new CellState[songCells.GetLength(0), songCells.GetLength(1) + columns];
+                for (int i = 0; i < songCells.GetLength(0); i++)
+                {
+                    for (int j = 0; j < songCells.GetLength(1); j++)
+                    {
+                        newSongCells[i, j] = songCells[i, j];
+                    }
+                }
+                SongCells = newSongCells;
+            }
+        }
+
+        public void InsertCells()
+        {
+            int endIndex = Math.Max(cursors.TopEndIndex, cursors.TopStartIndex + 1);
+            CellState[,] newSongCells = new CellState[songCells.GetLength(0), songCells.GetLength(1) + endIndex - cursors.TopStartIndex];
+            for (int i = 0; i < newSongCells.GetLength(0); i++)
+            {
+                for (int j = 0; j < cursors.TopStartIndex; j++)
+                {
+                    newSongCells[i, j] = songCells[i, j];
+                }
+                int tail = cursors.TopStartIndex;
+                while (tail < songCells.GetLength(1) && songCells[i, tail] == CellState.HOLD)
+                {
+                    songCells[i, tail] = CellState.SILENT;
+                    tail++;
+                }
+                for (int j = endIndex; j < newSongCells.GetLength(1); j++)
+                {
+                    newSongCells[i, j] = songCells[i, j - endIndex + cursors.TopStartIndex];
+                }
+            }
+            SongCells = newSongCells;
+        }
+
+        public void RemoveCells()
+        {
+            CellState[,] newSongCells = new CellState[songCells.GetLength(0), songCells.GetLength(1) - (cursors.TopEndIndex - cursors.TopStartIndex)];
+            for (int i = 0; i < newSongCells.GetLength(0); i++)
+            {
+                for (int j = 0; j < cursors.TopStartIndex; j++)
+                {
+                    newSongCells[i, j] = songCells[i, j];
+                }
+                int tail = cursors.TopEndIndex;
+                while (tail < songCells.GetLength(1) && songCells[i, tail] == CellState.HOLD)
+                {
+                    songCells[i, tail] = CellState.SILENT;
+                    tail++;
+                }
+                for (int j = cursors.TopStartIndex; j < newSongCells.GetLength(1); j++)
+                {
+                    newSongCells[i, j] = songCells[i, j - cursors.TopStartIndex + cursors.TopEndIndex];
+                }
+            }
+            SongCells = newSongCells;
+            cursors.TopEndIndex = cursors.TopStartIndex;
+        }
+
+        public void CopySelectedCells()
+        {
+            if (cursors.TopStartIndex != cursors.TopEndIndex && cursors.LeftStartIndex != cursors.LeftEndIndex)
+            {
+                CellState[,] selectedCells = new CellState[cursors.LeftEndIndex - cursors.LeftStartIndex, cursors.TopEndIndex - cursors.TopStartIndex];
+                for (int i = cursors.LeftStartIndex + 1; i <= cursors.LeftEndIndex; i++)
+                {
+                    for (int j = cursors.TopStartIndex; j < cursors.TopEndIndex; j++)
+                    {
+                        selectedCells[i - (cursors.LeftStartIndex + 1), j - cursors.TopStartIndex] = songCells[i, j];
+                    }
+                }
+                for (int i = 0; i < selectedCells.GetLength(0); i++)
+                {
+                    int tail = 0;
+                    while (tail < selectedCells.GetLength(1) && selectedCells[i, tail] == CellState.HOLD)
+                    {
+                        selectedCells[i, tail] = CellState.SILENT;
+                        tail++;
+                    }
+                }
+                CopyCellsToClipboard(selectedCells);
+            }
+        }
+
+        public void DeleteSelectedCells()
+        {
+            if (cursors.TopStartIndex != cursors.TopEndIndex && cursors.LeftStartIndex != cursors.LeftEndIndex)
+            {
+                for (int i = cursors.LeftStartIndex + 1; i <= cursors.LeftEndIndex; i++)
+                {
+                    for (int j = cursors.TopStartIndex; j < cursors.TopEndIndex; j++)
+                    {
+                        songCells[i, j] = CellState.SILENT;
+                    }
+                    int tail = cursors.TopEndIndex;
+                    while (tail < songCells.GetLength(1) && songCells[i, tail] == CellState.HOLD)
+                    {
+                        songCells[i, tail] = CellState.SILENT;
+                        tail++;
+                    }
+                } 
+            }
+        }
+
+        public void PasteToSelectedCells()
+        {
+            CellState[,] cellsToPaste = GetCellsFromClipboard();
+            if (cellsToPaste != null)
+            {
+                AddCells(cellsToPaste.GetLength(1) - (songCells.GetLength(1) - cursors.TopStartIndex));
+                for (int i = cursors.LeftEndIndex + 1 - cellsToPaste.GetLength(0); i <= cursors.LeftEndIndex; i++)
+                {
+                    if (i >= 0)
+                    {
+                        for (int j = cursors.TopStartIndex; j < cursors.TopStartIndex + cellsToPaste.GetLength(1); j++)
+                        {
+                            songCells[i, j] = cellsToPaste[i - (cursors.LeftEndIndex + 1 - cellsToPaste.GetLength(0)), j - cursors.TopStartIndex];
+                        }
+                        int tail = cursors.TopStartIndex + cellsToPaste.GetLength(1);
+                        while (tail < songCells.GetLength(1) && songCells[i, tail] == CellState.HOLD)
+                        {
+                            songCells[i, tail] = CellState.SILENT;
+                            tail++;
+                        }
+                    }
+                }
+                cursors.LeftStartIndex = cursors.LeftEndIndex - cellsToPaste.GetLength(0);
+                cursors.TopEndIndex = cursors.TopStartIndex + cellsToPaste.GetLength(1);
+            }
+        }
+
+        private void CopyCellsToClipboard(CellState[,] cellsToBeCopied)
+        {
+            if (cellsToBeCopied != null)
+            {
+                Clipboard.SetData(SONG_CELLS_FORMAT, cellsToBeCopied);
+            }
+        }
+
+        private CellState[,] GetCellsFromClipboard()
+        {
+            if (Clipboard.ContainsData(SONG_CELLS_FORMAT))
+            {
+                return (CellState[,])Clipboard.GetData(SONG_CELLS_FORMAT);
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// This class handles the updating and drawing of the cells 
@@ -665,11 +824,51 @@ namespace Automatone.GUI
             private int leftStartIndex;
             private int leftEndIndex;
 
-            public int TopStartIndex { get { return Math.Min(topStartIndex, topEndIndex); } }
-            public int TopEndIndex { get { return Math.Max(topEndIndex, topStartIndex); } }
+            public int TopStartIndex
+            {
+                get
+                {
+                    return Math.Min(topStartIndex, topEndIndex);
+                }
+                set
+                {
+                    topStartIndex = (int)MathHelper.Clamp(value, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) + 1);
+                }
+            }
+            public int TopEndIndex
+            {
+                get
+                {
+                    return Math.Max(topEndIndex, topStartIndex);
+                }
+                set
+                {
+                    topEndIndex = (int)MathHelper.Clamp(value, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) + 1);
+                }
+            }
 
-            public int LeftStartIndex { get { return Math.Min(leftStartIndex, leftEndIndex); } }
-            public int LeftEndIndex { get { return Math.Max(leftEndIndex, leftStartIndex); } }
+            public int LeftStartIndex
+            {
+                get
+                {
+                    return Math.Min(leftStartIndex, leftEndIndex);
+                }
+                set
+                {
+                    leftStartIndex = (int)MathHelper.Clamp(value, -1, GridPanel.Instance.SongCells.GetLength(DimensionY));
+                }
+            }
+            public int LeftEndIndex
+            {
+                get
+                {
+                    return Math.Max(leftEndIndex, leftStartIndex);
+                }
+                set
+                {
+                    leftEndIndex = (int)MathHelper.Clamp(value, -1, GridPanel.Instance.SongCells.GetLength(DimensionY));
+                }
+            }
 
             public void ResetIndices()
             {
@@ -759,13 +958,13 @@ namespace Automatone.GUI
                     && TopEndIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - LayoutManager.VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, LayoutManager.VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - LayoutManager.TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, LayoutManager.TOP_CURSOR_HEAD_WIDTH, LayoutManager.TOP_CURSOR_HEAD_HEIGHT), Color.Red);
+                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - LayoutManager.TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, LayoutManager.TOP_CURSOR_HEAD_WIDTH, LayoutManager.TOP_CURSOR_HEAD_HEIGHT), Color.White);
                 }
                 if (TopStartIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
                     && TopStartIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - LayoutManager.VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, LayoutManager.VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - LayoutManager.TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, LayoutManager.TOP_CURSOR_HEAD_WIDTH, LayoutManager.TOP_CURSOR_HEAD_HEIGHT), Color.Green);
+                    Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - LayoutManager.TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, LayoutManager.TOP_CURSOR_HEAD_WIDTH, LayoutManager.TOP_CURSOR_HEAD_HEIGHT), Color.White);
                 }
 
                 if (LeftStartIndex != LeftEndIndex
@@ -773,18 +972,18 @@ namespace Automatone.GUI
                     && LeftEndIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LayoutManager.HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, LayoutManager.HORIZONTAL_CURSOR_HEIGHT), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LayoutManager.LEFT_CURSOR_HEAD_HEIGHT / 2, LayoutManager.LEFT_CURSOR_HEAD_WIDTH, LayoutManager.LEFT_CURSOR_HEAD_HEIGHT), Color.Red);
+                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LayoutManager.LEFT_CURSOR_HEAD_HEIGHT / 2, LayoutManager.LEFT_CURSOR_HEAD_WIDTH, LayoutManager.LEFT_CURSOR_HEAD_HEIGHT), Color.White);
                 }
                 if (LeftStartIndex < GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
                     && LeftStartIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LayoutManager.HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, LayoutManager.HORIZONTAL_CURSOR_HEIGHT), Color.White);
-                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LayoutManager.LEFT_CURSOR_HEAD_HEIGHT / 2, LayoutManager.LEFT_CURSOR_HEAD_WIDTH, LayoutManager.LEFT_CURSOR_HEAD_HEIGHT), Color.Green);
+                    Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - LayoutManager.LEFT_CURSOR_HEAD_HEIGHT / 2, LayoutManager.LEFT_CURSOR_HEAD_WIDTH, LayoutManager.LEFT_CURSOR_HEAD_HEIGHT), Color.White);
                 }
                 
                 if(Automatone.Instance.Sequencer.State != Sequencer.MidiPlayerState.STOPPED)
                 {
-                    Automatone.Instance.SpriteBatch.Draw(playCursor, new Rectangle((int)(NavigatorPanel.Instance.GridDrawOffsetX - NavigatorPanel.Instance.PlayOffset - 32), LayoutManager.Instance.GridCellsClickableArea.Y, 32, LayoutManager.Instance.GridCellsClickableArea.Height), Color.AliceBlue);
+                    Automatone.Instance.SpriteBatch.Draw(playCursor, new Rectangle((int)(NavigatorPanel.Instance.GridDrawOffsetX - NavigatorPanel.Instance.PlayOffset - 32), LayoutManager.Instance.GridCellsClickableArea.Y, 32, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
                 }
                 Automatone.Instance.SpriteBatch.End();
             }
