@@ -632,15 +632,131 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grid Panel\Itm_Cursor.png">
-      <Name>Itm_Cursor</Name>
+    <Compile Include="Grid Panel\Itm_TopCursorHead.png">
+      <Name>Itm_TopCursorHead</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grid Panel\Itm_CursorHead.png">
-      <Name>Itm_CursorHead</Name>
+    <Compile Include="Control Panel\Arr_Left.png">
+      <Name>Arr_Left</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Left_Clicked.png">
+      <Name>Arr_Left_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Left_Disabled.png">
+      <Name>Arr_Left_Disabled</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Left_Hovered.png">
+      <Name>Arr_Left_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Right.png">
+      <Name>Arr_Right</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Right_Clicked.png">
+      <Name>Arr_Right_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Right_Disabled.png">
+      <Name>Arr_Right_Disabled</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Control Panel\Arr_Right_Hovered.png">
+      <Name>Arr_Right_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Bar_Border_Hori.png">
+      <Name>Bar_Border_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_Border_Vert.png">
+      <Name>Bar_Border_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollBar_Hori.png">
+      <Name>Bar_ScrollBar_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollBar_Vert.png">
+      <Name>Bar_ScrollBar_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Hori.png">
+      <Name>Bar_ScrollHandle_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Hori_Clicked.png">
+      <Name>Bar_ScrollHandle_Hori_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Hori_Hovered.png">
+      <Name>Bar_ScrollHandle_Hori_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Vert.png">
+      <Name>Bar_ScrollHandle_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Vert_Clicked.png">
+      <Name>Bar_ScrollHandle_Vert_Clicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Bar_ScrollHandle_Vert_Hovered.png">
+      <Name>Bar_ScrollHandle_Vert_Hovered</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Itm_Cursor_Highlight.png">
+      <Name>Itm_Cursor_Highlight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Itm_Cursor_Hori.png">
+      <Name>Itm_Cursor_Hori</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Itm_Cursor_Vert.png">
+      <Name>Itm_Cursor_Vert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Grid Panel\Itm_Play_Cursor.png">
+      <Name>Itm_Play_Cursor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grid Panel\Itm_LeftCursorHead.png">
+      <Name>Itm_LeftCursorHead</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

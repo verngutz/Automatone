@@ -132,7 +132,6 @@ namespace Automatone.GUI
 
         public void SlideUp()
         {
-            ControlPanel.Instance.BringToFront();
             slideMoveVelocity = -SLIDE_MOVESPEED;
         }
 

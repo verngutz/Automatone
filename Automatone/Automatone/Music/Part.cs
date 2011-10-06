@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace Automatone.Music
 {
@@ -41,7 +42,9 @@ namespace Automatone.Music
             noteLengthAdjustment = 0.5 + (0.5 * (rand.NextDouble() - 0.5) * inputParameters.PartNoteLengthVariance);
 
             //Set octave range based on input parameters
-            octaveRange = (int)Math.Round((theory.PART_OCTAVE_RANGE * inputParameters.MeanPartOctaveRange) + ((theory.PART_OCTAVE_RANGE * inputParameters.MeanPartOctaveRange) * (rand.NextDouble() - 0.5) * inputParameters.PartOctaveRangeVariance));
+            octaveRange = (int)Math.Round(theory.PART_OCTAVE_RANGE * inputParameters.MeanPartOctaveRange);
+            octaveRange += (int)Math.Round(octaveRange * (rand.NextDouble() - 0.5) * inputParameters.PartOctaveRangeVariance);
+            octaveRange = (int)MathHelper.Clamp(octaveRange, 1, Automatone.PIANO_SIZE / 12);
             
             //Set random lower pitch limit
             lowerPitchLimit = rand.Next(Automatone.PIANO_SIZE - (octaveRange * MusicTheory.OCTAVE_SIZE)) + Automatone.LOWEST_NOTE_CHROMATIC_NUMBER;

@@ -175,6 +175,8 @@ namespace Automatone
                 StopSongPlaying();
             }
             previousSequencerState = sequencer.State;
+            ParametersPanel.Instance.BringToFront();
+            ControlPanel.Instance.BringToFront();
             ParametersPanel.Instance.Update();
             base.Update(gameTime);
         }
