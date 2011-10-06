@@ -98,8 +98,8 @@ namespace Automatone
             MeanPartRhythmCrowdedness = 0.5;
             PartRhythmCrowdednessVariance = 0.5;
             PartNoteLengthVariance = 0.5;
-            MeanPartOctaveRange = 0.5;
-            PartOctaveRangeVariance = 0.5;
+            MeanPartOctaveRange = 1;
+            PartOctaveRangeVariance = 1;
 
             //Note Parameters
             MeanNoteLength = 0.5;
