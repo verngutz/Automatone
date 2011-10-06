@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
+using Duet.Audio_System;
+
 using Nuclex.UserInterface;
 using Nuclex.UserInterface.Controls.Desktop;
 using NuclexUserInterfaceExtension;
@@ -78,9 +80,13 @@ namespace Automatone.GUI
         public class RenewClippingDelegateReturn { }
         private delegate RenewClippingDelegateReturn RenewClippingDelegate();
 
+        private OptionControl playPauseButton;
+        private SkinNamedButtonControl stopButton;
         private SkinNamedHorizontalSliderControl horizontalSlider;
         private SkinNamedVerticalSliderControl verticalSlider;
 
+        public UniRectangle PlayPauseButtonBounds { set { playPauseButton.Bounds = value; } }
+        public UniRectangle StopButtonBounds { set { stopButton.Bounds = value; } }
         public UniRectangle HorizontalScrollBarBounds { set { horizontalSlider.Bounds = value; } }
         public UniRectangle VerticalScrollBarBounds { set { verticalSlider.Bounds = value; } }
         public float HorizontalScrollBarThumbSize { set { horizontalSlider.ThumbSize = value; } }
@@ -114,6 +120,22 @@ namespace Automatone.GUI
             //Contruct Children
             horizontalSlider = new SkinNamedHorizontalSliderControl();
             verticalSlider = new SkinNamedVerticalSliderControl();
+            playPauseButton = new OptionControl();
+            stopButton = new SkinNamedButtonControl();
+
+            //
+            // playPauseButton
+            //
+            playPauseButton.Bounds = LayoutManager.Instance.PlayPauseButtonBounds;
+            playPauseButton.Changed += new EventHandler(PlayPauseButtonToggled);
+            playPauseButton.Selected = false;
+
+            //
+            // stopButton
+            //
+            stopButton.Bounds = LayoutManager.Instance.StopButtonBounds;
+            stopButton.Pressed += new EventHandler(StopButtonPressed);
+            stopButton.SkinName = "stop";
 
             //
             // horizontalSlider
@@ -132,8 +154,62 @@ namespace Automatone.GUI
             verticalSlider.SkinName = "navigator";
 
             //Add Children
+            Children.Add(playPauseButton);
+            Children.Add(stopButton);
             Children.Add(horizontalSlider);
             Children.Add(verticalSlider);
+        }
+
+        public void StopSongPlaying()
+        {
+            Automatone.Instance.Sequencer.StopMidi();
+            NavigatorPanel.Instance.ResetScrolling();
+            playPauseButton.Selected = false;
+        }
+
+        public void PauseSongPlaying()
+        {
+            if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.PLAYING)
+            {
+                GridPanel.Instance.ScrollWithMidi = false;
+                playPauseButton.Selected = false;
+                PlayPauseButtonToggled(this, EventArgs.Empty);
+            }
+        }
+
+        public void ResetPlayButton()
+        {
+            playPauseButton.Selected = false;
+        }
+
+        private void PlayPauseButtonToggled(object sender, EventArgs e)
+        {
+            if (GridPanel.Instance.SongCells != null)
+            {
+                if (playPauseButton.Selected)
+                {
+                    if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
+                        Automatone.Instance.RewriteSong();
+                    Automatone.Instance.Sequencer.PlayMidi();
+                }
+                else
+                {
+                    Automatone.Instance.Sequencer.PauseMidi();
+                }
+
+                GridPanel.Instance.ScrollWithMidi = playPauseButton.Selected;
+            }
+            else
+            {
+                playPauseButton.Selected = false;
+            }
+
+            ParametersPanel.Instance.SlideUp();
+        }
+
+        private void StopButtonPressed(object sender, EventArgs e)
+        {
+            StopSongPlaying();
         }
 
         private void HorizontalSliderMoved(object sender, EventArgs e)

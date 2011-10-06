@@ -20,8 +20,6 @@ namespace Automatone.GUI
         private SkinNamedButtonControl arrowLeftButton;
         private SkinNamedButtonControl arrowRightButton;
         private SkinNamedButtonControl generateSongButton;
-        private OptionControl playPauseButton;
-        private SkinNamedButtonControl stopButton;
         private SkinNamedButtonControl newButton;
         private SkinNamedButtonControl openButton;
         private SkinNamedButtonControl saveButton;
@@ -67,8 +65,6 @@ namespace Automatone.GUI
             arrowLeftButton = new SkinNamedButtonControl();
             arrowRightButton = new SkinNamedButtonControl();
             generateSongButton = new SkinNamedButtonControl();
-            playPauseButton = new OptionControl();
-            stopButton = new SkinNamedButtonControl();
             newButton = new SkinNamedButtonControl();
             openButton = new SkinNamedButtonControl();
             saveButton = new SkinNamedButtonControl();
@@ -81,7 +77,7 @@ namespace Automatone.GUI
             addCellsButton = new SkinNamedButtonControl();
             removeCellsButton = new SkinNamedButtonControl();
 
-            buttonsetBounds = LayoutManager.Instance.GetButtonsetBounds(14, 0);
+            buttonsetBounds = LayoutManager.Instance.GetButtonsetBounds(12, 0);
             ResetButtonsetBounds();
 
             //
@@ -103,18 +99,6 @@ namespace Automatone.GUI
             //
             generateSongButton.Pressed += new EventHandler(GenerateSongButtonPressed);
             generateSongButton.SkinName = "generate.song";
-
-            //
-            // playPauseButton
-            //
-            playPauseButton.Changed += new EventHandler(PlayPauseButtonToggled);
-            playPauseButton.Selected = false;
-
-            //
-            // stopButton
-            //
-            stopButton.Pressed += new EventHandler(StopButtonPressed);
-            stopButton.SkinName = "stop";
 
             //
             // newButton
@@ -189,8 +173,6 @@ namespace Automatone.GUI
             Children.Add(arrowRightButton);
 
             Children.Add(generateSongButton);
-            Children.Add(playPauseButton);
-            Children.Add(stopButton);
             Children.Add(newButton);
             Children.Add(openButton);
             Children.Add(saveButton);
@@ -209,37 +191,19 @@ namespace Automatone.GUI
             firstButton = (int)MathHelper.Clamp(firstButton, 0, buttonsetBounds.Count - LayoutManager.Instance.VisibleButtonCount);
             buttonsetBounds = LayoutManager.Instance.GetButtonsetBounds(buttonsetBounds.Count, firstButton);
             generateSongButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(0);
-            playPauseButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(1);
-            stopButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(2);
-            newButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(3);
-            openButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(4);
-            saveButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(5);
-            exportButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(6);
-            cutButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(7);
-            copyButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(8);
-            pasteButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(9);
-            undoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(10);
-            redoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(11);
-            addCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(12);
-            removeCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(13);
+            newButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(1);
+            openButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(2);
+            saveButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(3);
+            exportButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(4);
+            cutButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(5);
+            copyButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(6);
+            pasteButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(7);
+            undoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(8);
+            redoButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(9);
+            addCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(10);
+            removeCellsButton.Bounds = buttonsetBounds.ElementAt<UniRectangle>(11);
             arrowLeftButton.Enabled = LayoutManager.Instance.ExcessButtonsLeft;
             arrowRightButton.Enabled = LayoutManager.Instance.ExcessButtonsRight;
-        }
-
-        public void StopSongPlaying()
-        {
-            Automatone.Instance.Sequencer.StopMidi();
-            NavigatorPanel.Instance.ResetScrolling();
-            playPauseButton.Selected = false;
-        }
-
-        public void PauseSongPlaying()
-        {
-            if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.PLAYING)
-            {
-                playPauseButton.Selected = false;
-                PlayPauseButtonToggled(this, EventArgs.Empty);
-            }
         }
 
         private void ArrowLeftPressed(object sender, EventArgs e)
@@ -256,44 +220,8 @@ namespace Automatone.GUI
 
         private void GenerateSongButtonPressed(object sender, EventArgs e)
         {
-            playPauseButton.Selected = false;
-            PlayPauseButtonToggled(sender, e);
+            NavigatorPanel.Instance.PauseSongPlaying();
             ParametersPanel.Instance.Toggle();
-        }
-
-        public void ResetPlayButton()
-        {
-            playPauseButton.Selected = false;
-        }
-
-        private void PlayPauseButtonToggled(object sender, EventArgs e)
-        {
-            if (GridPanel.Instance.SongCells != null)
-            {
-                if (playPauseButton.Selected)
-                {
-                    if (Automatone.Instance.Sequencer.State == Sequencer.MidiPlayerState.STOPPED)
-                        Automatone.Instance.RewriteSong();
-                    Automatone.Instance.Sequencer.PlayMidi();
-                }
-                else
-                {
-                    Automatone.Instance.Sequencer.PauseMidi();
-                }
-
-                GridPanel.Instance.ScrollWithMidi = playPauseButton.Selected;
-            }
-            else
-            {
-                playPauseButton.Selected = false;
-            }
-
-            ParametersPanel.Instance.SlideUp();
-        }
-
-        private void StopButtonPressed(object sender, EventArgs e)
-        {
-            StopSongPlaying();
         }
 
         public DialogResult ShowSaveConfirmation()
@@ -303,7 +231,7 @@ namespace Automatone.GUI
             if (GridPanel.Instance.SongCells != null && GridPanel.Instance.HasUnsavedChanges)
             {
                 System.Console.WriteLine(GridPanel.Instance.HasUnsavedChanges);
-                PauseSongPlaying();
+                NavigatorPanel.Instance.PauseSongPlaying();
                 result = MessageBox.Show(
                     "Save changes to current project?",
                     "Confirmation",
@@ -323,7 +251,7 @@ namespace Automatone.GUI
         {
             if (ShowSaveConfirmation() != DialogResult.Cancel)
             {
-                StopSongPlaying();
+                NavigatorPanel.Instance.StopSongPlaying();
                 Automatone.Instance.MeasureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * InputParameters.Instance.TimeSignature);
                 GridPanel.Instance.SongCells = new CellState[Automatone.PIANO_SIZE, Automatone.NEW_SONG_LENGTH];
                 GridPanel.Instance.ResetCursors();
@@ -345,7 +273,7 @@ namespace Automatone.GUI
 
                 if (projectLoadDialog.ShowDialog() == DialogResult.OK && (loadStream = projectLoadDialog.OpenFile()) != null)
                 {
-                    StopSongPlaying();
+                    NavigatorPanel.Instance.StopSongPlaying();
                     BinaryFormatter formatter = new BinaryFormatter();
                     InputParameters.LoadInstance((InputParameters)formatter.Deserialize(loadStream));
                     Automatone.Instance.MeasureLength = (int)formatter.Deserialize(loadStream);
@@ -374,7 +302,6 @@ namespace Automatone.GUI
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(saveStream, InputParameters.Instance);
                     formatter.Serialize(saveStream, Automatone.Instance.MeasureLength);
-                    Automatone.Instance.RewriteSong();
                     formatter.Serialize(saveStream, GridPanel.Instance.SongCells);
                     saveStream.Close();
                     GridPanel.Instance.HasUnsavedChanges = false;

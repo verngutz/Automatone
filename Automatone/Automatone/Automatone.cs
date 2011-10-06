@@ -96,6 +96,9 @@ namespace Automatone
         /// </summary>
         protected override void Initialize()
         {
+            // Initialize Input Parameters
+            InputParameters.Instance.Initialize();
+
             // Set Preferred Resolution
             graphics.PreferredBackBufferWidth = LayoutManager.DEFAULT_WINDOW_WIDTH;
             graphics.PreferredBackBufferHeight = LayoutManager.DEFAULT_WINDOW_HEIGHT;
@@ -138,7 +141,7 @@ namespace Automatone
 
             // Setup MIDI routing
             sequencer.OutputDevice = synthesizer;
-            
+
             base.Initialize();
         }
 
@@ -172,7 +175,7 @@ namespace Automatone
             synthesizer.Update(gameTime);
             if (previousSequencerState == Sequencer.MidiPlayerState.PLAYING && sequencer.State == Sequencer.MidiPlayerState.STOPPED)
             {
-                ControlPanel.Instance.StopSongPlaying();
+                NavigatorPanel.Instance.StopSongPlaying();
             }
             previousSequencerState = sequencer.State;
             ParametersPanel.Instance.BringToFront();

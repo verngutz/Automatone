@@ -23,7 +23,7 @@ namespace Automatone.Music
             //Set music properties
             measureLength = (int)Math.Round(Automatone.SUBBEATS_PER_WHOLE_NOTE * inputParameters.TimeSignature);
             NoteName key = new NoteName((byte)rand.Next(MusicTheory.OCTAVE_SIZE));
-            MusicTheory.SCALE_MODE mode = (rand.NextDouble() > 0.4 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
+            MusicTheory.SCALE_MODE mode = (inputParameters.Mood > 0.5 ? MusicTheory.SCALE_MODE.MAJOR : MusicTheory.SCALE_MODE.NATURAL_MINOR);
 
             //Calculate song length
             int songLength = (int)(inputParameters.MeanSongLength * theory.SONG_LENGTHINESS);

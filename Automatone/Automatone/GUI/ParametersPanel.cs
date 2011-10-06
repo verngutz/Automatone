@@ -91,28 +91,38 @@ namespace Automatone.GUI
             Children.Add(okButton);
             Children.Add(cancelButton);
 
+            int x = 0;
             //
             // Dynamically create sliders for each of the input parameters that needs to be hooked up to a slider
             //
-            foreach (PropertyInfo p in typeof(InputParameters).GetProperties())
+            foreach (PropertyInfo inputParameterInfo in typeof(InputParameters).GetProperties())
             {
                 // Do something only if the current parameter is a ParameterWrapper<T>, where T implements ZeroOneParameter
-                if (p.PropertyType.IsGenericType
-                    && p.PropertyType.GetGenericArguments()[0].GetInterfaces().Length != 0
-                    && p.PropertyType.GetGenericArguments()[0].GetInterfaces()[0] == typeof(ZeroOneParameter))
+                if (inputParameterInfo.PropertyType.IsGenericType
+                    && inputParameterInfo.PropertyType.GetGenericArguments()[0].GetInterfaces().Length != 0
+                    && inputParameterInfo.PropertyType.GetGenericArguments()[0].GetInterfaces()[0] == typeof(ZeroOneParameter))
                 {
+                    MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.DoubleMethodName).MakeGenericMethod(inputParameterInfo.PropertyType.GetGenericArguments()[0]);
 
                     SkinNamedHorizontalSliderControl parameterSlider = new SkinNamedHorizontalSliderControl();
-
-                    if (p.PropertyType == typeof(ParameterWrapper<SongParameter>))
-                    {
-                        System.Console.WriteLine("hahaha");
-                    }
-
+                    parameterSlider.Bounds = new UniRectangle(0, x * 50, 100, 30);
+                    parameterSlider.ThumbSize = 0.1f;
+                    parameterSlider.ThumbPosition = (float)(double)method.Invoke(null, new object[] { inputParameterInfo.GetGetMethod().Invoke(InputParameters.Instance, null) });
+                    parameterSlider.Moved += new EventHandler(ParameterSliderMoved);
                     parameterSlider.SkinName = "navigator";
                     Children.Add(parameterSlider);
-                    slidersHookUp.Add(parameterSlider, p);
+                    slidersHookUp.Add(parameterSlider, inputParameterInfo);
+                    x++;
                 }
+            }
+        }
+
+        private void ParameterSliderMoved(object sender, EventArgs e)
+        {
+            PropertyInfo inputParameterInfo;
+            if (slidersHookUp.TryGetValue((SkinNamedHorizontalSliderControl)sender, out inputParameterInfo))
+            {
+                
             }
         }
 
@@ -156,14 +166,14 @@ namespace Automatone.GUI
         {
             if (ControlPanel.Instance.ShowSaveConfirmation() != DialogResult.Cancel)
             {
-                ControlPanel.Instance.StopSongPlaying();
+                NavigatorPanel.Instance.StopSongPlaying();
 
                 //synchronize all the input parameters based on the slider parameters
                 foreach (KeyValuePair<SkinNamedHorizontalSliderControl, PropertyInfo> sliderParamPair in slidersHookUp)
                 {
-                    PropertyInfo propertyInfo = sliderParamPair.Value;
-                    MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.WrapperMethodName).MakeGenericMethod(propertyInfo.PropertyType.GetGenericArguments()[0]);
-                    propertyInfo.GetSetMethod().Invoke(InputParameters.Instance, new object[] { method.Invoke(null, new object[] { sliderParamPair.Key.ThumbPosition }) });
+                    PropertyInfo inputParameterInfo = sliderParamPair.Value;
+                    MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.WrapperMethodName).MakeGenericMethod(inputParameterInfo.PropertyType.GetGenericArguments()[0]);
+                    inputParameterInfo.GetSetMethod().Invoke(InputParameters.Instance, new object[] { method.Invoke(null, new object[] { sliderParamPair.Key.ThumbPosition }) });
                 }
 
 #if USESEED
@@ -191,10 +201,11 @@ namespace Automatone.GUI
                     == DialogResult.OK)
                 {
                     //reset all the sliders to the previous (unchanged) values of the underlying input parameters
-                    foreach (PropertyInfo p in slidersHookUp.Values)
+                    foreach (KeyValuePair<SkinNamedHorizontalSliderControl, PropertyInfo> sliderParamPair in slidersHookUp)
                     {
-                        MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.DoubleMethodName).MakeGenericMethod(p.PropertyType.GetGenericArguments()[0]);
-                        System.Console.WriteLine((double)method.Invoke(null, new object[] { p.GetGetMethod().Invoke(InputParameters.Instance, null) }));
+                        PropertyInfo inputParameterInfo = sliderParamPair.Value;
+                        MethodInfo method = typeof(ParameterWrapperFactory).GetMethod(ParameterWrapperFactory.DoubleMethodName).MakeGenericMethod(inputParameterInfo.PropertyType.GetGenericArguments()[0]);
+                        sliderParamPair.Key.ThumbPosition = (float)(double)method.Invoke(null, new object[] { inputParameterInfo.GetGetMethod().Invoke(InputParameters.Instance, null) });
                     }
                     slidersHaveBeenMoved = false;
                 }
