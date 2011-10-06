@@ -33,6 +33,10 @@ namespace Automatone.GUI
 
         public const byte MEDIA_BUTTON_HEIGHT = 64;
 
+        public const int PARAMETERS_BUTTON_WIDTH = 64;
+        public const int PARAMETERS_BUTTON_HEIGHT = 64;
+        public const int PARAMETERS_BUTTON_SPACING = 10;
+
         private int cellsArrayLengthX;
         private int cellsArrayLengthY;
 
@@ -71,10 +75,14 @@ namespace Automatone.GUI
         public Rectangle GridLeftCursorsClickableArea { get { return gridLeftCursorsClickableArea; } }
 
         private UniRectangle navigatorPanelBounds;
+        private UniRectangle playPauseButtonBounds;
+        private UniRectangle stopButtonBounds;
         private UniRectangle horizontalScrollBarBounds;
         private UniRectangle verticalScrollBarBounds;
 
         public UniRectangle NavigatorPanelBounds { get { return navigatorPanelBounds; } }
+        public UniRectangle PlayPauseButtonBounds { get { return playPauseButtonBounds; } }
+        public UniRectangle StopButtonBounds { get { return stopButtonBounds; } }
         public UniRectangle HorizontalScrollBarBounds { get { return horizontalScrollBarBounds; } }
         public UniRectangle VerticalScrollBarBounds { get { return verticalScrollBarBounds; } }
 
@@ -178,6 +186,8 @@ namespace Automatone.GUI
             RefreshGridLeftCursorsClickableArea();
 
             navigatorPanelBounds = new UniRectangle(0, CONTROLS_AND_GRID_DIVISION, windowWidth, windowHeight);
+            playPauseButtonBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height + BOTTOM_SCROLLBAR_THICKNESS, CONTROL_BUTTON_WIDTH, MEDIA_BUTTON_HEIGHT);
+            stopButtonBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left + CONTROL_BUTTON_WIDTH + CONTROL_BUTTON_SPACING, gridPanelLayout.OuterRectangle.Height + BOTTOM_SCROLLBAR_THICKNESS, CONTROL_BUTTON_WIDTH, MEDIA_BUTTON_HEIGHT);
             horizontalScrollBarBounds = new UniRectangle(gridPanelLayout.InnerRectangle.Left, gridPanelLayout.OuterRectangle.Height, gridPanelLayout.InnerRectangle.Width, BOTTOM_SCROLLBAR_THICKNESS);
             verticalScrollBarBounds = new UniRectangle(gridPanelLayout.OuterRectangle.Width, gridPanelLayout.InnerRectangle.Top - CONTROLS_AND_GRID_DIVISION, RIGHT_SCROLLBAR_THICKNESS, gridPanelLayout.InnerRectangle.Height);
 
@@ -186,9 +196,9 @@ namespace Automatone.GUI
             else
                 parametersPanelBounds = new UniRectangle(0, ParametersPanel.Instance.Bounds.Top, windowWidth, windowHeight - CONTROLS_AND_GRID_DIVISION);
 
-            globalRandomizeButtonBounds = new UniRectangle(new UniScalar(0.5f, -32), 10, 64, 64);
-            okButtonBounds = new UniRectangle(new UniScalar(0.33f, -32), new UniScalar(1, -74), 64, 64);
-            cancelButtonBounds = new UniRectangle(new UniScalar(0.66f, -32), new UniScalar(1, -74), 64, 64);
+            globalRandomizeButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING * 3 - PARAMETERS_BUTTON_WIDTH * 3), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
+            okButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING * 2 - PARAMETERS_BUTTON_WIDTH * 2), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
+            cancelButtonBounds = new UniRectangle(new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_WIDTH), new UniScalar(1, -PARAMETERS_BUTTON_SPACING - PARAMETERS_BUTTON_HEIGHT), PARAMETERS_BUTTON_WIDTH, PARAMETERS_BUTTON_HEIGHT);
         }
 
         private void RespondToWindowResize(int windowWidth, int windowHeight)
@@ -205,6 +215,8 @@ namespace Automatone.GUI
             ControlPanel.Instance.ResetButtonsetBounds();
 
             NavigatorPanel.Instance.Bounds = NavigatorPanelBounds;
+            NavigatorPanel.Instance.PlayPauseButtonBounds = PlayPauseButtonBounds;
+            NavigatorPanel.Instance.StopButtonBounds = StopButtonBounds;
             NavigatorPanel.Instance.HorizontalScrollBarBounds = HorizontalScrollBarBounds;
             NavigatorPanel.Instance.VerticalScrollBarBounds = VerticalScrollBarBounds;
             NavigatorPanel.Instance.HorizontalScrollBarThumbSize = HorizontalSliderThumbSize;

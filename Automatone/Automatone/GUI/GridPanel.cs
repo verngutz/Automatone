@@ -189,6 +189,7 @@ namespace Automatone.GUI
         {
             private static Texture2D silentCell;
             private static Texture2D startCell;
+            private static Texture2D startCellEnd;
             private static Texture2D holdCell;
             private static Texture2D holdCellEnd;
             private static Texture2D gridPanelBackground;
@@ -199,6 +200,7 @@ namespace Automatone.GUI
 
             public void LoadContent()
             {
+                startCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightboxend");
                 startCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Lightbox");
                 holdCell = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdbox");
                 holdCellEnd = Automatone.Instance.Content.Load<Texture2D>("Grid Panel/Cell_Holdboxend");
@@ -210,6 +212,7 @@ namespace Automatone.GUI
             {
                 if (silentCell != null) silentCell.Dispose();
                 if (startCell != null) startCell.Dispose();
+                if (startCellEnd != null) startCellEnd.Dispose();
                 if (holdCell != null) holdCell.Dispose();
                 if (holdCellEnd != null) holdCellEnd.Dispose();
                 if (gridPanelBackground != null) gridPanelBackground.Dispose();
@@ -311,6 +314,8 @@ namespace Automatone.GUI
                 switch (GridPanel.Instance.SongCells[i, j])
                 {
                     case CellState.START:
+                        if (j + 1 >= GridPanel.Instance.SongCells.GetLength(DimensionX) || GridPanel.Instance.SongCells[i, j + 1] != CellState.HOLD)
+                            return startCellEnd;
                         return startCell;
                     case CellState.HOLD:
                         if (j + 1 >= GridPanel.Instance.SongCells.GetLength(DimensionX) || GridPanel.Instance.SongCells[i, j+1] != CellState.HOLD)
@@ -638,26 +643,26 @@ namespace Automatone.GUI
                 }
                 if (TopStartIndex != TopEndIndex
                     && TopEndIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
-                    && TopEndIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                    && TopEndIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
                     Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopEndIndex) - TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, TOP_CURSOR_HEAD_WIDTH, TOP_CURSOR_HEAD_HEIGHT), Color.Red);
                 }
                 if (TopStartIndex <= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridRightBorderBounds.Left)
-                    && TopStartIndex >= GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
+                    && TopStartIndex > GridPanel.Instance.ScreenToGridCoordinatesX(LayoutManager.Instance.GridLeftBorderBounds.Right))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorVert, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - VERTICAL_CURSOR_WIDTH / 2, LayoutManager.Instance.GridTopBorderBounds.Bottom, VERTICAL_CURSOR_WIDTH, LayoutManager.Instance.GridCellsClickableArea.Height), Color.White);
                     Automatone.Instance.SpriteBatch.Draw(topCursorHead, new Rectangle(GridPanel.Instance.GridToScreenCoordinatesX(TopStartIndex) - TOP_CURSOR_HEAD_WIDTH / 2, LayoutManager.Instance.GridTopCursorsClickableArea.Y, TOP_CURSOR_HEAD_WIDTH, TOP_CURSOR_HEAD_HEIGHT), Color.Green);
                 }
 
                 if (LeftStartIndex != LeftEndIndex
-                    && LeftEndIndex <= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
+                    && LeftEndIndex < GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
                     && LeftEndIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, HORIZONTAL_CURSOR_HEIGHT), Color.White);
                     Automatone.Instance.SpriteBatch.Draw(leftCursorHead, new Rectangle(LayoutManager.Instance.GridLeftCursorsClickableArea.X, GridPanel.Instance.GridToScreenCoordinatesY(LeftEndIndex) - LEFT_CURSOR_HEAD_HEIGHT / 2, LEFT_CURSOR_HEAD_WIDTH, LEFT_CURSOR_HEAD_HEIGHT), Color.Red);
                 }
-                if (LeftStartIndex <= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
+                if (LeftStartIndex < GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridTopBorderBounds.Bottom)
                     && LeftStartIndex >= GridPanel.Instance.ScreenToGridCoordinatesY(LayoutManager.Instance.GridBottomBorderBounds.Top))
                 {
                     Automatone.Instance.SpriteBatch.Draw(cursorHori, new Rectangle(LayoutManager.Instance.GridLeftBorderBounds.Right, GridPanel.Instance.GridToScreenCoordinatesY(LeftStartIndex) - HORIZONTAL_CURSOR_HEIGHT / 2, LayoutManager.Instance.GridCellsClickableArea.Width, HORIZONTAL_CURSOR_HEIGHT), Color.White);

@@ -15,6 +15,7 @@
 	  -->
 
       <bitmap name="controlpanel" contentPath="Control Panel/Bg_Controlpanel"/>
+      <bitmap name="parameterspanel" contentPath="Parameters Panel/Bg_Parampanel"/>
 
       <bitmap name="arrowLeft" contentPath="Control Panel/Arr_Left"/>
       <bitmap name="arrowLeftClicked" contentPath="Control Panel/Arr_Left_Clicked"/>
@@ -50,6 +51,10 @@
       <bitmap name="saveClicked" contentPath="Control Panel/Btn_Save_Clicked"/>
       <bitmap name="saveHovered" contentPath="Control Panel/Btn_Save_Hovered"/>
 
+      <bitmap name="export" contentPath="Control Panel/Btn_Export"/>
+      <bitmap name="exportClicked" contentPath="Control Panel/Btn_Export_Clicked"/>
+      <bitmap name="exportHovered" contentPath="Control Panel/Btn_Export_Hovered"/>
+
       <bitmap name="cut" contentPath="Control Panel/Btn_Cut"/>
       <bitmap name="cutClicked" contentPath="Control Panel/Btn_Cut_Clicked"/>
       <bitmap name="cutHovered" contentPath="Control Panel/Btn_Cut_Hovered"/>
@@ -81,6 +86,18 @@
       <bitmap name="generate" contentPath="Control Panel/Btn_Generate"/>
       <bitmap name="generateClicked" contentPath="Control Panel/Btn_Generate_Clicked"/>
       <bitmap name="generateHovered" contentPath="Control Panel/Btn_Generate_Hovered"/>
+
+      <bitmap name="randomize" contentPath="Parameters Panel/Btn_Dice"/>
+      <bitmap name="randomizeClicked" contentPath="Parameters Panel/Btn_Dice_Clicked"/>
+      <bitmap name="randomizeHovered" contentPath="Parameters Panel/Btn_Dice_Hovered"/>
+
+      <bitmap name="okay" contentPath="Parameters Panel/Btn_Okay"/>
+      <bitmap name="okayClicked" contentPath="Parameters Panel/Btn_Okay_Clicked"/>
+      <bitmap name="okayHovered" contentPath="Parameters Panel/Btn_Okay_Hovered"/>
+
+      <bitmap name="cancel" contentPath="Parameters Panel/Btn_Cancel"/>
+      <bitmap name="cancelClicked" contentPath="Parameters Panel/Btn_Cancel_Clicked"/>
+      <bitmap name="cancelHovered" contentPath="Parameters Panel/Btn_Cancel_Hovered"/>
 
       <bitmap name="navigatorHorizontalRail" contentPath="Grid Panel/Bar_ScrollBar_Hori"/>
       <bitmap name="navigatorHorizontalThumb" contentPath="Grid Panel/Bar_ScrollHandle_Hori"/>
@@ -115,7 +132,7 @@
 	      Frame used to draw a parameters panel
 	    -->
       <frame name="parameters.panel.window">
-        <region source="controlpanel" hplacement ="stretch" vplacement="stretch" x="0" y="0" w="800" h="150" />
+        <region source="parameterspanel" hplacement ="stretch" vplacement="stretch" x="0" y="0" w="800" h="150" />
       </frame>
 	
 	    <!--
@@ -200,21 +217,21 @@
 	      Frame used for a global randomize button in its normal state
 	    -->
       <frame name="global.randomize.button.normal">
-        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="randomize" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
 	      Frame used for a global randomize button when it is depressed
 	    -->
       <frame name="global.randomize.button.depressed">
-        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="randomizeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
 	      Frame used for a global randomize button when it is highlighted
 	    -->
       <frame name="global.randomize.button.highlighted">
-        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="randomizeHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
@@ -227,21 +244,21 @@
 	      Frame used for a ok button in its normal state
 	    -->
       <frame name="ok.button.normal">
-        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="okay" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
 	      Frame used for a ok button when it is depressed
 	    -->
       <frame name="ok.button.depressed">
-        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="okayClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
 	      Frame used for a ok button when it is highlighted
 	    -->
       <frame name="ok.button.highlighted">
-        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="okayHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
@@ -254,21 +271,21 @@
 	      Frame used for a cancel button in its normal state
 	    -->
       <frame name="cancel.button.normal">
-        <region source="stop" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="cancel" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
 	      Frame used for a cancel button when it is depressed
 	    -->
       <frame name="cancel.button.depressed">
-        <region source="stopClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="cancelClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
 
       <!--
 	      Frame used for a cancel button when it is highlighted
 	    -->
       <frame name="cancel.button.highlighted">
-        <region source="stopHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
+        <region source="cancelHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="64" />
       </frame>
       
       <!--
@@ -433,6 +450,33 @@
 	    -->
       <frame name="save.button.depressed">
         <region source="saveClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a disabled save button
+	    -->
+      <frame name="export.button.disabled">
+      </frame>
+
+      <!--
+	      Frame used for a save button in its normal state
+	    -->
+      <frame name="export.button.normal">
+        <region source="export" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a save button when it is highlighted
+	    -->
+      <frame name="export.button.highlighted">
+        <region source="exportHovered" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
+      </frame>
+
+      <!--
+	      Frame used for a save button when it is depressed
+	    -->
+      <frame name="export.button.depressed">
+        <region source="exportClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
 
       <!--
@@ -623,7 +667,7 @@
       <frame name="remove.cells.button.depressed">
         <region source="removeClicked" hplacement ="left" vplacement="top" x="0" y="0" w="64" h="96" />
       </frame>
-      
+
       <!--
 	      Frame used for a disabled generate song button
 	    -->

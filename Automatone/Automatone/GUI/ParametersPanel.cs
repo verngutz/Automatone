@@ -166,7 +166,7 @@ namespace Automatone.GUI
         {
             if (ControlPanel.Instance.ShowSaveConfirmation() != DialogResult.Cancel)
             {
-                ControlPanel.Instance.StopSongPlaying();
+                NavigatorPanel.Instance.StopSongPlaying();
 
                 //synchronize all the input parameters based on the slider parameters
                 foreach (KeyValuePair<SkinNamedHorizontalSliderControl, PropertyInfo> sliderParamPair in slidersHookUp)

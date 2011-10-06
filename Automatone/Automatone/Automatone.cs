@@ -175,7 +175,7 @@ namespace Automatone
             synthesizer.Update(gameTime);
             if (previousSequencerState == Sequencer.MidiPlayerState.PLAYING && sequencer.State == Sequencer.MidiPlayerState.STOPPED)
             {
-                ControlPanel.Instance.StopSongPlaying();
+                NavigatorPanel.Instance.StopSongPlaying();
             }
             previousSequencerState = sequencer.State;
             ParametersPanel.Instance.BringToFront();
