@@ -269,7 +269,7 @@ namespace Automatone.GUI
                 GridPanel.Instance.HasUnsavedChanges = false;
                 ParametersPanel.Instance.SlideUp();
 
-                Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+                Memento.Instance.ClearMemento(GridPanel.Instance.getCurrentState());
                 ResetButtonsetStatuses();
             }
         }
@@ -298,7 +298,7 @@ namespace Automatone.GUI
                     ParametersPanel.Instance.SlideUp();
                 }
 
-                Memento.Instance.ClearMemento(GridPanel.Instance.SongCells);
+                Memento.Instance.ClearMemento(GridPanel.Instance.getCurrentState());
                 ResetButtonsetStatuses();
             }
         }
@@ -376,13 +376,13 @@ namespace Automatone.GUI
 
         private void UndoButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.SongCells = Memento.Instance.UndoAction(GridPanel.Instance.SongCells);
+            GridPanel.Instance.setCurrentState(Memento.Instance.UndoAction(GridPanel.Instance.getCurrentState()));
             ResetButtonsetStatuses();
         }
 
         private void RedoButtonPressed(object sender, EventArgs e)
         {
-            GridPanel.Instance.SongCells = Memento.Instance.RedoAction();
+            GridPanel.Instance.setCurrentState(Memento.Instance.RedoAction());
             ResetButtonsetStatuses();
         }
         

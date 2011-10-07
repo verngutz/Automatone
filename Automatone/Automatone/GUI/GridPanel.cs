@@ -184,6 +184,20 @@ namespace Automatone.GUI
             return SongCells.GetLength(DimensionY) - 1 - ((int)-NavigatorPanel.Instance.GridDrawOffsetY + y) / LayoutManager.CELLHEIGHT;
         }
 
+        public State getCurrentState()
+        {
+            return new State(songCells, cursors.TopStartIndex, cursors.TopEndIndex, cursors.LeftStartIndex, cursors.LeftEndIndex);
+        }
+
+        public void setCurrentState(State state)
+        {
+            songCells = state.SongCells;
+            cursors.TopStartIndex = state.TopStartCursorIndex;
+            cursors.TopEndIndex = state.TopEndCursorIndex;
+            cursors.LeftStartIndex = state.LeftStartCursorIndex;
+            cursors.LeftEndIndex = state.LeftEndCursorIndex;
+        }
+
         public void AddCells(int columns)
         {
             if (columns > 0)
@@ -196,7 +210,7 @@ namespace Automatone.GUI
                         newSongCells[i, j] = songCells[i, j];
                     }
                 }
-                Memento.Instance.DoAction(songCells);
+                Memento.Instance.DoAction(getCurrentState());
                 ControlPanel.Instance.ResetButtonsetStatuses();
                 SongCells = newSongCells;
             }
@@ -223,7 +237,7 @@ namespace Automatone.GUI
                     newSongCells[i, j] = songCells[i, j - endIndex + cursors.TopStartIndex];
                 }
             }
-            Memento.Instance.DoAction(songCells);
+            Memento.Instance.DoAction(getCurrentState());
             ControlPanel.Instance.ResetButtonsetStatuses();
             SongCells = newSongCells;
         }
@@ -248,7 +262,7 @@ namespace Automatone.GUI
                     newSongCells[i, j] = songCells[i, j - cursors.TopStartIndex + cursors.TopEndIndex];
                 }
             }
-            Memento.Instance.DoAction(songCells);
+            Memento.Instance.DoAction(getCurrentState());
             ControlPanel.Instance.ResetButtonsetStatuses();
             SongCells = newSongCells;
             cursors.TopEndIndex = cursors.TopStartIndex;
@@ -283,7 +297,7 @@ namespace Automatone.GUI
         {
             if (cursors.TopStartIndex != cursors.TopEndIndex && cursors.LeftStartIndex != cursors.LeftEndIndex)
             {
-                Memento.Instance.DoAction(songCells);
+                Memento.Instance.DoAction(getCurrentState());
                 ControlPanel.Instance.ResetButtonsetStatuses();
                 for (int i = cursors.LeftStartIndex + 1; i <= cursors.LeftEndIndex; i++)
                 {
@@ -306,7 +320,7 @@ namespace Automatone.GUI
             CellState[,] cellsToPaste = GetCellsFromClipboard();
             if (cellsToPaste != null)
             {
-                Memento.Instance.DoAction(songCells);
+                Memento.Instance.DoAction(getCurrentState());
                 ControlPanel.Instance.ResetButtonsetStatuses();
                 AddCells(cellsToPaste.GetLength(1) - (songCells.GetLength(1) - cursors.TopStartIndex));
                 for (int i = cursors.LeftEndIndex + 1 - cellsToPaste.GetLength(0); i <= cursors.LeftEndIndex; i++)
@@ -399,7 +413,7 @@ namespace Automatone.GUI
                 {
                     if (storeAction)
                     {
-                        Memento.Instance.DoAction(GridPanel.Instance.SongCells);
+                        Memento.Instance.DoAction(GridPanel.Instance.getCurrentState());
                         ControlPanel.Instance.ResetButtonsetStatuses();
                         storeAction = false;
                     }
@@ -838,6 +852,8 @@ namespace Automatone.GUI
             private Texture2D cursorVert;
             private Texture2D cursorHighlight;
 
+            private bool storeAction = true;
+
             private int topStartIndex;
             private int topEndIndex;
             private int leftStartIndex;
@@ -851,6 +867,7 @@ namespace Automatone.GUI
                 }
                 set
                 {
+                    topEndIndex = TopEndIndex;
                     topStartIndex = (int)MathHelper.Clamp(value, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) + 1);
                 }
             }
@@ -862,6 +879,7 @@ namespace Automatone.GUI
                 }
                 set
                 {
+                    topStartIndex = TopStartIndex;
                     topEndIndex = (int)MathHelper.Clamp(value, 0, GridPanel.Instance.SongCells.GetLength(DimensionX) + 1);
                 }
             }
@@ -874,6 +892,7 @@ namespace Automatone.GUI
                 }
                 set
                 {
+                    leftEndIndex = LeftEndIndex;
                     leftStartIndex = (int)MathHelper.Clamp(value, -1, GridPanel.Instance.SongCells.GetLength(DimensionY));
                 }
             }
@@ -885,6 +904,7 @@ namespace Automatone.GUI
                 }
                 set
                 {
+                    leftStartIndex = LeftStartIndex;
                     leftEndIndex = (int)MathHelper.Clamp(value, -1, GridPanel.Instance.SongCells.GetLength(DimensionY));
                 }
             }
@@ -925,11 +945,18 @@ namespace Automatone.GUI
                         || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
                     && LayoutManager.Instance.GridTopCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
                 {
+                    if (storeAction)
+                    {
+                        Memento.Instance.DoAction(GridPanel.Instance.getCurrentState());
+                        ControlPanel.Instance.ResetButtonsetStatuses();
+                        storeAction = false;
+                    }
                     if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed)
                     {
                         if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
                         {
                             topStartIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
+                            storeAction = true;
                         }
                         topEndIndex = GridPanel.Instance.ScreenToGridCoordinatesX(GridPanel.Instance.newMouseState.X + LayoutManager.CELLWIDTH / 2);
                     }
@@ -940,11 +967,18 @@ namespace Automatone.GUI
                         || GridPanel.Instance.oldMouseState.LeftButton != ButtonState.Released)
                     && LayoutManager.Instance.GridLeftCursorsClickableArea.Contains(new Point(GridPanel.Instance.newMouseState.X, GridPanel.Instance.newMouseState.Y)))
                 {
+                    if (storeAction)
+                    {
+                        Memento.Instance.DoAction(GridPanel.Instance.getCurrentState());
+                        ControlPanel.Instance.ResetButtonsetStatuses();
+                        storeAction = false;
+                    }
                     if (GridPanel.Instance.newMouseState.LeftButton == ButtonState.Pressed)
                     {
                         if (GridPanel.Instance.oldMouseState.LeftButton == ButtonState.Released)
                         {
                             leftStartIndex = GridPanel.Instance.ScreenToGridCoordinatesY(GridPanel.Instance.newMouseState.Y + LayoutManager.CELLHEIGHT / 2);
+                            storeAction = true;
                         }
                         leftEndIndex = GridPanel.Instance.ScreenToGridCoordinatesY(GridPanel.Instance.newMouseState.Y + LayoutManager.CELLHEIGHT / 2);
                     }

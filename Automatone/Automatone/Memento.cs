@@ -17,7 +17,7 @@ namespace Automatone
         }
         private Memento()
         {
-            undoBuffer = new List<CellState[,]>();
+            undoBuffer = new List<State>();
             canUndo = false;
             canRedo = false;
         }
@@ -29,19 +29,19 @@ namespace Automatone
         private bool canRedo;
         public bool CanRedo { get { return canRedo; } }
 
-        private List<CellState[,]> undoBuffer;
+        private List<State> undoBuffer;
         private int bufferPointer;
 
-        public void ClearMemento(CellState[,] initialState)
+        public void ClearMemento(State initialState)
         {
             canUndo = false;
             canRedo = false;
             undoBuffer.Clear();
-            undoBuffer.Add((CellState[,])initialState.Clone());
+            undoBuffer.Add(initialState);
             bufferPointer = 1;
         }
 
-        public void DoAction(CellState[,] currentState)
+        public void DoAction(State currentState)
         {
             while (undoBuffer.Count >= ACTION_MEMORY_CAPACITY)
             {
@@ -52,33 +52,33 @@ namespace Automatone
             {
                 undoBuffer.RemoveAt(bufferPointer);
             }
-            undoBuffer.Add((CellState[,])currentState.Clone());
+            undoBuffer.Add(currentState);
             bufferPointer++;
             updateCanUndoRedo();
         }
 
-        public CellState[,] UndoAction(CellState[,] currentState)
+        public State UndoAction(State currentState)
         {
             if (bufferPointer == undoBuffer.Count)
             {
-                undoBuffer.Add((CellState[,])currentState.Clone());
+                undoBuffer.Add(currentState);
             }
             if (canUndo)
             {
                 bufferPointer--;
                 updateCanUndoRedo();
-                return (CellState[,])undoBuffer.ElementAt<CellState[,]>(bufferPointer).Clone();
+                return undoBuffer.ElementAt<State>(bufferPointer);
             }
             return null;
         }
 
-        public CellState[,] RedoAction()
+        public State RedoAction()
         {
             if (canRedo)
             {
                 bufferPointer++;
                 updateCanUndoRedo();
-                return (CellState[,])undoBuffer.ElementAt<CellState[,]>(bufferPointer).Clone();
+                return undoBuffer.ElementAt<State>(bufferPointer);
             }
             return null;
         }
