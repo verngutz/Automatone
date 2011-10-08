@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using Duet.Audio_System;
 
@@ -87,6 +88,26 @@ namespace Automatone
             Window.Title = "Automatone";
             Window.AllowUserResizing = true;
         }
+        
+        private Stream projectStream;
+        public Stream ProjectStream { set { projectStream = value; } }
+        private void LoadProject()
+        {
+            if (projectStream != null)
+            {
+                NavigatorPanel.Instance.StopSongPlaying();
+                BinaryFormatter formatter = new BinaryFormatter();
+                InputParameters.LoadInstance((InputParameters)formatter.Deserialize(projectStream));
+                Automatone.Instance.MeasureLength = (int)formatter.Deserialize(projectStream);
+                GridPanel.Instance.SongCells = (CellState[,])formatter.Deserialize(projectStream);
+                projectStream.Close();
+                GridPanel.Instance.ResetCursors();
+                NavigatorPanel.Instance.ResetGridDrawOffset();
+                GridPanel.Instance.HasUnsavedChanges = false;
+                ParametersPanel.Instance.SlideUp();
+                projectStream = null;
+            }
+        }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -147,6 +168,8 @@ namespace Automatone
             sequencer.OutputDevice = synthesizer;
 
             base.Initialize();
+
+            LoadProject();
         }
 
         /// <summary>
