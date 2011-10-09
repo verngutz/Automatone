@@ -123,6 +123,13 @@ namespace Automatone.GUI
             }
         }
 
+        public void RefreshSliderPositions()
+        {
+            Children.Clear();
+            LayoutManager.Instance.ClearParametersPanel();
+            InitializeComponent();
+        }
+
         private void ParameterSliderMoved(object sender, EventArgs e)
         {
             slidersHaveBeenMoved = true;
