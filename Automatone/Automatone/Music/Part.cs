@@ -111,9 +111,9 @@ namespace Automatone.Music
             for (int i = 0; i < measureLength; i++)
             {
                 //Change pitch
-                int change = (int)(randomPitch.Next((int)(2 * melody.PitchContiguity)) - melody.PitchContiguity);
+                int change = (int)(randomPitch.NextDouble() * melody.PitchContiguity) * (randomPitch.NextDouble() > 0.5 ? 1 : -1);
                 pitch += change;
-                
+
                 //Adjust note length
                 double currNoteLength = noteLength;
                 currNoteLength += currNoteLength * ((randomRhythm.NextDouble() - 0.5) * inputParameters.NoteLengthVariance);
