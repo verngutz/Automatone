@@ -295,6 +295,7 @@ namespace Automatone.GUI
                     GridPanel.Instance.ResetCursors();
                     NavigatorPanel.Instance.ResetGridDrawOffset();
                     GridPanel.Instance.HasUnsavedChanges = false;
+                    ParametersPanel.Instance.RefreshSliderPositions();
                     ParametersPanel.Instance.SlideUp();
                 }
 

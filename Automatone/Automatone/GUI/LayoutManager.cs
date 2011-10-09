@@ -222,6 +222,12 @@ namespace Automatone.GUI
             parametersLabels.Add(sliderLabel);
         }
 
+        public void ClearParametersPanel()
+        {
+            parametersSliders.Clear();
+            parametersLabels.Clear();
+        }
+
         private UniRectangle GetParameterSliderBounds(int index)
         {
             float boundsX;
