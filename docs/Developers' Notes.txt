@@ -1,3 +1,0 @@
-TO DO
-1. Get rid of too many different references to measure length.
-2. Fix the grid panel's SongCells (2D array) to be consistent.
