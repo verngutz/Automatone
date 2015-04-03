@@ -242,7 +242,7 @@ namespace Automatone
 
             if (File.Exists("sample.mid"))
                 File.Delete("sample.mid");
-
+            
             Process txt2midi = new Process();
             System.Console.WriteLine(Environment.CurrentDirectory);
             txt2midi.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
